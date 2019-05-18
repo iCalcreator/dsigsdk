@@ -1,0 +1,44 @@
+{
+    "name": "kigkonsult/dsigsdk",
+    "description": "XML Digital Signature recomendation dsig sdk",
+    "keywords": [
+        "XML",
+        "Digital",
+        "Signature",
+        "recomendation",
+        "dsig",
+        "sdk"
+    ],
+    "time" : "2019-05-18",
+    "minimum-stability": "stable",
+    "license": "LGPL-3.0-or-later",
+    "homepage": "https://kigkonsult.se",
+    "support": {
+        "issues": "https://github.com/iCalcreator/dsigsdk/issues"
+    },
+    "authors": [
+        {
+            "name": "Kjell-Inge Gustafsson",
+            "email": "ical@kigkonsult.se"
+        }
+    ],
+    "autoload": {
+        "files": ["autoload.php"],
+        "psr-4": { "Kigkonsult\\DsigSdk\\": ["src/"] }
+    },
+    "require": {
+        "php": "^5.6 || ^7.0",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "ext-simplexml": "*",
+        "ext-xmlreader": "*",
+        "ext-xmlwriter": "*",
+        "kigkonsult/loggerdepot": "dev-master",
+        "psr/log": "1.1.0"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "^v1.8.0",
+        "katzgrau/klogger": "1.2.1",
+        "phpunit/phpunit": "6.5.14"
+    }
+}
