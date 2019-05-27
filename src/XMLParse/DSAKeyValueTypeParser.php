@@ -3,10 +3,13 @@
  * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
- * copyright (c) 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * This file is a part of DsigSdk.
+ *
+ * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.95
+ * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -24,8 +27,6 @@
  *
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
- *
- * This file is a part of DsigSdk.
  */
 namespace Kigkonsult\DsigSdk\XMLParse;
 
@@ -88,6 +89,9 @@ class DSAKeyValueTypeParser extends DsigParserBase
                 case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::SEED == $currentElement )) :
                     $DSAKeyValueType->setSeed( $this->reader->value );
                     break;
+                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::PGENCOUNTER == $currentElement )) :
+                    $DSAKeyValueType->setPgenCounter( $this->reader->value );
+                    break;
                 case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
                     break;
                 case ( self::P == $this->reader->localName ) :
@@ -106,6 +110,9 @@ class DSAKeyValueTypeParser extends DsigParserBase
                     $currentElement = $this->reader->localName;
                     break;
                 case ( self::SEED == $this->reader->localName ) :
+                    $currentElement = $this->reader->localName;
+                    break;
+                case ( self::PGENCOUNTER == $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
             } // end switch

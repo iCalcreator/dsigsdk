@@ -3,9 +3,12 @@
  * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
- * copyright (c) 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * This file is a part of DsigSdk.
+ *
+ * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
- * Version   0.95
+ * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -23,13 +26,14 @@
  *
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
- *
- * This file is a part of DsigSdk.
  */
 namespace Kigkonsult\DsigSdk;
 
+use Katzgrau\KLogger\Logger as KLogger;
 use Kigkonsult\LoggerDepot\LoggerDepot;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LogLevel;
+use Psr\Log\NullLogger;
 
 /**
  * Class BaseTest
@@ -53,8 +57,32 @@ abstract class BaseTest extends TestCase
         'xmlns' => "http://www.w3.org/2000/09/xmldsig#"
     ];
 
+    public static function getCm( $name ) {
+        return substr( $name, ( strrpos($name,  '\\' ) + 1 ));
+    }
+
     public static function getRealPath() {
         return realpath( __DIR__ . DIRECTORY_SEPARATOR . '..' ) . DIRECTORY_SEPARATOR;
+    }
+
+    public static function setUpBeforeClass()
+    {
+        if( defined( 'LOG' ) && ( false !== LOG )) {
+            $fileName = self::getCm( get_called_class()) . '.log';
+            file_put_contents( self::getRealPath() . LOG . DIRECTORY_SEPARATOR . $fileName, '' );
+            $logger  = new KLogger(
+                LOG,
+                LogLevel::DEBUG,
+                [ 'filename' => $fileName ]
+            );
+        }
+        else {
+            $logger = new NullLogger();
+        }
+        $key = __NAMESPACE__;
+        if( ! LoggerDepot::isLoggerSet( $key )) {
+            LoggerDepot::registerLogger( $key, $logger );
+        }
     }
 
     public static function tearDownAfterClass() {

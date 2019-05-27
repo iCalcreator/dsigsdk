@@ -3,10 +3,13 @@
  * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
- * copyright (c) 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * This file is a part of DsigSdk.
+ *
+ * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.95
+ * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -24,8 +27,6 @@
  *
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
- *
- * This file is a part of DsigSdk.
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
@@ -47,14 +48,14 @@ class SignatureMethodType implements DsigInterface, DsigLoaderInterface
         $signatureMethodTypes = [];
         for( $x = 0; $x <= $max; $x++ ) {
             $elementSet = [];
-            if( 1 == $faker->numberBetween( 1, 2 ) ) {
+            if( 1 == $faker->numberBetween( 1, 2 )) {
                 $elementSet[] = [ self::HMACOUTPUTLENGTH => ( 8 * $faker->numberBetween( 11, 12 )) ];
             }
             $max2 = $faker->numberBetween( 0, 2 );
             for( $x2 = 0; $x2 < $max2; $x2++ ) {
                 $elementSet[] = [ self::ANYTYPE => AnyType::loadFromFaker() ];
             }
-            if( ! empty( $elementSet ) ) {
+            if( ! empty( $elementSet )) {
                 $signatureMethodTypes[] = $elementSet;
             }
         } // end for

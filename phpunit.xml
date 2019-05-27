@@ -3,9 +3,10 @@
  DsigSdk   the PHP XML Digital Signature recomendation SDK,
            source http://www.w3.org/2000/09/xmldsig#
 
- copyright (c) 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ Author    Kjell-Inge Gustafsson, kigkonsult
  Link      https://kigkonsult.se
- Version   0.95
+ Version   0.965
  License   Subject matter of licence is the software DsigSdk.
            The above copyright, link, package and version notices,
            this licence notice shall be included in all copies or substantial
@@ -34,13 +35,19 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          syntaxCheck="false"
-         bootstrap="test/autoload.php"
+         bootstrap="autoload.php"
         >
     <testsuites>
-        <testsuite name="Dsig Tests">
-            <file>./test/TestSignature.php</file>
-            <file>./test/TestSignatureProperties.php</file>
-            <file>./test/TestManifest.php</file>
+        <testsuite name="Dsig Dto Tests">
+            <file>./test/SignatureTest.php</file>
+        </testsuite>
+        <testsuite name="Impl Tests">
+            <file>./test/Impl/CommonFactoryTest.php</file>
+            <file>./test/Impl/HashFactoryTest.php</file>
+            <file>./test/Impl/HmacHashFactoryTest.php</file>
+            <file>./test/Impl/PKCSFactoryTest.php</file>
+            <file>./test/Impl/OpenSSLBaseTest.php</file>
+            <file>./test/Impl/OpenSSLFactoryTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
@@ -145,6 +152,15 @@
             <file>./src/XMLWrite/TransformTypeWriter.php</file>
             <file>./src/XMLWrite/X509DataTypeWriter.php</file>
             <file>./src/XMLWrite/X509IssuerSerialTypeWriter.php</file>
+            <file>./src/Impl/ImplBase.php</file>
+            <file>./src/Impl/CommonFactory.php</file>
+            <file>./src/Impl/HashFactory.php</file>
+            <file>./src/Impl/HmacHashFactory.php</file>
+            <file>./src/Impl/OpenSSLInterface.php</file>
+            <file>./src/Impl/OpenSSLBase.php</file>
+            <file>./src/Impl/OpenSSLFactory.php</file>
+            <file>./src/Impl/PhpErrorException.php</file>
+            <file>./src/Impl/PKCSFactory.php</file>
         </whitelist>
     </filter>
   <logging>
@@ -174,9 +190,28 @@
            target="testDocs/testdox.txt"/ -->
   </logging>
     <php>
-        <!-- if LOG set, will (test-)log to dir "testDocs", named '__FUNCTION__'.log -->
+        <!-- if LOG set, will (debug-)log to dir "testDocs", named '__FUNCTION__'.log -->
         <const name="LOG" value="testDocs"/>
-        <!-- if SAVEXML set, will save xml-result from test in "testDocs", named '__FUNCTION__'.xml-->
+        <!--
+            SigntureTest only
+            if SAVEXML set, will save xml-result from test in "testDocs", named '__FUNCTION__'.xml
+        -->
         <const name="SAVEXML" value="testDocs"/>
+        <!-- OpenSSLFactory encrypt/decrypt tests only, OPENSSLMODE (default 0)
+             0 : cipher algorithm 'aes-256-ctr' - default  +  md (hash) 'sha256' - default
+             1 : cipher algorithm 'aes-256-ctr'            +  All md algorithms (excl aliases)
+             2 : cipher algorithm 'aes-256-ctr'            +  All md algorithms (incl aliases)
+             3 : ALL cipher algorithms (excl aliases)      +  md (hash) 'sha256'
+             4 : ALL cipher algorithms (excl aliases)      +  All md algorithms (excl aliases)
+             5 : ALL cipher algorithms (excl aliases)      +  All md algorithms (incl aliases)
+             6 : ALL cipher algorithms (incl aliases)      +  md (hash) 'sha256'
+             7 : ALL cipher algorithms (1ncl aliases)      +  All md algorithms (excl aliases)
+             8 : ALL cipher algorithms (1ncl aliases)      +  All md algorithms (incl aliases)
+             If LOG is set, statistics (aside from LOG above) are saved in (in LOG dir)
+                    cipherAndMdOk.txt
+                    cipherEncryptErrors.txt
+                    cipherDecryptErrors.txt
+        -->
+        <const name="OPENSSLMODE" value="0"/>
     </php>
 </phpunit>

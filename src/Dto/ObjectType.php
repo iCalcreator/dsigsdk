@@ -3,10 +3,13 @@
  * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
- * copyright (c) 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * This file is a part of DsigSdk.
+ *
+ * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.95
+ * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -24,8 +27,6 @@
  *
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
- *
- * This file is a part of DsigSdk.
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
@@ -36,7 +37,7 @@ class ObjectType extends DsigBase
 {
 
     /**
-     * @var AnyType[]
+     * @var Manifest|SignaturePropertiesType|AnyType[]
      *            minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="lax"
      * @access protected
      */
@@ -66,14 +67,14 @@ class ObjectType extends DsigBase
 
 
     /**
-     * @return AnyType[]
+     * @return Manifest|SignaturePropertiesType|AnyType[]
      */
     public function getAny() {
         return $this->any;
     }
 
     /**
-     * @param AnyType[] $any
+     * @param Manifest|SignaturePropertiesType|AnyType[] $any
      * @return static
      */
     public function setAny( array $any ) {

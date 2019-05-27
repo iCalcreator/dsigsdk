@@ -3,10 +3,13 @@
  * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
- * copyright (c) 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * This file is a part of DsigSdk.
+ *
+ * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.95
+ * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -24,11 +27,10 @@
  *
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
- *
- * This file is a part of DsigSdk.
  */
 namespace Kigkonsult\DsigSdk\XMLParse;
 
+use Kigkonsult\DsigSdk\Dto\ManifestType;
 use Kigkonsult\DsigSdk\Dto\ObjectType;
 use XMLReader;
 
@@ -88,8 +90,18 @@ class ObjectTypeParser extends DsigParserBase
                     break;
                 case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
                     break;
+                case ( self::MANIFEST == $this->reader->localName ) :
+                    $anyTypes[] = [
+                        self::MANIFEST => ManifestTypeParser::factory( $this->reader )->parse()
+                    ];
+                    break;
+                case ( self::SIGNATUREPROPERTIES == $this->reader->localName ) :
+                    $anyTypes[] = [
+                        self::SIGNATUREPROPERTIES => SignaturePropertiesTypeParser::factory( $this->reader )->parse()
+                    ];
+                    break;
                 default :
-                    $anyTypes[] = AnyTypeParser::factory( $this->reader )->parse();
+                    $anyTypes[] = [ self::ANYTYPE => AnyTypeParser::factory( $this->reader )->parse() ];
                     break;
             }  // end switch
         } // end while

@@ -3,10 +3,12 @@
  * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
- * copyright (c) 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * This file is a part of DsigSdk.
+ *
+ * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
- * Package   DsigSdk
- * Version   0.95
+ * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -24,27 +26,39 @@
  *
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
- *
- * This file is a part of DsigSdk.
  */
 /**
- * Kigkonsult\DsigSdk autoloader
+ * Kigkonsult\DsigSdk test autoloader
  */
 spl_autoload_register(
     function( $class ) {
-        static $PREFIX = 'Kigkonsult\\DsigSdk\\';
-        static $BS     = '\\';
-        static $FMT    = '%1$s%2$ssrc%2$s%3$s.php';
-        if( 0 != strncmp( $PREFIX, $class, 19 )) {
+        static $PREFIX   = 'Kigkonsult\\DsigSdk\\';
+        static $BS       = '\\';
+        static $PATHSRC  = null;
+        static $SRC      = 'src';
+        static $PATHTEST = null;
+        static $TEST     = 'test';
+        static $FMT      = '%s%s.php';
+        if( empty( $PATHSRC )) {
+            $PATHSRC  = __DIR__ . DIRECTORY_SEPARATOR . $SRC . DIRECTORY_SEPARATOR;
+            $PATHTEST = __DIR__ . DIRECTORY_SEPARATOR . $TEST . DIRECTORY_SEPARATOR;
+        }
+        if ( 0 != strncmp( $PREFIX, $class, 19 )) {
             return;
         }
         $class = substr( $class, 19 );
-        if( false !== strpos( $class, $BS )) {
+        if ( false !== strpos( $class, $BS )) {
             $class = str_replace( $BS, DIRECTORY_SEPARATOR, $class );
         }
-        $file = sprintf( $FMT, __DIR__, DIRECTORY_SEPARATOR, $class );
-        if( file_exists( $file )) {
+        $file = sprintf( $FMT, $PATHSRC, $class );
+        if ( file_exists( $file )) {
             include $file;
+        }
+        else {
+            $file = sprintf( $FMT, $PATHTEST, $class );
+            if( file_exists( $file ) ) {
+                include $file;
+            }
         }
     }
 );

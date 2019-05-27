@@ -3,10 +3,13 @@
  * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
- * copyright (c) 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * This file is a part of DsigSdk.
+ *
+ * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.95
+ * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -24,8 +27,6 @@
  *
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
- *
- * This file is a part of DsigSdk.
  */
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
@@ -58,14 +59,8 @@ class DsigWriter extends DsigWriterBase
         $this->writer->setIndent( true );
         $this->writer->startDocument( '1.0', 'UTF-8' );
         switch ( true ) {
-            case ( $dsigBase instanceof ManifestType ) :
-                ManifestTypeWriter::factory( $this->writer)->write( $dsigBase );
-                break;
             case ( $dsigBase instanceof SignatureType ) :
                 SignatureTypeWriter::factory( $this->writer)->write( $dsigBase );
-                break;
-            case ( $dsigBase instanceof SignaturePropertiesType ) :
-                SignaturePropertiesTypeWriter::factory( $this->writer)->write( $dsigBase );
                 break;
             default :
                 throw new InvalidArgumentException( sprintf( $FMTerr1, get_class( $dsigBase )));

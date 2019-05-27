@@ -21,7 +21,7 @@ Status of This Memo
 
 Copyright Notice
 
-   Copyright (C) The Internet Society (2005).
+   copyright  The Internet Society (2005).
 
 Abstract
 
@@ -902,7 +902,7 @@ RFC 4051              Additional XML Security URIs            April 2005
 
 Full Copyright Statement
 
-   Copyright (C) The Internet Society (2005).
+   copyright  The Internet Society (2005).
 
    This document is subject to the rights, licenses and restrictions
    contained in BCP 78, and except as set forth therein, the authors

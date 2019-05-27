@@ -8,15 +8,27 @@ and provide
 * dto's for all element(type)s in [XSD]
   * [src/Dto](src/Dto)
   * with getters and setters, no other logic
+  
 * parse of XML into dto(s)
   * [src/XMLParse/DsigParser::parse](src/XMLParse/DsigParser.php)
+  
 * write of dto(s) to XML string / DomNode
   * [src/XMLWrite/DsigWriter::write](src/XMLWrite/DsigWriter.php)
+  
+* logic aid support
+  * [src/Impl](src/Impl)
+    * [common](src/Impl/Common.md) : convenient salt, base64, hex, pack etc unility methods
+    * [Hash](src/Impl/Hash.md) : message digest support
+    * [HmacHash](src/Impl/HmacHash.md) : message hmac digest support
+    * [OpenSSL](src/Impl/OpenSSL.md) : encryption/decryption support
+    * [Misc](src/Impl/Misc.md)
+
+For help finding a good PHP cryptography library, please review 
+* [Choosing the Right Cryptography Library for your PHP Project: A Guide ](https://paragonie.com/blog/2015/11/choosing-right-cryptography-library-for-your-php-project-guide)
+  
 
 #### Usage, parse XML
-DsigSdk uses XMLReader parsing input 
-and accepts Signature, SignatureProperties and Manifest root elements. 
-To parse an Dsig (Signature) XML file (using XMLReader) :
+To parse an Dsig (Signature root) XML file (using XMLReader) :
 
 ```php
 <?php
@@ -80,9 +92,9 @@ $dsig = SignatureType::factory()
     ->setKeyInfo(
         KeyInfoType::factory()
             ->setKeyInfoType( [
-                [
-                    [ 
-                        self::X509DATA => 
+                [                 // one set of elements
+                    [             // element
+                        SignatureType::X509DATA => 
                             X509DataType::factory()
                                 ->setX509Certificate( ... )
                     ],
@@ -172,7 +184,7 @@ $domNode = DsigWriter::factory()->write( $dsig, true );
 
 #### Info
 
-For class structure and architecture, please examine 
+For class structure and architecture, please review 
 * the [XSD]
 * [docs/Dsig.png](docs/Dsig.png) class design
 * the [src/DsigLoader](src/DtoLoader) directory
@@ -181,15 +193,18 @@ You may find convenient constants in
 - [src/DsigInterface](src/DsigInterface.php)
 - [src/XMLAttributesInterface](src/XMLAttributesInterface.php)
 
+For base64Encode/base64Decode/hash support, please review [src/Impl/Impl.md](src/Impl/Impl.md)
+
 #### Installation
 
-[Composer], from the Command Line:
+###### [Composer]
+From the Command Line:
 
 ``` php
 composer require kigkonsult/dsigsdk
 ```
 
-[Composer], in your `composer.json`:
+In your `composer.json`:
 
 ``` json
 {
@@ -199,21 +214,28 @@ composer require kigkonsult/dsigsdk
 }
 ```
 
-[Composer], acquire access
+Acquire access
 ``` php
 namespace Kigkonsult\DsigSdk;
 ...
 include 'vendor/autoload.php';
 ```
 
+Run tests
+```
+cd pathToSource/DsigSdk
+vendor/bin/phpunit
+```
 
-Otherwise , download and acquire..
+###### Or
+Download and acquire..
 
 ``` php
 namepace Kigkonsult\DsigSdk;
 ...
 include 'pathToSource/DsigSdk/autoload.php';
 ```
+
 
 #### Support
 
