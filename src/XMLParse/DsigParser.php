@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -35,14 +35,12 @@ use DOMNode;
 use InvalidArgumentException;
 use Kigkonsult\LoggerDepot\LoggerDepot;
 use Kigkonsult\DsigSdk\Dto\SignatureType;
-use Kigkonsult\DsigSdk\Dto\ManifestType;
-use Kigkonsult\DsigSdk\Dto\SignaturePropertiesType;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use XMLReader;
 
 use function count;
-use function file_exists;
 use function file_get_contents;
 use function libxml_clear_errors;
 use function libxml_get_errors;
@@ -62,15 +60,12 @@ class DsigParser extends DsigParserBase
      *
      * @param string $fileName
      * @param bool   $asDomNode
-     * @return SignatureType|ManifestType|SignaturePropertiesType|DOMNode
+     * @return SignatureType|DOMNode
      * @throws InvalidArgumentException
      * @throws Exception
      */
     public function parseXmlFromFile( $fileName, $asDomNode = false ) {
-        static $FMTerr1 = 'Error, can\' find %s';
-        if( ! file_exists( $fileName )) {
-            throw new InvalidArgumentException( sprintf( $FMTerr1, $fileName ));
-        }
+        CommonFactory::assertFileName( $fileName );
         self::assertIsValidXML( $fileName );
         $content = $this->getContentFromFile( $fileName );
         $this->logger->debug( 'Got content from ' . $fileName );
@@ -82,7 +77,7 @@ class DsigParser extends DsigParserBase
      *
      * @param string $xml
      * @param bool   $asDomNode
-     * @return SignatureType|ManifestType|SignaturePropertiesType|DOMNode
+     * @return SignatureType|DOMNode
      * @throws Exception
      */
     public function parseXmlFromString( $xml, $asDomNode = false ) {
@@ -118,42 +113,49 @@ class DsigParser extends DsigParserBase
      *
      * @param string $xml
      * @param bool   $asDomNode
-     * @return SignatureType|ManifestType|SignaturePropertiesType|DOMNode
-     * @throws RuntimeException
+     * @return SignatureType|DOMNode
      * @throws Exception
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     public function parse( $xml, $asDomNode = false ) {
         static $FMTerr1 = 'Error #%d parsing xml';
         static $FMTerr2 = 'Unknown xml root element \'%s\'';
         static $FMTerr3 = 'No xml root element found';
+        CommonFactory::assertString( $xml );
         $this->reader   = new XMLReader();
-        if( false === $this->reader->xml( $xml, null, self::$XMLReaderOptions )) {
-            throw new InvalidArgumentException( sprintf( $FMTerr1, 1 ));
-        }
+        $xmlInitError   = false;
         $loadEntities         = libxml_disable_entity_loader( true );
         $useInternalXmlErrors = libxml_use_internal_errors( true ); // enable user error handling
-        $result               = null;
-        while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-                );
-            }
-            switch( true ) {
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
-                    break;
-                case ( self::SIGNATURE == $this->reader->localName ) :
-                    if( $asDomNode ) {
-                        $result = $this->reader->expand();
-                        break 2;
-                    }
-                    $result = SignatureTypeParser::factory( $this->reader )->parse();
-                    break;
-                default :
-                    throw new RuntimeException( sprintf( $FMTerr2, $this->reader->localName ));
-                    break;
-            } // end switch
-        } // end while
+        if( false === $this->reader->xml( $xml, null, self::$XMLReaderOptions )) {
+            $xmlInitError     = true;
+        }
+        else {
+            $result = null;
+            while( @$this->reader->read() ) {
+                if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+                    $this->logger->debug(
+                        sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType],
+                                 $this->reader->localName
+                        )
+                    );
+                }
+                switch( true ) {
+                    case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                        break;
+                    case ( self::SIGNATURE == $this->reader->localName ) :
+                        if( $asDomNode ) {
+                            $result = $this->reader->expand();
+                            break 2;
+                        }
+                        $result = SignatureTypeParser::factory( $this->reader )->parse();
+                        break;
+                    default :
+                        throw new RuntimeException( sprintf( $FMTerr2, $this->reader->localName ) );
+                        break;
+                } // end switch
+            } // end while
+        } // end else
         $libxmlErrors = libxml_get_errors();
         libxml_disable_entity_loader( $loadEntities );
         libxml_use_internal_errors( $useInternalXmlErrors ); // disable user error handling
@@ -163,6 +165,9 @@ class DsigParser extends DsigParserBase
             if( self::LogLibxmlErrors( LoggerDepot::getLogger( get_class()), $libXarr )) {
                 throw new RuntimeException( sprintf( $FMTerr1, 2 ));
             }
+        }
+        if( $xmlInitError ) {
+            throw new InvalidArgumentException( sprintf( $FMTerr1, 1 ));
         }
         $this->reader->close();
         if( empty( $result )) {

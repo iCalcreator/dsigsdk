@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -48,7 +48,7 @@ class X509DataTypeWriter extends DsigWriterBase
         parent::SetWriterStartElement( $this->writer, self::X509DATA, $XMLattributes );
 
         foreach( $X509DataType->getX509DataTypes() as $X509DataType ) {
-            Foreach( $X509DataType as $key => $value ) {
+            foreach( $X509DataType as $key => $value ) {
                 switch( $key ) {
                     case self::X509ISSUERSERIAL :
                         X509IssuerSerialTypeWriter::factory( $this->writer )->write( $value );

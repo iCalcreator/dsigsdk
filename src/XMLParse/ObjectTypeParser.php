@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,7 +30,6 @@
  */
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\ManifestType;
 use Kigkonsult\DsigSdk\Dto\ObjectType;
 use XMLReader;
 
@@ -75,7 +74,7 @@ class ObjectTypeParser extends DsigParserBase
             return $objectType;
         }
         $headElement = $this->reader->localName;
-        $anyTypes    = [];
+        $objectTypes = [];
         while( @$this->reader->read()) {
             if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
                 $this->logger->debug(
@@ -91,21 +90,21 @@ class ObjectTypeParser extends DsigParserBase
                 case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
                     break;
                 case ( self::MANIFEST == $this->reader->localName ) :
-                    $anyTypes[] = [
+                    $objectTypes[] = [
                         self::MANIFEST => ManifestTypeParser::factory( $this->reader )->parse()
                     ];
                     break;
                 case ( self::SIGNATUREPROPERTIES == $this->reader->localName ) :
-                    $anyTypes[] = [
+                    $objectTypes[] = [
                         self::SIGNATUREPROPERTIES => SignaturePropertiesTypeParser::factory( $this->reader )->parse()
                     ];
                     break;
                 default :
-                    $anyTypes[] = [ self::ANYTYPE => AnyTypeParser::factory( $this->reader )->parse() ];
+                    $objectTypes[] = [ self::ANYTYPE => AnyTypeParser::factory( $this->reader )->parse() ];
                     break;
             }  // end switch
         } // end while
-        $objectType->setAny( $anyTypes );
+        $objectType->setObjectTypes( $objectTypes );
         return $objectType;
     }
 }

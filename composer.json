@@ -8,6 +8,7 @@
         "recomendation",
         "dsig",
         "sdk",
+        "algorithm",
         "cipher",
         "digest",
         "hash",
@@ -18,7 +19,7 @@
         "encrypt",
         "decrypt"
     ],
-    "time" : "2019-05-27",
+    "time" : "2019-05-29",
     "minimum-stability": "stable",
     "license": "LGPL-3.0-or-later",
     "homepage": "https://kigkonsult.se",

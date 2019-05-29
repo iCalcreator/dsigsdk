@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -29,6 +29,9 @@
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 namespace Kigkonsult\DsigSdk\Dto;
+
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 /**
  * Class PGPDataType
@@ -68,9 +71,10 @@ class PGPDataType extends DsigBase
     /**
      * @param string $PGPKeyID
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setPGPKeyID( $PGPKeyID ) {
-        $this->PGPKeyID = $PGPKeyID;
+        $this->PGPKeyID = CommonFactory::assertString( $PGPKeyID );
         return $this;
     }
 
@@ -84,9 +88,10 @@ class PGPDataType extends DsigBase
     /**
      * @param string $PGPKeyPacket
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setPGPKeyPacket( $PGPKeyPacket ) {
-        $this->PGPKeyPacket = $PGPKeyPacket;
+        $this->PGPKeyPacket = CommonFactory::assertString( $PGPKeyPacket );
         return $this;
     }
 

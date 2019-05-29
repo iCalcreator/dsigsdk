@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,6 +30,11 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
+
+use function is_array;
+use function sprintf;
 /**
  * Class KeyInfoType
  */
@@ -69,9 +74,48 @@ class KeyInfoType extends DsigBase
     /**
      * @param mixed[] $keyInfoType
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setKeyInfoType( array $keyInfoType ) {
-        $this->keyInfoType = $keyInfoType;
+        foreach( $keyInfoType as $ix => $element ) {
+            if( ! is_array( $element )) {
+                $element = [ $ix => $element ];
+            }
+            foreach( $element as $key => $value ) {
+                switch( $key ) {
+                    case self::KEYNAME :
+                        CommonFactory::assertString( $value );
+                        $this->keyInfoType[$ix] = $element;
+                        break;
+                        break;
+                    case self::KEYVALUE :
+                        $this->keyInfoType[$ix] = $element;
+                        break 2;
+                    case self::RETRIEVALMETHOD :
+                        $this->keyInfoType[$ix] = $element;
+                        break 2;
+                    case self::X509DATA :
+                        $this->keyInfoType[$ix] = $element;
+                        break 2;
+                    case self::PGPDATA :
+                        $this->keyInfoType[$ix] = $element;
+                        break 2;
+                    case self::SPKIDATA :
+                        $this->keyInfoType[$ix] = $element;
+                        break 2;
+                    case self::MGMTDATA :
+                        CommonFactory::assertString( $value );
+                        $this->keyInfoType[$ix] = $element;
+                        break 2;
+                    case self::ANYTYPE :
+                        $this->keyInfoType[$ix] = $element;
+                        break 2;
+                    default :
+                        throw new InvalidArgumentException( sprintf( self::$FMTERR1, self::KEYINFO, $ix, $key ));
+                        break;
+                } // end switch
+            } // end foreach
+        } // end foreach
         return $this;
     }
 
@@ -85,9 +129,10 @@ class KeyInfoType extends DsigBase
     /**
      * @param string $id
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setId( $id ) {
-        $this->id = $id;
+        $this->id = CommonFactory::assertString( $id );
         return $this;
     }
 

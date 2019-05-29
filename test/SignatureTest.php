@@ -8,7 +8,7 @@
  * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -33,7 +33,7 @@ use DOMNode;
 use Kigkonsult\DsigSdk\Dto\SignatureType;
 use Kigkonsult\DsigSdk\XMLParse\DsigParser;
 use Kigkonsult\DsigSdk\XMLWrite\DsigWriter;
-use Kigkonsult\DsigSdk\DsigLoader\SignatureType1;
+use Kigkonsult\DsigSdk\DsigLoader\SignatureType as SignatureType1;
 use Kigkonsult\DsigSdk\DsigLoader\SignatureType2;
 
 /**
@@ -49,7 +49,7 @@ class SignatureTest extends BaseTest
      */
     public function signatureTest2() {
 
-        echo PHP_EOL . ' START  ' . __FUNCTION__ . PHP_EOL;
+        echo PHP_EOL . ' START  (min) ' . __FUNCTION__ . PHP_EOL;
         $startTime  = microtime( true );               // ---- load
         $signature1 = SignatureType2::loadFromFaker();
         echo sprintf( '%s load time    : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
@@ -95,7 +95,7 @@ class SignatureTest extends BaseTest
      */
     public function signatureTest3() {
 
-        echo PHP_EOL . ' START  ' . __FUNCTION__ . PHP_EOL;
+        echo PHP_EOL . ' START (full) ' . __FUNCTION__ . PHP_EOL;
         $startTime  = microtime( true );               // ---- load
         $signature1 = SignatureType1::loadFromFaker();
         echo sprintf( '%s load time    : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
@@ -139,7 +139,7 @@ class SignatureTest extends BaseTest
      */
     public function signatureTest5() {
 
-        echo PHP_EOL . ' START  ' . __FUNCTION__ . PHP_EOL;
+        echo PHP_EOL . ' START (min+prefix) ' . __FUNCTION__ . PHP_EOL;
         $startTime  = microtime( true );               // ---- load
         $signature1 = SignatureType2::loadFromFaker();
         echo sprintf( '%s load time    : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
@@ -198,7 +198,7 @@ class SignatureTest extends BaseTest
      */
     public function signatureTest6() {
 
-        echo PHP_EOL . ' START  ' . __FUNCTION__ . PHP_EOL;
+        echo PHP_EOL . ' START  (domNode) ' . __FUNCTION__ . PHP_EOL;
         $signature = SignatureType2::loadFromFaker();
 
         $xml       = DsigWriter::factory()->write( $signature );

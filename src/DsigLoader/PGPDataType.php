@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -30,8 +30,9 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Kigkonsult\DsigSdk\Dto\PGPDataType as Dto;
 use Faker;
+use Kigkonsult\DsigSdk\Dto\PGPDataType as Dto;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 class PGPDataType
 {
@@ -51,13 +52,13 @@ class PGPDataType
         switch( $faker->numberBetween( 1, 2 )) {
             case 1 :
                 return Dto::factory()
-                          ->setPGPKeyID( $faker->sha256 )
-                          ->setPGPKeyPacket( $faker->sha256 )
+                          ->setPGPKeyID( CommonFactory::base64Encode( $faker->sha256 ))
+                          ->setPGPKeyPacket( CommonFactory::base64Encode( $faker->sha256 ))
                           ->setAny( $anys );
                 break;
             default :
                 return Dto::factory()
-                          ->setPGPKeyPacket( $faker->sha256 )
+                          ->setPGPKeyPacket( CommonFactory::base64Encode( $faker->sha256 ))
                           ->setAny( $anys );
                 break;
         }

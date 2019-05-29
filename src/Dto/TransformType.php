@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,6 +30,11 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
+
+use function is_array;
+use function sprintf;
 /**
  * Class TransformType
  */
@@ -59,9 +64,27 @@ class TransformType extends DsigBase
     /**
      * @param $transformTypes[]
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setTransformTypes( array $transformTypes ) {
-        $this->transformTypes = $transformTypes;
+        foreach( $transformTypes as $ix => $element ) {
+            if( ! is_array( $element )) {
+                $element = [ $ix => $element ];
+            }
+            foreach( $element as $key => $value ) {
+                switch( $key ) {
+                    case self::XPATH :
+                        $this->transformTypes[$ix][$key] = CommonFactory::assertString( $value );
+                        break 2;
+                    case self::ANYTYPE :
+                        $this->transformTypes[$ix][$key] = $value;
+                        break 2;
+                    default :
+                        throw new InvalidArgumentException( sprintf( self::$FMTERR1, self::TRANSFORM, $ix, $key ));
+                        break;
+                } // end switch
+            } // end foreach
+        } // end foreach
         return $this;
     }
 
@@ -75,9 +98,10 @@ class TransformType extends DsigBase
     /**
      * @param string $algorithm
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setAlgorithm( $algorithm ) {
-        $this->algorithm = $algorithm;
+        $this->algorithm = CommonFactory::assertString( $algorithm );
         return $this;
     }
 

@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,8 +30,9 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Kigkonsult\DsigSdk\Dto\ReferenceType as Dto;
 use Faker;
+use Kigkonsult\DsigSdk\Dto\ReferenceType as Dto;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 class ReferenceType
 {
@@ -45,8 +46,8 @@ class ReferenceType
         return Dto::factory()
             ->setTransforms( TransformsType::loadFromFaker())
             ->setDigestMethod( DigestMethodType::loadFromFaker())
-            ->setDigestValue( $faker->sha256 )
-            ->setId( $faker->sha256 )
+            ->setDigestValue( CommonFactory::base64Encode( $faker->sha256 ))
+            ->setId( CommonFactory::getSalt())
             ->setURI( $faker->url )
             ->setType( $faker->url );
 

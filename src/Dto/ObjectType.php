@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,6 +30,9 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
+
 /**
  * Class ObjectType
  */
@@ -41,7 +44,7 @@ class ObjectType extends DsigBase
      *            minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="lax"
      * @access protected
      */
-    protected $any = [];
+    protected $objectTypes = [];
 
     /**
      * @var string
@@ -69,16 +72,37 @@ class ObjectType extends DsigBase
     /**
      * @return Manifest|SignaturePropertiesType|AnyType[]
      */
-    public function getAny() {
-        return $this->any;
+    public function getObjectTypes() {
+        return $this->objectTypes;
     }
 
     /**
-     * @param Manifest|SignaturePropertiesType|AnyType[] $any
+     * @param Manifest|SignaturePropertiesType|AnyType[] $objectTypes
      * @return static
+     * @throws InvalidArgumentException
      */
-    public function setAny( array $any ) {
-        $this->any = $any;
+    public function setObjectTypes( array $objectTypes ) {
+        foreach( $objectTypes as $ix => $element ) {
+            if( ! is_array( $element )) {
+                $element = [ $ix => $element ];
+            }
+            foreach( $element as $key => $value ) {
+                switch( $key ) {
+                    case self::MANIFEST :
+                        $this->objectTypes[$ix] = $element;
+                        break 2;
+                    case self::SIGNATUREPROPERTIES :
+                        $this->objectTypes[$ix] = $element;
+                        break 2;
+                    case self::ANYTYPE :
+                        $this->objectTypes[$ix] = $element;
+                        break 2;
+                    default :
+                        throw new InvalidArgumentException( sprintf( self::$FMTERR1, self::KEYINFO, $ix, $key ));
+                        break;
+                } // end switch
+            } // end foreach
+        } // end foreach
         return $this;
     }
 
@@ -92,9 +116,10 @@ class ObjectType extends DsigBase
     /**
      * @param string $id
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setId( $id ) {
-        $this->id = $id;
+        $this->id = CommonFactory::assertString( $id );
         return $this;
     }
 
@@ -108,9 +133,10 @@ class ObjectType extends DsigBase
     /**
      * @param string $mimeType
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setMimeType( $mimeType ) {
-        $this->mimeType = $mimeType;
+        $this->mimeType = CommonFactory::assertString( $mimeType );
         return $this;
     }
 
@@ -124,9 +150,10 @@ class ObjectType extends DsigBase
     /**
      * @param string $encoding
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setEncoding( $encoding ) {
-        $this->encoding = $encoding;
+        $this->encoding = CommonFactory::assertString( $encoding );
         return $this;
     }
 

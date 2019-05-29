@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -29,6 +29,9 @@
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 namespace Kigkonsult\DsigSdk\Dto;
+
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 /**
  * Class ReferenceType
@@ -118,9 +121,10 @@ class ReferenceType extends DsigBase
     /**
      * @param string $digestValue
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setDigestValue( $digestValue ) {
-        $this->digestValue = $digestValue;
+        $this->digestValue = CommonFactory::assertString( $digestValue );
         return $this;
     }
 
@@ -134,9 +138,10 @@ class ReferenceType extends DsigBase
     /**
      * @param string $id
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setId( $id ) {
-        $this->id = $id;
+        $this->id = CommonFactory::assertString( $id );
         return $this;
     }
 
@@ -150,9 +155,10 @@ class ReferenceType extends DsigBase
     /**
      * @param string $URI
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setURI( $URI ) {
-        $this->URI = $URI;
+        $this->URI = CommonFactory::assertString( $URI );
         return $this;
     }
 
@@ -166,9 +172,10 @@ class ReferenceType extends DsigBase
     /**
      * @param string $type
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setType( $type ) {
-        $this->type = $type;
+        $this->type = CommonFactory::assertString( $type );
         return $this;
     }
 

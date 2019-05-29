@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -29,6 +29,9 @@
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 namespace Kigkonsult\DsigSdk\Dto;
+
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 /**
  * Class RSAKeyValueType
@@ -58,9 +61,10 @@ class RSAKeyValueType  extends DsigBase
     /**
      * @param string $modulus
      * @return RSAKeyValueType
+     * @throws InvalidArgumentException
      */
     public function setModulus( $modulus ) {
-        $this->modulus = $modulus;
+        $this->modulus = CommonFactory::assertString( $modulus );
         return $this;
     }
 
@@ -74,9 +78,10 @@ class RSAKeyValueType  extends DsigBase
     /**
      * @param string $exponent
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setExponent( $exponent ) {
-        $this->exponent = $exponent;
+        $this->exponent = CommonFactory::assertString( $exponent );
         return $this;
     }
 

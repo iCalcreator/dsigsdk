@@ -30,6 +30,9 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
+
 /**
  * Class DSAKeyValueType
  */
@@ -92,9 +95,10 @@ class DSAKeyValueType extends DsigBase
     /**
      * @param string $p
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setP( $p ) {
-        $this->p = $p;
+        $this->p = CommonFactory::assertString( $p );
         return $this;
     }
 
@@ -108,9 +112,10 @@ class DSAKeyValueType extends DsigBase
     /**
      * @param string $q
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setQ( $q ) {
-        $this->q = $q;
+        $this->q = CommonFactory::assertString( $q );
         return $this;
     }
 
@@ -124,9 +129,10 @@ class DSAKeyValueType extends DsigBase
     /**
      * @param string $g
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setG( $g ) {
-        $this->g = $g;
+        $this->g = CommonFactory::assertString( $g );
         return $this;
     }
 
@@ -140,9 +146,10 @@ class DSAKeyValueType extends DsigBase
     /**
      * @param string $y
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setY( $y ) {
-        $this->y = $y;
+        $this->y = CommonFactory::assertString( $y );
         return $this;
     }
 
@@ -156,9 +163,10 @@ class DSAKeyValueType extends DsigBase
     /**
      * @param string $j
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setJ( $j ) {
-        $this->j = $j;
+        $this->j = CommonFactory::assertString( $j );
         return $this;
     }
 
@@ -172,9 +180,10 @@ class DSAKeyValueType extends DsigBase
     /**
      * @param string $seed
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setSeed( $seed ) {
-        $this->seed = $seed;
+        $this->seed = CommonFactory::assertString( $seed );
         return $this;
     }
 
@@ -188,9 +197,10 @@ class DSAKeyValueType extends DsigBase
     /**
      * @param string $pgenCounter
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setPgenCounter( $pgenCounter ) {
-        $this->pgenCounter = $pgenCounter;
+        $this->pgenCounter = CommonFactory::assertString( $pgenCounter );
         return $this;
     }
 

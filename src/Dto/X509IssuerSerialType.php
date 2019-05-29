@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -29,6 +29,9 @@
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 namespace Kigkonsult\DsigSdk\Dto;
+
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 /**
  * Class X509IssuerSerialType
@@ -58,9 +61,10 @@ class X509IssuerSerialType extends DsigBase
     /**
      * @param string $X509IssuerName
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setX509IssuerName( $X509IssuerName ) {
-        $this->X509IssuerName = $X509IssuerName;
+        $this->X509IssuerName = CommonFactory::assertString( $X509IssuerName );
         return $this;
     }
 
@@ -74,9 +78,10 @@ class X509IssuerSerialType extends DsigBase
     /**
      * @param string $X509SerialNumber
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setX509SerialNumber( $X509SerialNumber ) {
-        $this->X509SerialNumber = $X509SerialNumber;
+        $this->X509SerialNumber = CommonFactory::assertString( $X509SerialNumber );
         return $this;
     }
 

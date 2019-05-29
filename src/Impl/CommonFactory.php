@@ -8,7 +8,7 @@
  * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -76,10 +76,12 @@ class CommonFactory extends ImplBase
      * @throws InvalidArgumentException
      * @return string
      */
-    public static function assertString( $data, $argIx = 1 ) {
-        static $FMT2 = 'String argument (#%d) expected, \'%s\' given.';
+    public static function assertString( $data, $argIx = null ) {
+        static $FMT1 = ' (argument #%d)';
+        static $FMT2 = 'String expected%s, \'%s\' given.';
         if( ! is_scalar( $data )) {
-            throw new InvalidArgumentException( sprintf( $FMT2, $argIx, gettype( $data )));
+            $argNoFmt = ( empty( $argIx )) ? null : sprintf( $FMT1, $argIx );
+            throw new InvalidArgumentException( sprintf( $FMT2, $argNoFmt, gettype( $data )));
         }
         return (string) $data;
     }

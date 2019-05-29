@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -29,6 +29,9 @@
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 namespace Kigkonsult\DsigSdk\Dto;
+
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 /**
  * Class SignatureValueType
@@ -61,9 +64,10 @@ class SignatureValueType extends DsigBase
     /**
      * @param string $signatureValueType
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setSignatureValueType( $signatureValueType ) {
-        $this->signatureValueType = $signatureValueType;
+        $this->signatureValueType = CommonFactory::assertString( $signatureValueType );
         return $this;
     }
 
@@ -77,9 +81,10 @@ class SignatureValueType extends DsigBase
     /**
      * @param string $id
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setId( $id ) {
-        $this->id = $id;
+        $this->id = CommonFactory::assertString( $id );
         return $this;
     }
 

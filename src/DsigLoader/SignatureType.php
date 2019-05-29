@@ -31,10 +31,16 @@
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
 use Faker;
-use Kigkonsult\DsigSdk\Dto\DSAKeyValueType as Dto;
+use Kigkonsult\DsigSdk\Dto\SignatureType as Dto;
 use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
-class DSAKeyValueType
+/**
+ * Class Signature
+ *
+ * schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
+ * namespace="http://www.w3.org/2000/09/xmldsig#"
+ */
+class SignatureType
 {
 
     /**
@@ -44,14 +50,17 @@ class DSAKeyValueType
     public static function loadFromFaker() {
         $faker = Faker\Factory::create();
 
+        $max = $faker->numberBetween( 1, 2 );
+        $objects = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            $objects[] = ObjectType::loadFromFaker();
+        }
         return Dto::factory()
-                  ->setP( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setQ( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setG( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setY( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setJ( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setSeed( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setPgenCounter( CommonFactory::base64Encode( $faker->sha256 ));
+                  ->setSignedInfo( SignedInfoType::loadFromFaker())
+                  ->setSignatureValue( SignatureValueType::loadFromFaker())
+                  ->setKeyInfo( KeyInfoType::loadFromFaker())
+                  ->setObject( $objects )
+                  ->setId( CommonFactory::getSalt());
     }
 
 }

@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -31,7 +31,6 @@
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\ObjectType;
-use Kigkonsult\DsigSdk\Dto\SignaturePropertiesType;
 
 /**
  * Class ObjectTypeWriter
@@ -51,7 +50,7 @@ class ObjectTypeWriter extends DsigWriterBase
         parent::writeAttribute( $this->writer, self::MIMETYPE, $objectType->getMimeType());
         parent::writeAttribute( $this->writer, self::ENCODING, $objectType->getEncoding());
 
-        foreach( $objectType->getAny() as $element ) {
+        foreach( $objectType->getObjectTypes() as $element ) {
             foreach( $element as $key => $value ) {
                 switch( $key ) {
                     case self::MANIFEST :

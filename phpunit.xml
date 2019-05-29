@@ -54,6 +54,7 @@
         <whitelist addUncoveredFilesFromWhitelist='true' processUncoveredFilesFromWhitelist="true">
             <file>./src/DsigBase.php</file>
             <file>./src/DsigInterface.php</file>
+            <file>./src/DsigIdentifiersInterface.php</file>
             <file>./src/XMLAttributesInterface.php</file>
             <file>./src/Dto/Any.php</file>
             <file>./src/Dto/AnyType.php</file>
@@ -139,7 +140,7 @@
             <file>./src/XMLWrite/ObjectTypeWriter.php</file>
             <file>./src/XMLWrite/PGPDataTypeWriter.php</file>
             <file>./src/XMLWrite/ReferenceTypeWriter.php</file>
-            <file>./src/XMLWrite/RetrievalMethodWriter.php</file>
+            <file>./src/XMLWrite/RetrievalMethodTypeWriter.php</file>
             <file>./src/XMLWrite/RSAKeyValueTypeWriter.php</file>
             <file>./src/XMLWrite/SignatureMethodTypeWriter.php</file>
             <file>./src/XMLWrite/SignaturePropertiesTypeWriter.php</file>

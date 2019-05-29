@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,13 +30,15 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Kigkonsult\DsigSdk\Dto\ObjectType as Dto;
 use Faker;
+use Kigkonsult\DsigSdk\DsigInterface;
+use Kigkonsult\DsigSdk\Dto\ObjectType as Dto;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 /**
  * Class ObjectType
  */
-class ObjectType
+class ObjectType implements DsigInterface
 {
 
     /**
@@ -46,18 +48,24 @@ class ObjectType
     public static function loadFromFaker() {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 2, 4 );
-        $anys = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            if( 1 == $faker->numberBetween( 1, 2 )) {
-                $anys[] = SignaturePropertiesType::loadFromFaker();
-                continue;
-            }
-            $anys[] = AnyType::loadFromFaker();
-        }
+        $max         = $faker->numberBetween( 4, 6 );
+        $objectTypes = [];
+        for( $x = 0; $x < $max; $x++ ) {
+            switch( $faker->numberBetween( 1, 3 )) {
+                case 1 :
+                    $objectTypes[] = [ self::MANIFEST => ManifestType::loadFromFaker() ];
+                    break;
+                case 2 :
+                    $objectTypes[] = [ self::SIGNATUREPROPERTIES => SignaturePropertiesType::loadFromFaker() ];
+                    break;
+                case 3 :
+                    $objectTypes[] = [ self::ANYTYPE => AnyType::loadFromFaker() ];
+                    break;
+            } // end switch
+        } // end foreach
         return Dto::factory()
-                  ->setAny( $anys )
-                  ->setId( $faker->sha256 )
+                  ->setObjectTypes( $objectTypes )
+                  ->setId( CommonFactory::getSalt())
                   ->setMimeType( $faker->mimeType )
                   ->setEncoding( 'UTF-8' );
 

@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,8 +30,9 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+// use Faker;
 use Kigkonsult\DsigSdk\Dto\SignedInfoType as Dto;
-use Faker;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 class SignedInfoType
 {
@@ -41,12 +42,12 @@ class SignedInfoType
      * @access static
      */
     public static function loadFromFaker() {
-        $faker = Faker\Factory::create();
+//        $faker = Faker\Factory::create();
 
         return Dto::factory()
             ->setCanonicalizationMethod( CanonicalizationMethodType::loadFromFaker())
             ->setSignatureMethod( SignatureMethodType::loadFromFaker())
-            ->setId( $faker->md5 );
+            ->setId( CommonFactory::getSalt());
 
     }
 

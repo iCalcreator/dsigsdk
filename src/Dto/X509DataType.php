@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -30,6 +30,11 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
+
+use function is_array;
+use function sprintf;
 /**
  * Class X509DataType
  */
@@ -59,9 +64,39 @@ class X509DataType extends DsigBase
     /**
      * @param mixed[] $X509DataTypes
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setX509DataTypes( array $X509DataTypes ) {
-        $this->X509DataTypes = $X509DataTypes;
+        foreach( $X509DataTypes as $ix => $element ) {
+            if( ! is_array( $element )) {
+                $element = [ $ix => $element ];
+            }
+            foreach( $element as $key => $value ) {
+                switch( $key ) {
+                    case self::X509ISSUERSERIAL :
+                        $this->X509DataTypes[$ix][$key] = $value;
+                        break 2;
+                    case self::X509SKI :
+                        $this->X509DataTypes[$ix][$key] = CommonFactory::assertString( $value );
+                        break 2;
+                    case self::X509SUBJECTNAME :
+                        $this->X509DataTypes[$ix][$key] = CommonFactory::assertString( $value );
+                        break 2;
+                    case self::X509CERTIFICATE :
+                        $this->X509DataTypes[$ix][$key] = CommonFactory::assertString( $value );
+                        break 2;
+                    case self::X509CRL :
+                        $this->X509DataTypes[$ix][$key] = CommonFactory::assertString( $value );
+                        break 2;
+                    case self::ANYTYPE :
+                        $this->X509DataTypes[$ix][$key] = $value;
+                        break 2;
+                    default :
+                        throw new InvalidArgumentException( sprintf( self::$FMTERR1, self::X509DATA, $ix, $key ));
+                        break;
+                } // end switch
+            } // end foreach
+        } // end foreach
         return $this;
     }
 

@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -29,6 +29,8 @@
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 namespace Kigkonsult\DsigSdk\Dto;
+
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 /**
  * Class AnyType
@@ -84,7 +86,7 @@ class AnyType extends DsigBase
      * @return static
      */
     public function setElementName( $elementName ) {
-        $this->elementName = $elementName;
+        $this->elementName = CommonFactory::assertString( $elementName );
         return $this;
     }
 
@@ -100,7 +102,10 @@ class AnyType extends DsigBase
      * @return static
      */
     public function setAttributes( array $attributes ) {
-        $this->attributes = $attributes;
+        foreach( $attributes as $key => $value ) {
+            CommonFactory::assertString( $key );
+            $this->attributes[$key] = CommonFactory::assertString( $value );
+        }
         return $this;
     }
 
@@ -116,7 +121,7 @@ class AnyType extends DsigBase
      * @return static
      */
     public function setContent( $content ) {
-        $this->content = $content;
+        $this->content = CommonFactory::assertString( $content );
         return $this;
     }
 

@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,6 +30,11 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
+
+use function is_array;
+use function sprintf;
 /**
  * Class SPKIDataType
  */
@@ -51,9 +56,34 @@ class SPKIDataType extends DsigBase
     /**
      * @param array $SPKIData
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setSPKIDataType( array $SPKIData ) {
-        $this->SPKIDataType = $SPKIData;
+        foreach( $SPKIData as $ix1 => $elementSet ) {
+            if( ! is_array( $elementSet )) {
+                $elementSet = [ $ix1 => $elementSet ];
+            }
+            foreach( $elementSet as $ix2 => $element ) {
+                if( ! is_array( $element )) {
+                    $element = [ $ix2 => $element ];
+                }
+                foreach( $element as $key => $value ) {
+                    switch( $key ) {
+                        case self::SPKISEXP :
+                            $this->SPKIDataType[$ix1][$ix2][$key] = CommonFactory::assertString( $value );
+                            break;
+                        case self::ANYTYPE :
+                            $this->SPKIDataType[$ix1][$ix2][$key] = $value;
+                            break 2;
+                        default :
+                            throw new InvalidArgumentException(
+                                sprintf( self::$FMTERR2, self::SPKIDATA, $ix1, $ix2, $key )
+                            );
+                            break;
+                    } // end switch
+                } // end foreach
+            } // end foreach
+        }
         return $this;
     }
 

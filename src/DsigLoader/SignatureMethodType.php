@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -49,7 +49,7 @@ class SignatureMethodType implements DsigInterface, DsigLoaderInterface
         for( $x = 0; $x <= $max; $x++ ) {
             $elementSet = [];
             if( 1 == $faker->numberBetween( 1, 2 )) {
-                $elementSet[] = [ self::HMACOUTPUTLENGTH => ( 8 * $faker->numberBetween( 11, 12 )) ];
+                $elementSet[] = [ self::HMACOUTPUTLENGTH => ( 8 * $faker->numberBetween( 11, 14 )) ];
             }
             $max2 = $faker->numberBetween( 0, 2 );
             for( $x2 = 0; $x2 < $max2; $x2++ ) {

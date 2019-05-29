@@ -8,7 +8,7 @@
  * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -196,6 +196,7 @@ class HmacHashFactory extends ImplBase
     public static function generate( $algorithm, $data, $secret, $rawOutput = false ) {
         $algorithm = self::assertAlgorithm( $algorithm );
         $data      = CommonFactory::assertString( $data, 2 );
+        CommonFactory::assertString(  $secret, 3 );
         return hash_hmac( $algorithm, $data, $secret, $rawOutput );
     }
 

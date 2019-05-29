@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -50,7 +50,7 @@ class KeyInfoTypeWriter extends DsigWriterBase
         parent::writeAttribute( $this->writer, self::ID, $keyInfoType->getId());
 
         foreach( $keyInfoType->getKeyInfoType() as $element ) {
-            Foreach( $element as $key => $value ) {
+            foreach( $element as $key => $value ) {
                 switch( $key ) {
                     case self::KEYNAME :
                         parent::SetWriterStartElement(

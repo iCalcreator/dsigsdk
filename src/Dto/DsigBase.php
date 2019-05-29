@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -30,7 +30,9 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use InvalidArgumentException;
 use Kigkonsult\DsigSdk\DsigInterface;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 use Kigkonsult\DsigSdk\XMLAttributesInterface;
 use XMLReader;
 
@@ -39,6 +41,12 @@ use XMLReader;
  */
 abstract class DsigBase implements DsigInterface, XMLAttributesInterface
 {
+
+    /**
+     * @var string
+     */
+    protected static $FMTERR1 = 'Unknown %s type #%s \'%s\'';
+    protected static $FMTERR2 = 'Unknown %s type #%s:%s \'%s\'';
 
     /**
      * @var array
@@ -73,9 +81,11 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      * @param string $value
      * @param bool   $propagateDown
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setXMLattribute( $key, $value, $propagateDown = false ) {
-        $this->XMLattributes[$key] = $value;
+        CommonFactory::assertString( $key );
+        $this->XMLattributes[$key] = CommonFactory::assertString( $value );
         if( $propagateDown ) {
             self::propagateDown( $this, $key, $value, false );
         }

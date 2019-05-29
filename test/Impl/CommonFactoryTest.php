@@ -8,7 +8,7 @@
  * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -31,13 +31,14 @@ namespace Kigkonsult\DsigSdk\Impl;
 
 use Exception;
 use Faker;
+use Kigkonsult\DsigSdk\DsigIdentifiersInterface;
 use Kigkonsult\DsigSdk\DsigInterface;
 use Kigkonsult\DsigSdk\BaseTest;
 
 /**
  * Class CommonFactoryTest
  */
-class CommonFactoryTest extends BaseTest implements DsigInterface
+class CommonFactoryTest extends BaseTest implements DsigInterface, DsigIdentifiersInterface
 {
     private static $FMT  = '%s Error in case #%d';
     private static $FMT2 = '%s Error in case #%d, expected %d, actual %d';
@@ -330,6 +331,8 @@ class CommonFactoryTest extends BaseTest implements DsigInterface
         return $dataArr;
     }
 
+    private static $FMT3  = '%s #%d, %s time : %01.6f testing on %d characters string';
+
 
     /** ***********************************************************************
      *  Base64
@@ -353,12 +356,10 @@ class CommonFactoryTest extends BaseTest implements DsigInterface
         $time2     = microtime( true ) - $startTime;
         if( 660 <= $case ) {
             echo sprintf(
-                    '%s #%d, encode time : %01.6f testing on %d characters string',
-                    self::getCm( __METHOD__ ), $case, $time1, strlen( $string )
+                self::$FMT3, self::getCm( __METHOD__ ), $case, 'encode', $time1, strlen( $string )
                 ) . PHP_EOL;
             echo sprintf(
-                    '%s #%d, decode time : %01.6f testing on %d characters string',
-                    self::getCm( __METHOD__ ), $case, $time2, strlen( $encoded )
+                self::$FMT3, self::getCm( __METHOD__ ), $case, 'decode', $time2, strlen( $encoded )
                 ) . PHP_EOL;
         }
         $this->assertEquals( $string, $decoded, sprintf( self::$FMT, self::getCm( __METHOD__ ), $case . 1 ));
@@ -412,14 +413,26 @@ class CommonFactoryTest extends BaseTest implements DsigInterface
     public function testHex( $case, $string ) {
         $case = 800 + $case;
 
-        $hex  = CommonFactory::strToHex( $string );
+        $startTime = microtime( true );
+        $hex       = CommonFactory::strToHex( $string );
+        $time1     = microtime( true ) - $startTime;
 
         $this->assertTrue(
             CommonFactory::isHex( $hex ),
             sprintf( self::$FMT, self::getCm( __METHOD__ ), $case . '1' )
         );
 
-        $string2 = CommonFactory::hexToStr( $hex );
+        $startTime = microtime( true );
+        $string2   = CommonFactory::hexToStr( $hex );
+        $time2     = microtime( true ) - $startTime;
+        if( 860 <= $case ) {
+            echo sprintf(
+                self::$FMT3, self::getCm( __METHOD__ ), $case, 'encode', $time1, strlen( $string )
+                ) . PHP_EOL;
+            echo sprintf(
+                self::$FMT3, self::getCm( __METHOD__ ), $case, 'decode', $time2, strlen( $hex )
+                ) . PHP_EOL;
+        }
 
         if( ! ctype_digit( $string2 )) {
             $this->assertFalse(
@@ -451,17 +464,23 @@ class CommonFactoryTest extends BaseTest implements DsigInterface
     public function testPackUnpack( $case, $string ) {
         static $FMT1 = ', input: %d, hex: %d, packed: %d, unpacked: %d, result: %d';
         $case = 900 + $case;
-        $startTime = microtime( true );
         $hex       = CommonFactory::strToHex( $string );
+
+        $startTime = microtime( true );
         $packed    = CommonFactory::Hpach( $hex );
+        $time1     = microtime( true ) - $startTime;
+
+        $startTime = microtime( true );
         $unPacked  = CommonFactory::HunPach( $packed );
+        $time2     = microtime( true ) - $startTime;
+
         $result    = CommonFactory::hexToStr( $unPacked );
         if( 960 <= $case ) {
             echo sprintf(
-                    '%s exec time : %01.6f testing on %d characters string',
-                    self::getCm( __METHOD__ ),
-                    microtime( true ) - $startTime,
-                    strlen( $string )
+                self::$FMT3, self::getCm( __METHOD__ ), $case, 'encode', $time1, strlen( $hex )
+                ) . PHP_EOL;
+            echo sprintf(
+                self::$FMT3, self::getCm( __METHOD__ ), $case, 'decode', $time2, strlen( $packed )
                 ) . PHP_EOL;
         }
 

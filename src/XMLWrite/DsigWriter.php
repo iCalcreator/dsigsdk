@@ -31,9 +31,7 @@
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\DsigBase;
-use Kigkonsult\DsigSdk\Dto\ManifestType;
 use Kigkonsult\DsigSdk\Dto\SignatureType;
-use Kigkonsult\DsigSdk\Dto\SignaturePropertiesType;
 use XMLWriter;
 use InvalidArgumentException;
 

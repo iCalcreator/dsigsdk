@@ -42,12 +42,7 @@ namespace Kigkonsult\DsigSdk\Impl;
 
 use InvalidArgumentException;
 
-use function clearstatcache;
-use function gettype;
 use function in_array;
-use function is_file;
-use function is_readable;
-use function is_scalar;
 use function sprintf;
 
 

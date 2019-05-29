@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,6 +30,12 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
+
+use function ctype_digit;
+use function is_array;
+use function sprintf;
 /**
  * Class SignatureMethodType
  */
@@ -61,9 +67,45 @@ class SignatureMethodType extends DsigBase
     /**
      * @param array $signatureMethodTypes
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setSignatureMethodTypes( array $signatureMethodTypes ) {
-        $this->signatureMethodTypes = $signatureMethodTypes;
+        static $FMTERR2 = 'Invalid %s %s value \'%s\'';
+        foreach( $signatureMethodTypes as $ix1 => $elementSet ) {
+            if( ! is_array( $elementSet )) {
+                $elementSet = [ $ix1 => $elementSet ];
+            }
+            foreach( $elementSet as $ix2 => $element ) {
+                if( ! is_array( $element )) {
+                    $element = [ $ix2 => $element ];
+                }
+                foreach( $element as $key => $value ) {
+                    switch( $key ) {
+                        case self::HMACOUTPUTLENGTH :
+                            if( ! ctype_digit((string) $value )) {
+                                throw new InvalidArgumentException(
+                                    sprintf(
+                                        $FMTERR2,
+                                        self::SIGNATUREMETHOD,
+                                        self::HMACOUTPUTLENGTH,
+                                        $value
+                                    )
+                                );
+                            }
+                            $this->signatureMethodTypes[$ix1][$ix2][$key] = $value;
+                            break 2;
+                        case  self::ANYTYPE :
+                            $this->signatureMethodTypes[$ix1][$ix2][$key] = $value;
+                            break 2;
+                        default :
+                            throw new InvalidArgumentException(
+                                sprintf( self::$FMTERR2, self::SIGNATUREMETHOD, $ix1, $ix2, $key )
+                            );
+                            break;
+                    } // end switch
+                } // end foreach
+            } // end foreach
+        } // end foreach
         return $this;
     }
 
@@ -77,9 +119,10 @@ class SignatureMethodType extends DsigBase
     /**
      * @param string $algorithm
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setAlgorithm( $algorithm ) {
-        $this->algorithm = $algorithm;
+        $this->algorithm = CommonFactory::assertString( $algorithm );
         return $this;
     }
 

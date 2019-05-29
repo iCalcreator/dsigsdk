@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,9 +30,10 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Faker;
 use Kigkonsult\DsigSdk\Dto\SPKIDataType as Dto;
 use Kigkonsult\DsigSdk\DsigInterface;
-use Faker;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 class SPKIDataType implements DsigInterface
 {
@@ -47,7 +48,7 @@ class SPKIDataType implements DsigInterface
         $max = $faker->numberBetween( 1, 2 );
         $SPKIDataTypes = [];
         for( $x = 0; $x <= $max; $x++ ) {
-            $SPKIDataTypes[$x][] = [ self::SPKISEXP => $faker->numberBetween( 1, 3 ) ];
+            $SPKIDataTypes[$x][] = [ self::SPKISEXP => CommonFactory::base64Encode( $faker->sha256 ) ];
             $SPKIDataTypes[$x][] = [ self::ANYTYPE  => AnyType::loadFromFaker() ];
         }
         return Dto::factory()

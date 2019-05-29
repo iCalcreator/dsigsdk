@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -30,9 +30,10 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Faker;
 use Kigkonsult\DsigSdk\DsigInterface;
 use Kigkonsult\DsigSdk\Dto\X509DataType as Dto;
-use Faker;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 class X509DataType  implements DsigInterface
 {
@@ -47,10 +48,10 @@ class X509DataType  implements DsigInterface
         return Dto::factory()
                   ->setX509DataTypes( [
                       [ self::X509ISSUERSERIAL => X509IssuerSerialType::loadFromFaker() ],
-                      [ self::X509SKI          => $faker->sha256 ],
+                      [ self::X509SKI          => CommonFactory::base64Encode( $faker->sha256 ) ],
                       [ self::X509SUBJECTNAME  => $faker->company ],
-                      [ self::X509CERTIFICATE  => $faker->sha256 ],
-                      [ self::X509CRL          => $faker->sha256 ],
+                      [ self::X509CERTIFICATE  => CommonFactory::base64Encode( $faker->sha256 ) ],
+                      [ self::X509CRL          => CommonFactory::base64Encode( $faker->sha256 ) ],
                       [ self::ANYTYPE          => AnyType::loadFromFaker() ],
                   ] );
     }

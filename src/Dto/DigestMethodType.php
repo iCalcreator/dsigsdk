@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial 
@@ -29,6 +29,9 @@
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 namespace Kigkonsult\DsigSdk\Dto;
+
+use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
 /**
  * Class DigestMethodType
@@ -77,9 +80,10 @@ class DigestMethodType extends DsigBase
     /**
      * @param string $algorithm
      * @return static
+     * @throws InvalidArgumentException
      */
     public function setAlgorithm( $algorithm ) {
-        $this->algorithm = $algorithm;
+        $this->algorithm = CommonFactory::assertString( $algorithm );
         return $this;
     }
 
