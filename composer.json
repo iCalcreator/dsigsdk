@@ -23,15 +23,21 @@
     "minimum-stability": "stable",
     "license": "LGPL-3.0-or-later",
     "homepage": "https://kigkonsult.se",
-    "support": {
-        "issues": "https://github.com/iCalcreator/dsigsdk/issues"
-    },
     "authors": [
         {
             "name": "Kjell-Inge Gustafsson",
             "email": "ical@kigkonsult.se"
         }
     ],
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://paypal.me/kigkonsult"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/iCalcreator/dsigsdk/issues"
+    },
     "autoload": {
         "files": ["autoload.php"],
         "psr-4": { "Kigkonsult\\DsigSdk\\": ["src/"] }
