@@ -1,6 +1,6 @@
 ## DsigSdk
 
-* PHP SDK of XML Digital Signature recomendation 
+* PHP SDK of XML Digital Signature recommendation 
 * based on the [XSD] schema 
 
 and provide
@@ -16,12 +16,6 @@ and provide
   * [src/XMLWrite/DsigWriter::write](src/XMLWrite/DsigWriter.php)
   
 * logic aid support
-  * [src/Impl](src/Impl)
-    * [common](src/Impl/Common.md) : convenient salt, base64, hex, pack etc unility methods
-    * [Hash](src/Impl/Hash.md) : message digest support
-    * [HmacHash](src/Impl/HmacHash.md) : message hmac digest support
-    * [OpenSSL](src/Impl/OpenSSL.md) : encryption/decryption support
-    * [Misc](src/Impl/Misc.md)
 
 For help finding a good PHP cryptography library, please review 
 * [Choosing the Right Cryptography Library for your PHP Project: A Guide ](https://paragonie.com/blog/2015/11/choosing-right-cryptography-library-for-your-php-project-guide)
@@ -76,7 +70,7 @@ $dsig = SignatureType::factory()
                              ->setContent( 'Lr1mKGxP7VAgMB...' ),
                         AnyType::factory()
                             ->setElementName( 'nonSchemaElement2')
-                            ->setSubElements( [
+                            ->setAny( [
                                 AnyType::factory()
                                     ->setElementName( 'nonSchemaElement3')
                                     ->setContent( 'Lr1mKGxP7VAgMB...' ),
@@ -162,8 +156,8 @@ Note, an AnyType instance may have
 or
 * sub-elements 
   * type array [*AnyType]
-  * AnyType::setSubElements()
-  * AnyType::getSubElements()
+  * AnyType::setAny()
+  * AnyType::getAny()
 
 but not both.
 

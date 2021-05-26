@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -30,6 +30,8 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Class SignaturePropertiesType
  *
@@ -58,6 +60,7 @@ class SignaturePropertiesType extends DsigBase
      * @return static
      */
     public function setSignatureProperty( array $signatureProperty ) {
+        Assert::allIsInstanceOf( $signatureProperty, parent::getNs() . self::SIGNATUREPROPERTY . parent::$TYPE  );
         $this->signatureProperty = $signatureProperty;
         return $this;
     }

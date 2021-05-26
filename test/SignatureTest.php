@@ -30,17 +30,87 @@
 namespace Kigkonsult\DsigSdk;
 
 use DOMNode;
+use Katzgrau\KLogger\Logger as KLogger;
 use Kigkonsult\DsigSdk\Dto\SignatureType;
 use Kigkonsult\DsigSdk\XMLParse\DsigParser;
 use Kigkonsult\DsigSdk\XMLWrite\DsigWriter;
 use Kigkonsult\DsigSdk\DsigLoader\SignatureType as SignatureType1;
 use Kigkonsult\DsigSdk\DsigLoader\SignatureType2;
+use Kigkonsult\LoggerDepot\LoggerDepot;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\LogLevel;
+use Psr\Log\NullLogger;
+
 
 /**
  * Class SignatureTest
  */
-class SignatureTest extends BaseTest
+class SignatureTest extends TestCase
 {
+
+    /**
+     * const int
+     */
+    const XMLReaderOptions = LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NSCLEAN | LIBXML_HTML_NODEFDTD;
+
+    public static $SieXMLAttributes = [
+        'xmlns:xsi'          => "http://www.w3.org/2001/XMLSchema-instance",
+        'xmlns:xsd'          => "http://www.w3.org/2001/XMLSchema",
+        'xsi:schemaLocation' => "http://www.sie.se/sie5 http://www.sie.se/sie5.xsd",
+        'xmlns'              => "http://www.sie.se/sie5"
+    ];
+
+    public static $DsigXMLAttributes = [
+        'xmlns' => "http://www.w3.org/2000/09/xmldsig#"
+    ];
+
+    public static function getCm( $name ) {
+        return substr( $name, ( strrpos($name,  '\\' ) + 1 ));
+    }
+
+    public static function getBasePath() {
+        $dir0 = $dir = __DIR__;
+        $level = 6;
+        while( ! is_dir( $dir . DIRECTORY_SEPARATOR . 'test' )) {
+            $dir = realpath( __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR );
+            if( false == $dir ) {
+                $dir = $dir0;
+                break;
+            }
+            $level -= 1;
+            if( empty( $level )) {
+                $dir = $dir0;
+                break;
+            }
+        }
+        return $dir . DIRECTORY_SEPARATOR;
+    }
+
+    public static function setUpBeforeClass() {
+        if( defined( 'LOG' ) && ( false !== LOG )) {
+            $basePath = self::getBasePath() . LOG . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
+            $fileName = self::getCm( get_called_class()) . '.log';
+            file_put_contents( $basePath . $fileName, '' ); // empty if exists
+            $logger   = new KLogger(
+                $basePath,
+                LogLevel::DEBUG,
+                [ 'filename' => $fileName ]
+            );
+        }
+        else {
+            $logger = new NullLogger();
+        }
+        $key = __NAMESPACE__;
+        if( ! LoggerDepot::isLoggerSet( $key )) {
+            LoggerDepot::registerLogger( $key, $logger );
+        }
+    }
+
+    public static function tearDownAfterClass() {
+        foreach( LoggerDepot::getLoggerKeys() as $key ) {
+            LoggerDepot::unregisterLogger( $key );
+        }
+    }
 
     /**
      * Create minimal sie-instance loaded with Faker-data, write xml1 and parse again, write xml2 and compare
@@ -65,7 +135,9 @@ class SignatureTest extends BaseTest
         echo sprintf( '%s write time 1 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
-            file_put_contents( SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '1.xml', $xml1 );
+            $fileName1 = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '1.xml';
+            touch( $fileName1 );
+            file_put_contents( $fileName1, $xml1 );
         }
 
         $startTime  = microtime( true );               // ---- parse XML
@@ -78,7 +150,9 @@ class SignatureTest extends BaseTest
         echo sprintf( '%s write time 2 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
-            file_put_contents( SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '2.xml', $xml2 );
+            $fileName2 = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '2.xml';
+            touch( $fileName2 );
+            file_put_contents( $fileName2, $xml2 );
         }
         $this->assertXmlStringEqualsXmlString(
             $xml1,
@@ -110,7 +184,9 @@ class SignatureTest extends BaseTest
         echo sprintf( '%s write time 1 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
-            file_put_contents( SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '.xml', $xml1 );
+            $fileName1 = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '1.xml';
+            touch( $fileName1 );
+            file_put_contents( $fileName1, $xml1 );
         }
 
         $startTime  = microtime( true );               // ---- parse XML
@@ -128,7 +204,9 @@ class SignatureTest extends BaseTest
 
         );
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
-            file_put_contents( SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '.xml', $xml2 );
+            $fileName2 = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '2.xml';
+            touch( $fileName2 );
+            file_put_contents( $fileName2, $xml2 );
         }
     }
 
@@ -154,7 +232,9 @@ class SignatureTest extends BaseTest
         echo sprintf( '%s write time 1 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
-            file_put_contents( SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '1.xml', $xml1 );
+            $fileName1 = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '1.xml';
+            touch( $fileName1 );
+            file_put_contents( $fileName1, $xml1 );
         }
 
         $startTime  = microtime( true );               // ---- parse XML
@@ -181,7 +261,9 @@ class SignatureTest extends BaseTest
         echo sprintf( '%s write time 2 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
-            file_put_contents( SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '2.xml', $xml2 );
+            $fileName2 = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '2.xml';
+            touch( $fileName2 );
+            file_put_contents( $fileName2, $xml2 );
         }
         $this->assertTrue(
             2 < substr_count( $xml2, 'dsig:' ),
@@ -203,7 +285,9 @@ class SignatureTest extends BaseTest
 
         $xml       = DsigWriter::factory()->write( $signature );
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
-            file_put_contents( SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '.xml', $xml );
+            $fileName = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '1.xml';
+            touch( $fileName );
+            file_put_contents( $fileName, $xml );
         }
 
         $domNode   = DsigParser::factory()->parse( $xml, true );

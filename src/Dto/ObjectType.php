@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -31,7 +31,7 @@
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Webmozart\Assert\Assert;
 
 /**
  * Class ObjectType
@@ -47,11 +47,11 @@ class ObjectType extends DsigBase
     protected $objectTypes = [];
 
     /**
-     * @var string
+     * Property, get- and setter methods for
+     * var string id
      *            attribute name="Id" type="ID" use="optional"
-     * @access protected
      */
-    protected $id = null;
+    use Traits\IdTrait;
 
     /**
      * @var string
@@ -87,14 +87,18 @@ class ObjectType extends DsigBase
                 $element = [ $ix => $element ];
             }
             foreach( $element as $key => $value ) {
+                Assert::string( $key );
                 switch( $key ) {
                     case self::MANIFEST :
+                        Assert::isInstanceOf( $value, parent::getNs() . self::MANIFEST . parent::$TYPE  );
                         $this->objectTypes[$ix] = $element;
                         break 2;
                     case self::SIGNATUREPROPERTIES :
+                        Assert::isInstanceOf( $value, parent::getNs() . self::SIGNATUREPROPERTIES . parent::$TYPE  );
                         $this->objectTypes[$ix] = $element;
                         break 2;
                     case self::ANYTYPE :
+                        Assert::isInstanceOf( $value, parent::getNs() . self::ANYTYPE );
                         $this->objectTypes[$ix] = $element;
                         break 2;
                     default :
@@ -103,23 +107,6 @@ class ObjectType extends DsigBase
                 } // end switch
             } // end foreach
         } // end foreach
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId() {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     * @return static
-     * @throws InvalidArgumentException
-     */
-    public function setId( $id ) {
-        $this->id = CommonFactory::assertString( $id );
         return $this;
     }
 
@@ -136,7 +123,8 @@ class ObjectType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setMimeType( $mimeType ) {
-        $this->mimeType = CommonFactory::assertString( $mimeType );
+        Assert::string( $mimeType );
+        $this->mimeType = $mimeType;
         return $this;
     }
 
@@ -153,7 +141,8 @@ class ObjectType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setEncoding( $encoding ) {
-        $this->encoding = CommonFactory::assertString( $encoding );
+        Assert::string( $encoding );
+        $this->encoding = $encoding;
         return $this;
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -30,9 +30,6 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
-use InvalidArgumentException;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
-
 /**
  * Class CanonicalizationMethodType
  */
@@ -40,52 +37,18 @@ class CanonicalizationMethodType extends DsigBase
 {
 
     /**
-     * @var AnyType[]
+     * Property, get- and setter methods
+     * var AnyType[]  any
      *            minOccurs="0" maxOccurs="unbounded"
-     * @access protected
      */
-    protected $any = [];
+    use Traits\AnyTypesTrait;
+
 
     /**
-     * @var string
+     * Property, get- and setter methods for
+     * var string algorithm
      *            attribute name="Algorithm" type="anyURI" use="required"
-     * @access protected
      */
-    protected $algorithm = null;
-
-
-    /**
-     * @return AnyType[]
-     */
-    public function getAny() {
-        return $this->any;
-    }
-
-    /**
-     * @param AnyType[] $any
-     * @return static
-     */
-    public function setAny( array $any ) {
-        $this->any = $any;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAlgorithm() {
-        return $this->algorithm;
-    }
-
-    /**
-     * @param string $algorithm
-     * @return static
-     * @throws InvalidArgumentException
-     */
-    public function setAlgorithm( $algorithm ) {
-        $this->algorithm = CommonFactory::assertString( $algorithm );
-        return $this;
-    }
-
+    use Traits\AlgorithmTrait;
 
 }

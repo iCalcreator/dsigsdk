@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -31,7 +31,7 @@
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Webmozart\Assert\Assert;
 
 /**
  * Class ReferenceType
@@ -59,25 +59,25 @@ class ReferenceType extends DsigBase
     protected $digestValue = null;
 
     /**
-     * @var string
+     * Property, get- and setter methods for
+     * var string id
      *            attribute name="Id" type="ID" use="optional"
-     * @access protected
      */
-    protected $id = null;
+    use Traits\IdTrait;
 
     /**
-     * @var string
+     * Property, get- and setter methods for
+     * var string type
      *            attribute name="URI" type="anyURI" use="optional"
-     * @access protected
      */
-    protected $URI = null;
+    use Traits\URITrait;
 
     /**
-     * @var string
+     * Property, get- and setter methods for
+     * var string type
      *            attribute name="Type" type="anyURI" use="optional"
-     * @access protected
      */
-    protected $type = null;
+    use Traits\TypeTrait;
 
     /**
      * @return TransformsType
@@ -124,58 +124,8 @@ class ReferenceType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setDigestValue( $digestValue ) {
-        $this->digestValue = CommonFactory::assertString( $digestValue );
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId() {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     * @return static
-     * @throws InvalidArgumentException
-     */
-    public function setId( $id ) {
-        $this->id = CommonFactory::assertString( $id );
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getURI() {
-        return $this->URI;
-    }
-
-    /**
-     * @param string $URI
-     * @return static
-     * @throws InvalidArgumentException
-     */
-    public function setURI( $URI ) {
-        $this->URI = CommonFactory::assertString( $URI );
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType() {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     * @return static
-     * @throws InvalidArgumentException
-     */
-    public function setType( $type ) {
-        $this->type = CommonFactory::assertString( $type );
+        Assert::string( $digestValue );
+        $this->digestValue = $digestValue;
         return $this;
     }
 

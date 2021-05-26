@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- DsigSdk   the PHP XML Digital Signature recomendation SDK,
+ DsigSdk   the PHP XML Digital Signature recommendation SDK,
            source http://www.w3.org/2000/09/xmldsig#
 
  Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
@@ -40,14 +40,6 @@
     <testsuites>
         <testsuite name="Dsig Dto Tests">
             <file>./test/SignatureTest.php</file>
-        </testsuite>
-        <testsuite name="Impl Tests">
-            <file>./test/Impl/CommonFactoryTest.php</file>
-            <file>./test/Impl/HashFactoryTest.php</file>
-            <file>./test/Impl/HmacHashFactoryTest.php</file>
-            <file>./test/Impl/PKCSFactoryTest.php</file>
-            <file>./test/Impl/OpenSSLBaseTest.php</file>
-            <file>./test/Impl/OpenSSLFactoryTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
@@ -99,9 +91,15 @@
             <file>./src/Dto/Transforms.php</file>
             <file>./src/Dto/TransformsType.php</file>
             <file>./src/Dto/TransformType.php</file>
+            <file>./src/Dto/Util.php</file>
             <file>./src/Dto/X509Data.php</file>
             <file>./src/Dto/X509DataType.php</file>
             <file>./src/Dto/X509IssuerSerialType.php</file>
+            <file>./src/Dto/Traits/AlgorithmTrait.php</file>
+            <file>./src/Dto/Traits/AnyTypesTrait.php</file>
+            <file>./src/Dto/Traits/IdTrait.php</file>
+            <file>./src/Dto/Traits/TypeTrait.php</file>
+            <file>./src/Dto/Traits/URITrait.php</file>
             <file>./src/XMLParse/AnyTypeParser.php</file>
             <file>./src/XMLParse/CanonicalizationMethodTypeParser.php</file>
             <file>./src/XMLParse/DigestMethodTypeParser.php</file>
@@ -110,7 +108,6 @@
             <file>./src/XMLParse/DsigParserBase.php</file>
             <file>./src/XMLParse/KeyInfoTypeParser.php</file>
             <file>./src/XMLParse/KeyValueTypeParser.php</file>
-            <file>./src/XMLParse/LibXmlUtilTrait.php</file>
             <file>./src/XMLParse/ManifestTypeParser.php</file>
             <file>./src/XMLParse/ObjectTypeParser.php</file>
             <file>./src/XMLParse/PGPDataTypeParser.php</file>
@@ -153,15 +150,6 @@
             <file>./src/XMLWrite/TransformTypeWriter.php</file>
             <file>./src/XMLWrite/X509DataTypeWriter.php</file>
             <file>./src/XMLWrite/X509IssuerSerialTypeWriter.php</file>
-            <file>./src/Impl/ImplBase.php</file>
-            <file>./src/Impl/CommonFactory.php</file>
-            <file>./src/Impl/HashFactory.php</file>
-            <file>./src/Impl/HmacHashFactory.php</file>
-            <file>./src/Impl/OpenSSLInterface.php</file>
-            <file>./src/Impl/OpenSSLBase.php</file>
-            <file>./src/Impl/OpenSSLFactory.php</file>
-            <file>./src/Impl/PhpErrorException.php</file>
-            <file>./src/Impl/PKCSFactory.php</file>
         </whitelist>
     </filter>
   <logging>
@@ -198,21 +186,5 @@
             if SAVEXML set, will save xml-result from test in "testDocs", named '__FUNCTION__'.xml
         -->
         <const name="SAVEXML" value="testDocs"/>
-        <!-- OpenSSLFactory encrypt/decrypt tests only, OPENSSLMODE (default 0)
-             0 : cipher algorithm 'aes-256-ctr' - default  +  md (hash) 'sha256' - default
-             1 : cipher algorithm 'aes-256-ctr'            +  All md algorithms (excl aliases)
-             2 : cipher algorithm 'aes-256-ctr'            +  All md algorithms (incl aliases)
-             3 : ALL cipher algorithms (excl aliases)      +  md (hash) 'sha256'
-             4 : ALL cipher algorithms (excl aliases)      +  All md algorithms (excl aliases)
-             5 : ALL cipher algorithms (excl aliases)      +  All md algorithms (incl aliases)
-             6 : ALL cipher algorithms (incl aliases)      +  md (hash) 'sha256'
-             7 : ALL cipher algorithms (1ncl aliases)      +  All md algorithms (excl aliases)
-             8 : ALL cipher algorithms (1ncl aliases)      +  All md algorithms (incl aliases)
-             If LOG is set, statistics (aside from LOG above) are saved in (in LOG dir)
-                    cipherAndMdOk.txt
-                    cipherEncryptErrors.txt
-                    cipherDecryptErrors.txt
-        -->
-        <const name="OPENSSLMODE" value="0"/>
     </php>
 </phpunit>

@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK,
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -31,7 +31,7 @@
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Webmozart\Assert\Assert;
 
 use function is_array;
 use function sprintf;
@@ -72,23 +72,30 @@ class X509DataType extends DsigBase
                 $element = [ $ix => $element ];
             }
             foreach( $element as $key => $value ) {
+                Assert::string( $key );
                 switch( $key ) {
                     case self::X509ISSUERSERIAL :
+                        Assert::isInstanceOf( $value, parent::getNs() . self::X509ISSUERSERIAL . parent::$TYPE  );
                         $this->X509DataTypes[$ix][$key] = $value;
                         break 2;
                     case self::X509SKI :
-                        $this->X509DataTypes[$ix][$key] = CommonFactory::assertString( $value );
+                        Assert::string( $value );
+                        $this->X509DataTypes[$ix][$key] = $value;
                         break 2;
                     case self::X509SUBJECTNAME :
-                        $this->X509DataTypes[$ix][$key] = CommonFactory::assertString( $value );
+                        Assert::string( $value );
+                        $this->X509DataTypes[$ix][$key] = $value;
                         break 2;
                     case self::X509CERTIFICATE :
-                        $this->X509DataTypes[$ix][$key] = CommonFactory::assertString( $value );
+                        Assert::string( $value );
+                        $this->X509DataTypes[$ix][$key] = $value;
                         break 2;
                     case self::X509CRL :
-                        $this->X509DataTypes[$ix][$key] = CommonFactory::assertString( $value );
+                        Assert::string( $value );
+                        $this->X509DataTypes[$ix][$key] = $value;
                         break 2;
                     case self::ANYTYPE :
+                        Assert::isInstanceOf( $value, parent::getNs() . self::ANYTYPE );
                         $this->X509DataTypes[$ix][$key] = $value;
                         break 2;
                     default :

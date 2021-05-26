@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK,
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -31,7 +31,7 @@
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Webmozart\Assert\Assert;
 
 /**
  * Class PGPDataType
@@ -54,12 +54,12 @@ class PGPDataType extends DsigBase
     protected $PGPKeyPacket = null;
 
     /**
-     * @var AnyType[]
-     *            namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"
-     *             choice op 1 and 2
-     * @access protected
+     * Property, get- and setter methods
+     * var AnyType[]  any
+     *              namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"
+     *              choice op 1 and 2
      */
-    protected $any = [];
+    use Traits\AnyTypesTrait;
 
     /**
      * @return string
@@ -74,7 +74,8 @@ class PGPDataType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setPGPKeyID( $PGPKeyID ) {
-        $this->PGPKeyID = CommonFactory::assertString( $PGPKeyID );
+        Assert::string( $PGPKeyID );
+        $this->PGPKeyID = $PGPKeyID;
         return $this;
     }
 
@@ -91,23 +92,8 @@ class PGPDataType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setPGPKeyPacket( $PGPKeyPacket ) {
-        $this->PGPKeyPacket = CommonFactory::assertString( $PGPKeyPacket );
-        return $this;
-    }
-
-    /**
-     * @return AnyType[]
-     */
-    public function getAny() {
-        return $this->any;
-    }
-
-    /**
-     * @param AnyType[] $any
-     * @return static
-     */
-    public function setAny( array $any ) {
-        $this->any = $any;
+        Assert::string( $PGPKeyPacket );
+        $this->PGPKeyPacket = $PGPKeyPacket;
         return $this;
     }
 

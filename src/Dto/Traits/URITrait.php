@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -28,12 +28,37 @@
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace Kigkonsult\DsigSdk\Dto;
+namespace Kigkonsult\DsigSdk\Dto\Traits;
 
-/**
- * Class Transform
- */
-class Transform extends TransformType
+use InvalidArgumentException;
+use Webmozart\Assert\Assert;
+
+trait URITrait
 {
+    /**
+     * @var string
+     *            type="anyURI"
+     * @access protected
+     */
+    protected $URI = null;
+
+
+    /**
+     * @return string
+     */
+    public function getURI() {
+        return $this->URI;
+    }
+
+    /**
+     * @param string $URI
+     * @return static
+     * @throws InvalidArgumentException
+     */
+    public function setURI( $URI ) {
+        Assert::string( $URI );
+        $this->URI = $URI;
+        return $this;
+    }
 
 }

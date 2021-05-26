@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -57,6 +57,5 @@ abstract class DsigBase extends LogLevel implements DsigInterface, XMLAttributes
             $this->logger = new NullLogger();
         }
     }
-
 
 }

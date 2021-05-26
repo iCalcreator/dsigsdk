@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -36,14 +36,14 @@ class KeyValueType extends DsigBase
     /**
      * @var DSAKeyValueType
      *                     choice opt 1
-     * @access procated
+     * @access protected
      */
     protected $DSAKeyValue = null;
 
     /**
      * @var RSAKeyValueType
      *                     choice opt 2
-     * @access procated
+     * @access protected
      */
     protected $RSAKeyValue = null;
 
@@ -103,6 +103,5 @@ class KeyValueType extends DsigBase
         $this->any = $anyType;
         return $this;
     }
-
 
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -31,7 +31,7 @@
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Webmozart\Assert\Assert;
 
 /**
  * Class X509IssuerSerialType
@@ -46,7 +46,7 @@ class X509IssuerSerialType extends DsigBase
     protected $X509IssuerName = null;
 
     /**
-     * @var string
+     * @var int
      * @access protected
      */
     protected $X509SerialNumber = null;
@@ -64,12 +64,13 @@ class X509IssuerSerialType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setX509IssuerName( $X509IssuerName ) {
-        $this->X509IssuerName = CommonFactory::assertString( $X509IssuerName );
+        Assert::string( $X509IssuerName );
+        $this->X509IssuerName = $X509IssuerName;
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getX509SerialNumber() {
         return $this->X509SerialNumber;
@@ -81,7 +82,8 @@ class X509IssuerSerialType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setX509SerialNumber( $X509SerialNumber ) {
-        $this->X509SerialNumber = CommonFactory::assertString( $X509SerialNumber );
+        Assert::integerish( $X509SerialNumber );
+        $this->X509SerialNumber = (int) $X509SerialNumber;
         return $this;
     }
 

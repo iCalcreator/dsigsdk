@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK,
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -31,7 +31,7 @@
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Webmozart\Assert\Assert;
 
 /**
  * Class DSAKeyValueType
@@ -98,7 +98,8 @@ class DSAKeyValueType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setP( $p ) {
-        $this->p = CommonFactory::assertString( $p );
+        Assert::string( $p );
+        $this->p = $p;
         return $this;
     }
 
@@ -115,7 +116,8 @@ class DSAKeyValueType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setQ( $q ) {
-        $this->q = CommonFactory::assertString( $q );
+        Assert::string( $q );
+        $this->q = $q;
         return $this;
     }
 
@@ -132,7 +134,8 @@ class DSAKeyValueType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setG( $g ) {
-        $this->g = CommonFactory::assertString( $g );
+        Assert::string( $g );
+        $this->g = $g;
         return $this;
     }
 
@@ -149,7 +152,8 @@ class DSAKeyValueType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setY( $y ) {
-        $this->y = CommonFactory::assertString( $y );
+        Assert::string( $y );
+        $this->y = $y;
         return $this;
     }
 
@@ -166,7 +170,8 @@ class DSAKeyValueType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setJ( $j ) {
-        $this->j = CommonFactory::assertString( $j );
+        Assert::string( $j );
+        $this->j = $j;
         return $this;
     }
 
@@ -183,7 +188,8 @@ class DSAKeyValueType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setSeed( $seed ) {
-        $this->seed = CommonFactory::assertString( $seed );
+        Assert::string( $seed );
+        $this->seed = $seed;
         return $this;
     }
 
@@ -200,7 +206,8 @@ class DSAKeyValueType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setPgenCounter( $pgenCounter ) {
-        $this->pgenCounter = CommonFactory::assertString( $pgenCounter );
+        Assert::string( $pgenCounter );
+        $this->pgenCounter = $pgenCounter;
         return $this;
     }
 

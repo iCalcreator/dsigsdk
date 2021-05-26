@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK,
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -30,7 +30,7 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Webmozart\Assert\Assert;
 
 /**
  * Class AnyType
@@ -58,7 +58,7 @@ class AnyType extends DsigBase
     protected $attributes = [];
 
     /**
-     * content OR elements
+     * content
      *
      * @var string
      * @access protected
@@ -66,12 +66,10 @@ class AnyType extends DsigBase
     protected $content = null;
 
     /**
-     * content OR elements
-     *
-     * @var AnyType[]
-     * @access protected
+     * Property, get- and setter methods
+     * var AnyType[]  any
      */
-    protected $subElements = [];
+    use Traits\AnyTypesTrait;
 
 
     /**
@@ -86,7 +84,8 @@ class AnyType extends DsigBase
      * @return static
      */
     public function setElementName( $elementName ) {
-        $this->elementName = CommonFactory::assertString( $elementName );
+        Assert::string( $elementName );
+        $this->elementName = $elementName;
         return $this;
     }
 
@@ -103,8 +102,9 @@ class AnyType extends DsigBase
      */
     public function setAttributes( array $attributes ) {
         foreach( $attributes as $key => $value ) {
-            CommonFactory::assertString( $key );
-            $this->attributes[$key] = CommonFactory::assertString( $value );
+            Assert::string( $key );
+            Assert::string( $value );
+            $this->attributes[$key] = $value;
         }
         return $this;
     }
@@ -121,25 +121,8 @@ class AnyType extends DsigBase
      * @return static
      */
     public function setContent( $content ) {
-        $this->content = CommonFactory::assertString( $content );
+        Assert::string( $content );
         return $this;
     }
-
-    /**
-     * @return AnyType[]
-     */
-    public function getSubElements() {
-        return $this->subElements;
-    }
-
-    /**
-     * @param array $subElements
-     * @return static
-     */
-    public function setSubElements( $subElements ) {
-        $this->subElements = $subElements;
-        return $this;
-    }
-
 
 }

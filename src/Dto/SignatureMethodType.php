@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -31,9 +31,8 @@
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Webmozart\Assert\Assert;
 
-use function ctype_digit;
 use function is_array;
 use function sprintf;
 /**
@@ -49,12 +48,11 @@ class SignatureMethodType extends DsigBase
     protected $signatureMethodTypes = [];
 
     /**
-     * @var string
+     * Property, get- and setter methods for
+     * var string algorithm
      *            attribute name="Algorithm" type="anyURI" use="required"
-     * @access protected
      */
-    protected $algorithm = null;
-
+    use Traits\AlgorithmTrait;
 
 
     /**
@@ -70,7 +68,7 @@ class SignatureMethodType extends DsigBase
      * @throws InvalidArgumentException
      */
     public function setSignatureMethodTypes( array $signatureMethodTypes ) {
-        static $FMTERR2 = 'Invalid %s %s value \'%s\'';
+        static $FMTERR2 = 'Invalid %s %s value %s';
         foreach( $signatureMethodTypes as $ix1 => $elementSet ) {
             if( ! is_array( $elementSet )) {
                 $elementSet = [ $ix1 => $elementSet ];
@@ -80,21 +78,19 @@ class SignatureMethodType extends DsigBase
                     $element = [ $ix2 => $element ];
                 }
                 foreach( $element as $key => $value ) {
+                    Assert::string( $key );
                     switch( $key ) {
                         case self::HMACOUTPUTLENGTH :
-                            if( ! ctype_digit((string) $value )) {
-                                throw new InvalidArgumentException(
-                                    sprintf(
-                                        $FMTERR2,
-                                        self::SIGNATUREMETHOD,
-                                        self::HMACOUTPUTLENGTH,
-                                        $value
-                                    )
-                                );
-                            }
+                            Assert::integerish( $value );
+                            Assert::greaterThan(
+                                $value,
+                                0,
+                                sprintf( $FMTERR2, self::SIGNATUREMETHOD, self::HMACOUTPUTLENGTH, self::$PLCHDLR )
+                            );
                             $this->signatureMethodTypes[$ix1][$ix2][$key] = $value;
                             break 2;
                         case  self::ANYTYPE :
+                            Assert::isInstanceOf( $value, parent::getNs() . self::ANYTYPE );
                             $this->signatureMethodTypes[$ix1][$ix2][$key] = $value;
                             break 2;
                         default :
@@ -106,23 +102,6 @@ class SignatureMethodType extends DsigBase
                 } // end foreach
             } // end foreach
         } // end foreach
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAlgorithm() {
-        return $this->algorithm;
-    }
-
-    /**
-     * @param string $algorithm
-     * @return static
-     * @throws InvalidArgumentException
-     */
-    public function setAlgorithm( $algorithm ) {
-        $this->algorithm = CommonFactory::assertString( $algorithm );
         return $this;
     }
 
