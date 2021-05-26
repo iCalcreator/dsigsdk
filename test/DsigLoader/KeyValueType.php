@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -30,11 +30,10 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Kigkonsult\DsigSdk\Dto\KeyValueType as Dto;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\ManifestType as Dto;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
-class ManifestType
+class KeyValueType
 {
 
     /**
@@ -44,15 +43,17 @@ class ManifestType
     public static function loadFromFaker() {
         $faker = Faker\Factory::create();
 
-        $max           = $faker->numberBetween( 1, 2 );
-        $referenceType = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $referenceType[] = ReferenceType::loadFromFaker();
+        switch( $faker->numberBetween( 1, 3 )) {
+            case 1 :
+                return Dto::factory()
+                          ->setDSAKeyValue( DSAKeyValueType::loadFromFaker());
+            case 2 :
+                return Dto::factory()
+                          ->setRSAKeyValue( RSAKeyValueType::loadFromFaker());
+            default :
+                return Dto::factory()
+                          ->setAny( AnyType::loadFromFaker());
         }
-        return Dto::factory()
-                  ->setReference( $referenceType )
-                  ->setId( CommonFactory::getSalt());
-
     }
 
 }

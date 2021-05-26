@@ -32,14 +32,11 @@ namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\SignatureValueType;
 
-use function is_null;
-
 /**
  * Class SignatureValueTypeWriter
  */
 class SignatureValueTypeWriter extends DsigWriterBase
 {
-
     /**
      * Write
      * @param SignatureValueType $signatureValueType
@@ -53,7 +50,7 @@ class SignatureValueTypeWriter extends DsigWriterBase
         parent::writeAttribute( $this->writer, self::ID, $signatureValueType->getId());
 
         $signatureValueType = $signatureValueType->getSignatureValueType();
-        if( ! is_null( $signatureValueType )) {
+        if( ! empty( $signatureValueType )) {
             $this->writer->text( $signatureValueType );
         }
 

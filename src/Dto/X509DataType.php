@@ -5,11 +5,11 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -35,12 +35,12 @@ use Webmozart\Assert\Assert;
 
 use function is_array;
 use function sprintf;
+
 /**
  * Class X509DataType
  */
 class X509DataType extends DsigBase
 {
-
     /**
      * @var mixed[]
      *              maxOccurs="unbounded"
@@ -50,7 +50,6 @@ class X509DataType extends DsigBase
      *              X509Certificate   type="base64Binary"/>
      *              X509CRL           type="base64Binary"/>
      *              Any               AnyType
-     * @access protected
      */
     protected $X509DataTypes = [];
 
@@ -75,7 +74,7 @@ class X509DataType extends DsigBase
                 Assert::string( $key );
                 switch( $key ) {
                     case self::X509ISSUERSERIAL :
-                        Assert::isInstanceOf( $value, parent::getNs() . self::X509ISSUERSERIAL . parent::$TYPE  );
+                        Assert::isInstanceOf( $value, X509IssuerSerialType::class  );
                         $this->X509DataTypes[$ix][$key] = $value;
                         break 2;
                     case self::X509SKI :
@@ -95,16 +94,14 @@ class X509DataType extends DsigBase
                         $this->X509DataTypes[$ix][$key] = $value;
                         break 2;
                     case self::ANYTYPE :
-                        Assert::isInstanceOf( $value, parent::getNs() . self::ANYTYPE );
+                        Assert::isInstanceOf( $value, AnyType::class );
                         $this->X509DataTypes[$ix][$key] = $value;
                         break 2;
                     default :
                         throw new InvalidArgumentException( sprintf( self::$FMTERR1, self::X509DATA, $ix, $key ));
-                        break;
                 } // end switch
             } // end foreach
         } // end foreach
         return $this;
     }
-
 }

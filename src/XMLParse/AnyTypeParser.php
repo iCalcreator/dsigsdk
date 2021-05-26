@@ -95,7 +95,7 @@ class AnyTypeParser extends DsigParserBase
             } // end switch
         } // end while
         if( ! $contentIsSet ) {
-            $anyType->setSubElements( $anys );
+            $anyType->setAny( $anys );
         }
         return $anyType;
     }

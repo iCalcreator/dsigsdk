@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -12,7 +12,7 @@
  * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -31,10 +31,13 @@
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
 use Faker;
-use Kigkonsult\DsigSdk\Dto\SignatureValueType as Dto;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Kigkonsult\DsigSdk\DsigInterface;
+use Kigkonsult\DsigSdk\Dto\ObjectType as Dto;
 
-class SignatureValueType
+/**
+ * Class ObjectType
+ */
+class ObjectType implements DsigInterface
 {
 
     /**
@@ -44,9 +47,26 @@ class SignatureValueType
     public static function loadFromFaker() {
         $faker = Faker\Factory::create();
 
+        $max         = $faker->numberBetween( 4, 6 );
+        $objectTypes = [];
+        for( $x = 0; $x < $max; $x++ ) {
+            switch( $faker->numberBetween( 1, 3 )) {
+                case 1 :
+                    $objectTypes[] = [ self::MANIFEST => ManifestType::loadFromFaker() ];
+                    break;
+                case 2 :
+                    $objectTypes[] = [ self::SIGNATUREPROPERTIES => SignaturePropertiesType::loadFromFaker() ];
+                    break;
+                case 3 :
+                    $objectTypes[] = [ self::ANYTYPE => AnyType::loadFromFaker() ];
+                    break;
+            } // end switch
+        } // end foreach
         return Dto::factory()
-                  ->setSignatureValueType( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setId( CommonFactory::getSalt());
+                  ->setObjectTypes( $objectTypes )
+                  ->setId( CommonFactory::getSalt())
+                  ->setMimeType( $faker->mimeType )
+                  ->setEncoding( 'UTF-8' );
 
     }
 

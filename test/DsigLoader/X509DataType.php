@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -12,7 +12,7 @@
  * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -31,10 +31,12 @@
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
 use Faker;
-use Kigkonsult\DsigSdk\Dto\DSAKeyValueType as Dto;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Kigkonsult\DsigSdk\DsigInterface;
+use Kigkonsult\DsigSdk\Dto\X509DataType as Dto;
 
-class DSAKeyValueType
+use function base64_encode;
+
+class X509DataType  implements DsigInterface
 {
 
     /**
@@ -45,13 +47,14 @@ class DSAKeyValueType
         $faker = Faker\Factory::create();
 
         return Dto::factory()
-                  ->setP( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setQ( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setG( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setY( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setJ( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setSeed( CommonFactory::base64Encode( $faker->sha256 ))
-                  ->setPgenCounter( CommonFactory::base64Encode( $faker->sha256 ));
+                  ->setX509DataTypes( [
+                      [ self::X509ISSUERSERIAL => X509IssuerSerialType::loadFromFaker() ],
+                      [ self::X509SKI          => base64_encode( $faker->sha256 ) ],
+                      [ self::X509SUBJECTNAME  => $faker->company ],
+                      [ self::X509CERTIFICATE  => base64_encode( $faker->sha256 ) ],
+                      [ self::X509CRL          => base64_encode( $faker->sha256 ) ],
+                      [ self::ANYTYPE          => AnyType::loadFromFaker() ],
+                  ] );
     }
 
 }

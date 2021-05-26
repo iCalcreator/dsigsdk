@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\ReferenceType;
 
-use function is_null;
-
 /**
  * Class ReferenceTypeWriter
  */
@@ -53,15 +51,15 @@ class ReferenceTypeWriter extends DsigWriterBase
         parent::writeAttribute( $this->writer, self::TYPE, $referenceType->getType());
 
         $transforms = $referenceType->getTransforms();
-        if( ! is_null( $transforms )) {
+        if( ! empty( $transforms )) {
             TransformsTypeWriter::factory( $this->writer)->write( $transforms );
         }
         $digestMethod = $referenceType->getDigestMethod();
-        if( ! is_null( $digestMethod )) {
+        if( ! empty( $digestMethod )) {
             DigestMethodTypeWriter::factory( $this->writer)->write( $digestMethod );
         }
         $digestValue = $referenceType->getDigestValue();
-        if( ! is_null( $digestValue )) {
+        if( ! empty( $digestValue )) {
             parent::SetWriterStartElement( $this->writer, self::DIGESTVALUE, $XMLattributes );
             $this->writer->text( $digestValue );
             $this->writer->endElement();

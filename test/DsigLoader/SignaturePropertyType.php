@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -12,7 +12,7 @@
  * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -31,16 +31,9 @@
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
 use Faker;
-use Kigkonsult\DsigSdk\Dto\SignatureType as Dto;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Kigkonsult\DsigSdk\Dto\SignaturePropertyType as Dto;
 
-/**
- * Class Signature
- *
- * schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
- * namespace="http://www.w3.org/2000/09/xmldsig#"
- */
-class SignatureType
+class SignaturePropertyType
 {
 
     /**
@@ -51,16 +44,15 @@ class SignatureType
         $faker = Faker\Factory::create();
 
         $max = $faker->numberBetween( 1, 2 );
-        $objects = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $objects[] = ObjectType::loadFromFaker();
+        $anys = [];
+        for( $x = 0; $x < $max; $x++ ) {
+            $anys[] = AnyType::loadFromFaker();
         }
         return Dto::factory()
-                  ->setSignedInfo( SignedInfoType::loadFromFaker())
-                  ->setSignatureValue( SignatureValueType::loadFromFaker())
-                  ->setKeyInfo( KeyInfoType::loadFromFaker())
-                  ->setObject( $objects )
+                  ->setAny( $anys )
+                  ->setTarget( $faker->url )
                   ->setId( CommonFactory::getSalt());
+
     }
 
 }

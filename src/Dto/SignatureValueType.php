@@ -5,14 +5,14 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -38,12 +38,9 @@ use Webmozart\Assert\Assert;
  */
 class SignatureValueType extends DsigBase
 {
-
-
     /**
      * @var string
      *            base="base64Binary"
-     * @access protected
      */
     protected $signatureValueType = null;
 
@@ -71,5 +68,4 @@ class SignatureValueType extends DsigBase
         $this->signatureValueType = $signatureValueType;
         return $this;
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -12,7 +12,7 @@
  * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\PGPDataType;
 
-use function is_null;
-
 /**
  * Class PGPDataTypeWriter
  */
@@ -50,7 +48,7 @@ class PGPDataTypeWriter extends DsigWriterBase
         parent::SetWriterStartElement( $this->writer, self::PGPDATA, $XMLattributes );
 
         $PGPKeyID = $PGPDataType->getPGPKeyID();
-        if( ! is_null( $PGPKeyID )) {
+        if( ! empty( $PGPKeyID )) {
             parent::SetWriterStartElement(
                 $this->writer, self::PGPKEYID, $XMLattributes
             );
@@ -58,7 +56,7 @@ class PGPDataTypeWriter extends DsigWriterBase
             $this->writer->endElement();
         }
         $PGPKeyPacket = $PGPDataType->getPGPKeyPacket();
-        if( ! is_null( $PGPKeyPacket )) {
+        if( ! empty( $PGPKeyPacket )) {
             parent::SetWriterStartElement(
                 $this->writer, self::PGPKEYPACKET, $XMLattributes
             );

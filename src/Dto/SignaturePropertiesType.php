@@ -5,14 +5,14 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -40,11 +40,9 @@ use Webmozart\Assert\Assert;
  */
 class SignaturePropertiesType extends DsigBase
 {
-
     /**
      * @var SignaturePropertyType[]
      *                     maxOccurs="unbounded"
-     * @access protected
      */
     protected $signatureProperty = [];
 
@@ -60,9 +58,8 @@ class SignaturePropertiesType extends DsigBase
      * @return static
      */
     public function setSignatureProperty( array $signatureProperty ) {
-        Assert::allIsInstanceOf( $signatureProperty, parent::getNs() . self::SIGNATUREPROPERTY . parent::$TYPE  );
+        Assert::allIsInstanceOf( $signatureProperty, SignaturePropertyType::class );
         $this->signatureProperty = $signatureProperty;
         return $this;
     }
-
 }

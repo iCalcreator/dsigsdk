@@ -5,11 +5,11 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -35,9 +35,9 @@ use DOMNode;
 use InvalidArgumentException;
 use Kigkonsult\LoggerDepot\LoggerDepot;
 use Kigkonsult\DsigSdk\Dto\SignatureType;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Webmozart\Assert\Assert;
 use XMLReader;
 
 use function count;
@@ -65,7 +65,7 @@ class DsigParser extends DsigParserBase
      * @throws Exception
      */
     public function parseXmlFromFile( $fileName, $asDomNode = false ) {
-        CommonFactory::assertFileName( $fileName );
+        Assert::string( $fileName );
         self::assertIsValidXML( $fileName );
         $content = $this->getContentFromFile( $fileName );
         $this->logger->debug( 'Got content from ' . $fileName );
@@ -122,12 +122,12 @@ class DsigParser extends DsigParserBase
         static $FMTerr1 = 'Error #%d parsing xml';
         static $FMTerr2 = 'Unknown xml root element \'%s\'';
         static $FMTerr3 = 'No xml root element found';
-        CommonFactory::assertString( $xml );
+        Assert::string( $xml );
         $this->reader   = new XMLReader();
         $xmlInitError   = false;
         $loadEntities         = libxml_disable_entity_loader( true );
         $useInternalXmlErrors = libxml_use_internal_errors( true ); // enable user error handling
-        if( false === $this->reader->xml( $xml, null, self::$XMLReaderOptions )) {
+        if( false === $this->reader->XML( $xml, null, self::$XMLReaderOptions )) {
             $xmlInitError     = true;
         }
         else {
@@ -152,7 +152,6 @@ class DsigParser extends DsigParserBase
                         break;
                     default :
                         throw new RuntimeException( sprintf( $FMTerr2, $this->reader->localName ) );
-                        break;
                 } // end switch
             } // end while
         } // end else
@@ -182,7 +181,6 @@ class DsigParser extends DsigParserBase
      * @param LoggerInterface $logger
      * @param array           $libXarr
      * @return bool           true on critical
-     * @access private
      * @static
      */
     private static function LogLibxmlErrors( LoggerInterface $logger, array $libXarr ) {
@@ -197,5 +195,4 @@ class DsigParser extends DsigParserBase
         } // end foreach
         return $critical;
     }
-
 }

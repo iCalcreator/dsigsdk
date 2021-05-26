@@ -5,11 +5,11 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019.21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -38,10 +38,8 @@ trait URITrait
     /**
      * @var string
      *            type="anyURI"
-     * @access protected
      */
     protected $URI = null;
-
 
     /**
      * @return string
@@ -60,5 +58,4 @@ trait URITrait
         $this->URI = $URI;
         return $this;
     }
-
 }

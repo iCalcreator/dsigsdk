@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -30,11 +30,10 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Kigkonsult\DsigSdk\Dto\X509IssuerSerialType as Dto;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\PGPDataType as Dto;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
 
-class PGPDataType
+class X509IssuerSerialType
 {
 
     /**
@@ -44,24 +43,9 @@ class PGPDataType
     public static function loadFromFaker() {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
-        $anys = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $anys[] = AnyType::loadFromFaker();
-        }
-        switch( $faker->numberBetween( 1, 2 )) {
-            case 1 :
-                return Dto::factory()
-                          ->setPGPKeyID( CommonFactory::base64Encode( $faker->sha256 ))
-                          ->setPGPKeyPacket( CommonFactory::base64Encode( $faker->sha256 ))
-                          ->setAny( $anys );
-                break;
-            default :
-                return Dto::factory()
-                          ->setPGPKeyPacket( CommonFactory::base64Encode( $faker->sha256 ))
-                          ->setAny( $anys );
-                break;
-        }
+        return Dto::factory()
+                  ->setX509IssuerName( $faker->company )
+                  ->setX509SerialNumber((string) PHP_INT_MAX );
 
     }
 

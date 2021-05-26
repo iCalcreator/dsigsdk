@@ -1,18 +1,18 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -33,7 +33,6 @@ namespace Kigkonsult\DsigSdk\XMLWrite;
 use Kigkonsult\DsigSdk\DsigBase;
 use XMLWriter;
 
-use function is_null;
 use function get_called_class;
 use function sprintf;
 use function substr;
@@ -43,7 +42,6 @@ use function substr;
  */
 abstract class DsigWriterBase extends DsigBase
 {
-
     /**
      * const XML Schema keys
      */
@@ -51,7 +49,6 @@ abstract class DsigWriterBase extends DsigBase
 
     /**
      * @var XMLWriter
-     * @access protected
      */
     protected $writer = null;
 
@@ -62,7 +59,7 @@ abstract class DsigWriterBase extends DsigBase
      */
     public function __construct( XMLWriter $writer = null ) {
         parent::__construct();
-        if( ! is_null( $writer )) {
+        if( null !== $writer ) {
             $this->writer = $writer;
         }
     }
@@ -85,7 +82,6 @@ abstract class DsigWriterBase extends DsigBase
      * @param XMLWriter $writer
      * @param string    $elementName
      * @param array     $XMLattributes
-     * @access protected
      * @static
      */
     protected static function SetWriterStartElement( XMLWriter $writer, $elementName = null, array $XMLattributes = [] ) {
@@ -108,18 +104,16 @@ abstract class DsigWriterBase extends DsigBase
     /**
      * Write attribute
      *
-     * @param XMLWriter $writer
-     * @param string    $elementName
-     * @param string    $value
-     * @access protected
+     * @param XMLWriter   $writer
+     * @param string      $elementName
+     * @param null|string $value
      * @static
      */
-    protected static function writeAttribute( XMLWriter $writer, $elementName, $value ) {
-        if( ! is_null( $value )) {
+    protected static function writeAttribute( XMLWriter $writer, $elementName, $value = null ) {
+        if( null !==  $value ) {
             $writer->startAttribute($elementName );
             $writer->text( $value );
             $writer->endAttribute();
         }
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -12,7 +12,7 @@
  * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\SignatureType;
 
-use function is_null;
-
 /**
  * Class SignatureTypeWriter
  */
@@ -52,15 +50,15 @@ class SignatureTypeWriter extends DsigWriterBase
         parent::writeAttribute( $this->writer, self::ID, $signatureType->getId());
 
         $signedInfo = $signatureType->getSignedInfo();
-        if( ! is_null( $signedInfo )) {
+        if( ! empty( $signedInfo )) {
             SignedInfoTypeWriter::factory( $this->writer)->write( $signedInfo );
         }
         $signatureValue = $signatureType->getSignatureValue();
-        if( ! is_null( $signatureValue )) {
+        if( ! empty( $signatureValue )) {
             SignatureValueTypeWriter::factory( $this->writer)->write( $signatureValue );
         }
         $keyInfo = $signatureType->getKeyInfo();
-        if( ! is_null( $keyInfo )) {
+        if( ! empty( $keyInfo )) {
             KeyInfoTypeWriter::factory( $this->writer)->write( $keyInfo );
         }
         foreach( $signatureType->getObject() as $object ) {

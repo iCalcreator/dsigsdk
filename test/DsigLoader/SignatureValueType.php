@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -9,10 +9,10 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -28,12 +28,27 @@
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace Kigkonsult\DsigSdk\Dto;
+namespace Kigkonsult\DsigSdk\DsigLoader;
 
-/**
- * Class Object
- */
-class Object extends ObjectType
+use Faker;
+use Kigkonsult\DsigSdk\Dto\SignatureValueType as Dto;
+
+use function base64_encode;
+
+class SignatureValueType
 {
+
+    /**
+     * @return Dto
+     * @access static
+     */
+    public static function loadFromFaker() {
+        $faker = Faker\Factory::create();
+
+        return Dto::factory()
+                  ->setSignatureValueType( base64_encode( $faker->sha256 ))
+                  ->setId( CommonFactory::getSalt());
+
+    }
 
 }

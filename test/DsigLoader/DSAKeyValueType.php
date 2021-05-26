@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -9,10 +9,10 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -30,10 +30,12 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Kigkonsult\DsigSdk\Dto\X509IssuerSerialType as Dto;
 use Faker;
+use Kigkonsult\DsigSdk\Dto\DSAKeyValueType as Dto;
 
-class X509IssuerSerialType
+use function base64_encode;
+
+class DSAKeyValueType
 {
 
     /**
@@ -44,9 +46,13 @@ class X509IssuerSerialType
         $faker = Faker\Factory::create();
 
         return Dto::factory()
-                  ->setX509IssuerName( $faker->company )
-                  ->setX509SerialNumber( PHP_INT_MAX );
-
+                  ->setP( base64_encode( $faker->sha256 ))
+                  ->setQ( base64_encode( $faker->sha256 ))
+                  ->setG( base64_encode( $faker->sha256 ))
+                  ->setY( base64_encode( $faker->sha256 ))
+                  ->setJ( base64_encode( $faker->sha256 ))
+                  ->setSeed( base64_encode( $faker->sha256 ))
+                  ->setPgenCounter( base64_encode( $faker->sha256 ));
     }
 
 }

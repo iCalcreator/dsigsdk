@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -12,7 +12,7 @@
  * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -30,11 +30,10 @@
  */
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Faker;
-use Kigkonsult\DsigSdk\Dto\SignaturePropertyType as Dto;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+// use Faker;
+use Kigkonsult\DsigSdk\Dto\SignedInfoType as Dto;
 
-class SignaturePropertyType
+class SignedInfoType
 {
 
     /**
@@ -42,17 +41,12 @@ class SignaturePropertyType
      * @access static
      */
     public static function loadFromFaker() {
-        $faker = Faker\Factory::create();
+//        $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
-        $anys = [];
-        for( $x = 0; $x < $max; $x++ ) {
-            $anys[] = AnyType::loadFromFaker();
-        }
         return Dto::factory()
-                  ->setAny( $anys )
-                  ->setTarget( $faker->url )
-                  ->setId( CommonFactory::getSalt());
+            ->setCanonicalizationMethod( CanonicalizationMethodType::loadFromFaker())
+            ->setSignatureMethod( SignatureMethodType::loadFromFaker())
+            ->setId( CommonFactory::getSalt());
 
     }
 

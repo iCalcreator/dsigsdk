@@ -1,18 +1,18 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -40,11 +40,9 @@ use Webmozart\Assert\Assert;
  */
 class ManifestType extends DsigBase
 {
-
     /**
      * @var ReferenceType[]
      *                  maxOccurs="unbounded"
-     * @access protected
      */
     protected $reference = [];
 
@@ -54,8 +52,6 @@ class ManifestType extends DsigBase
      *            attribute name="Id" type="ID" use="optional"
      */
     use Traits\IdTrait;
-
-
 
     /**
      * @return ReferenceType[]
@@ -69,9 +65,8 @@ class ManifestType extends DsigBase
      * @return static
      */
     public function setReference( array $referenceType ) {
-        Assert::allIsInstanceOf( $referenceType, parent::getNs() . self::REFERENS . parent::$TYPE  );
+        Assert::allIsInstanceOf( $referenceType, ReferenceType::class  );
         $this->reference = $referenceType;
         return $this;
     }
-
 }

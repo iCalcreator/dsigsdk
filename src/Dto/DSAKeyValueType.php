@@ -5,11 +5,11 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -42,46 +42,39 @@ class DSAKeyValueType extends DsigBase
     /**
      * @var string  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
-     * @access protected
      */
     protected $p = null;
 
     /**
      * @var string  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
-     * @access protected
      */
     protected $q = null;
 
     /**
      * @var string  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
-     * @access protected
      */
     protected $g = null;
 
     /**
      * @var string  type="ds:CryptoBinary" -  base="base64Binary"
-     * @access protected
      */
     protected $y = null;
 
     /**
      * @var string  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
-     * @access protected
      */
     protected $j = null;
 
     /**
      * @var string  type="ds:CryptoBinary" -  base="base64Binary"
-     * @access protected
      */
     protected $seed = null;
 
     /**
      * @var string  type="ds:CryptoBinary" -  base="base64Binary"
-     * @access protected
      */
     protected $pgenCounter = null;
 

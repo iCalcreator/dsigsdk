@@ -5,14 +5,14 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -37,24 +37,19 @@ use Webmozart\Assert\Assert;
  */
 class SignedInfoType extends DsigBase
 {
-
-
     /**
      * @var CanonicalizationMethodType
-     * @access protected
      */
     protected $canonicalizationMethod = null;
 
     /**
      * @var SignatureMethodType
-     * @access protected
      */
     protected $signatureMethod = null;
 
     /**
      * @var ReferenceType[]
      *                    maxOccurs="unbounded"
-     * @access protected
      */
     protected $reference = [];
 
@@ -64,7 +59,6 @@ class SignedInfoType extends DsigBase
      *            attribute name="Id" type="ID" use="optional"
      */
     use Traits\IdTrait;
-
 
     /**
      * @return CanonicalizationMethodType
@@ -110,9 +104,8 @@ class SignedInfoType extends DsigBase
      * @return static
      */
     public function setReference( array $reference ) {
-        Assert::allIsInstanceOf( $reference, parent::getNs() . self::REFERENS );
+        Assert::allIsInstanceOf( $reference, ReferenceType::class );
         $this->reference = $reference;
         return $this;
     }
-
 }

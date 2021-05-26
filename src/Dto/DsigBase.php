@@ -5,11 +5,11 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -32,8 +32,8 @@ namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
 use Kigkonsult\DsigSdk\DsigInterface;
-use Webmozart\Assert\Assert;
 use Kigkonsult\DsigSdk\XMLAttributesInterface;
+use Webmozart\Assert\Assert;
 use XMLReader;
 
 /**
@@ -41,7 +41,6 @@ use XMLReader;
  */
 abstract class DsigBase implements DsigInterface, XMLAttributesInterface
 {
-
     /**
      * @var string
      */
@@ -52,9 +51,8 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
 
     /**
      * @var array
-     * @access private
      */
-    private $XMLattributes = [];
+    protected $XMLattributes = [];
 
     /**
      * Factory
@@ -116,11 +114,10 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
     /**
      * Propagate or remove XML attribute down
      *
-     * @param DsigBase $dsigBase
-     * @param string   $key
-     * @param string   $value
-     * @param bool     $unset
-     * @access protected
+     * @param DsigBase     $dsigBase
+     * @param string       $key
+     * @param null|string  $value
+     * @param null|bool    $unset
      * @static
      */
     protected static function propagateDown( DsigBase $dsigBase, $key, $value, $unset = false ) {
@@ -150,7 +147,6 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      * @param string $key
      * @param string $value
      * @param bool   $unset
-     * @access protected
      * @static
      */
     protected static function propagateDownArray( array $arrayValue, $key, $value, $unset = false ) {
@@ -187,12 +183,10 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
 
     /**
      * @return string
-     * @access protected
      * @static
      */
     protected static function getNs() {
         static $BS = '\\';
         return __NAMESPACE__ . $BS;
     }
-
 }

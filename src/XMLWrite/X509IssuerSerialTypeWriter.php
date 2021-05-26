@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -12,7 +12,7 @@
  * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\X509IssuerSerialType;
 
-use function is_null;
-
 /**
  * Class X509IssuerSerialTypeWriter
  */
@@ -50,7 +48,7 @@ class X509IssuerSerialTypeWriter extends DsigWriterBase
         parent::SetWriterStartElement( $this->writer, self::X509ISSUERSERIAL, $XMLattributes );
 
         $X509IssuerName = $X509IssuerSerialType->getX509IssuerName();
-        if( ! is_null( $X509IssuerName )) {
+        if( ! empty( $X509IssuerName )) {
             parent::SetWriterStartElement(
                 $this->writer, self::X509ISSUERNAME, $XMLattributes
             );
@@ -58,7 +56,7 @@ class X509IssuerSerialTypeWriter extends DsigWriterBase
             $this->writer->endElement();
         }
         $X509SerialNumber = $X509IssuerSerialType->getX509SerialNumber();
-        if( ! is_null( $X509SerialNumber )) {
+        if( ! empty( $X509SerialNumber )) {
             parent::SetWriterStartElement(
                 $this->writer, self::X509SERIALNUBER, $XMLattributes
             );

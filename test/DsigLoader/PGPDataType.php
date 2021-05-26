@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -12,7 +12,7 @@
  * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -31,11 +31,11 @@
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
 use Faker;
-use Kigkonsult\DsigSdk\Dto\SPKIDataType as Dto;
-use Kigkonsult\DsigSdk\DsigInterface;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
+use Kigkonsult\DsigSdk\Dto\PGPDataType as Dto;
 
-class SPKIDataType implements DsigInterface
+use function base64_encode;
+
+class PGPDataType
 {
 
     /**
@@ -46,13 +46,21 @@ class SPKIDataType implements DsigInterface
         $faker = Faker\Factory::create();
 
         $max = $faker->numberBetween( 1, 2 );
-        $SPKIDataTypes = [];
+        $anys = [];
         for( $x = 0; $x <= $max; $x++ ) {
-            $SPKIDataTypes[$x][] = [ self::SPKISEXP => CommonFactory::base64Encode( $faker->sha256 ) ];
-            $SPKIDataTypes[$x][] = [ self::ANYTYPE  => AnyType::loadFromFaker() ];
+            $anys[] = AnyType::loadFromFaker();
         }
-        return Dto::factory()
-                  ->setSPKIDataType( $SPKIDataTypes );
+        switch( $faker->numberBetween( 1, 2 )) {
+            case 1 :
+                return Dto::factory()
+                          ->setPGPKeyID( base64_encode( $faker->sha256 ))
+                          ->setPGPKeyPacket( base64_encode( $faker->sha256 ))
+                          ->setAny( $anys );
+            default :
+                return Dto::factory()
+                          ->setPGPKeyPacket( base64_encode( $faker->sha256 ))
+                          ->setAny( $anys );
+        }
 
     }
 

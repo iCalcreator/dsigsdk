@@ -1,18 +1,18 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recommendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -38,11 +38,9 @@ use Webmozart\Assert\Assert;
  */
 class ObjectType extends DsigBase
 {
-
     /**
-     * @var Manifest|SignaturePropertiesType|AnyType[]
+     * @var array Manifest[]|SignaturePropertiesType[]|AnyType[] mixed
      *            minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="lax"
-     * @access protected
      */
     protected $objectTypes = [];
 
@@ -56,28 +54,24 @@ class ObjectType extends DsigBase
     /**
      * @var string
      *            attribute name="MimeType" type="string" use="optional"
-     * @access protected
      */
     protected $mimeType = null;
 
     /**
      * @var string
      *            attribute name="Encoding" type="anyURI" use="optional"
-     * @access protected
      */
     protected $encoding = null;
 
-
-
     /**
-     * @return Manifest|SignaturePropertiesType|AnyType[]
+     * @return array Manifest[]|SignaturePropertiesType[]|AnyType[] mixed
      */
     public function getObjectTypes() {
         return $this->objectTypes;
     }
 
     /**
-     * @param Manifest|SignaturePropertiesType|AnyType[] $objectTypes
+     * @param array $objectTypes Manifest|SignaturePropertiesType|AnyType[]
      * @return static
      * @throws InvalidArgumentException
      */
@@ -90,20 +84,19 @@ class ObjectType extends DsigBase
                 Assert::string( $key );
                 switch( $key ) {
                     case self::MANIFEST :
-                        Assert::isInstanceOf( $value, parent::getNs() . self::MANIFEST . parent::$TYPE  );
+                        Assert::isInstanceOf( $value, ManifestType::class  );
                         $this->objectTypes[$ix] = $element;
                         break 2;
                     case self::SIGNATUREPROPERTIES :
-                        Assert::isInstanceOf( $value, parent::getNs() . self::SIGNATUREPROPERTIES . parent::$TYPE  );
+                        Assert::isInstanceOf( $value, SignaturePropertiesType::class );
                         $this->objectTypes[$ix] = $element;
                         break 2;
                     case self::ANYTYPE :
-                        Assert::isInstanceOf( $value, parent::getNs() . self::ANYTYPE );
+                        Assert::isInstanceOf( $value, AnyType::class );
                         $this->objectTypes[$ix] = $element;
                         break 2;
                     default :
                         throw new InvalidArgumentException( sprintf( self::$FMTERR1, self::KEYINFO, $ix, $key ));
-                        break;
                 } // end switch
             } // end foreach
         } // end foreach
@@ -145,5 +138,4 @@ class ObjectType extends DsigBase
         $this->encoding = $encoding;
         return $this;
     }
-
 }

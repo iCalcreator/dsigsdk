@@ -1,6 +1,6 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
@@ -12,7 +12,7 @@
  * Version   0.965
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\SignedInfoType;
 
-use function is_null;
-
 /**
  * Class SignedInfoTypeWriter
  */
@@ -51,11 +49,11 @@ class SignedInfoTypeWriter extends DsigWriterBase
         parent::writeAttribute( $this->writer, self::ID, $signedInfoType->getId());
 
         $canonicalizationMethod = $signedInfoType->getCanonicalizationMethod();
-        if( ! is_null( $canonicalizationMethod )) {
+        if( ! empty( $canonicalizationMethod )) {
             CanonicalizationMethodTypeWriter::factory( $this->writer)->write( $canonicalizationMethod );
         }
         $signatureMethod = $signedInfoType->getSignatureMethod();
-        if( ! is_null( $signatureMethod )) {
+        if( ! empty( $signatureMethod )) {
             SignatureMethodTypeWriter::factory( $this->writer)->write( $signatureMethod );
         }
         foreach( $signedInfoType->getReference() as $reference ) {

@@ -1,18 +1,18 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recommendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -28,29 +28,12 @@
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace Kigkonsult\DsigSdk\DsigLoader;
+namespace Kigkonsult\DsigSdk\Dto;
 
-use Faker;
-use Kigkonsult\DsigSdk\Dto\ReferenceType as Dto;
-use Kigkonsult\DsigSdk\Impl\CommonFactory;
-
-class ReferenceType
+/**
+ * Class Objekt
+ */
+class Objekt extends ObjectType
 {
-    /**
-     * @return Dto
-     * @access static
-     */
-    public static function loadFromFaker() {
-        $faker = Faker\Factory::create();
-
-        return Dto::factory()
-            ->setTransforms( TransformsType::loadFromFaker())
-            ->setDigestMethod( DigestMethodType::loadFromFaker())
-            ->setDigestValue( CommonFactory::base64Encode( $faker->sha256 ))
-            ->setId( CommonFactory::getSalt())
-            ->setURI( $faker->url )
-            ->setType( $faker->url );
-
-    }
 
 }

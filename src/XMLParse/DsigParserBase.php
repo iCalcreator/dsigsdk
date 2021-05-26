@@ -1,18 +1,18 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
+ * DsigSdk   the PHP XML Digital Signature recomendation SDK,
  *           source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
+ *           this licence notice shall be included in all copies or substantial
  *           portions of the DsigSdk.
  *
  *           DsigSdk is free software: you can redistribute it and/or modify
@@ -40,10 +40,8 @@ use function get_called_class;
  */
 abstract class DsigParserBase extends DsigBase
 {
-
     /**
      * @var string
-     * @access protected
      * @static
      */
     protected static $FMTnodeFound = '%s Found (%s) %s';
@@ -52,7 +50,6 @@ abstract class DsigParserBase extends DsigBase
 
     /**
      * @var array $nodeTypes
-     * @access protected
      * @static
      */
     protected static $nodeTypes = [
@@ -78,7 +75,6 @@ abstract class DsigParserBase extends DsigBase
 
     /**
      * @var XMLReader
-     * @access protected
      */
     protected $reader = null;
 
@@ -105,5 +101,4 @@ abstract class DsigParserBase extends DsigBase
         $class = get_called_class();
         return new $class( $reader );
     }
-
 }

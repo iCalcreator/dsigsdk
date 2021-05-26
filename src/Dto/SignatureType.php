@@ -5,11 +5,11 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.971
+ * Version   0.9.8
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -40,30 +40,25 @@ use Webmozart\Assert\Assert;
  */
 class SignatureType extends DsigBase
 {
-
     /**
      * @var SignedInfoType
-     * @access protected
      */
     protected $signedInfo = null;
 
     /**
      * @var SignatureValueType
-     * @access protected
      */
     protected $signatureValue = null;
 
     /**
      * @var KeyInfoType
      *                  minOccurs="0"
-     * @access protected
      */
     protected $keyInfo = null;
 
     /**
      * @var ObjectType[]
      *           minOccurs="0" maxOccurs="unbounded"
-     * @access protected
      */
     protected $object = [];
 
@@ -134,9 +129,8 @@ class SignatureType extends DsigBase
      * @return static
      */
     public function setObject( array $object ) {
-        Assert::allIsInstanceOf( $object, parent::getNs() . self::OBJECT . parent::$TYPE  );
+        Assert::allIsInstanceOf( $object, ObjectType::class  );
         $this->object = $object;
         return $this;
     }
-
 }

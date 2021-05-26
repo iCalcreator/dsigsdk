@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\RSAKeyValueType;
 
-use function is_null;
-
 /**
  * Class RSAKeyValueTypeWriter
  */
@@ -51,13 +49,13 @@ class RSAKeyValueTypeWriter extends DsigWriterBase
 
 
         $modulus = $RSAKeyValueType->getModulus();
-        if( ! is_null( $modulus )) {
+        if( ! empty( $modulus )) {
             parent::SetWriterStartElement( $this->writer, self::MODULUS, $XMLattributes );
             $this->writer->text( $modulus );
             $this->writer->endElement();
         }
         $exponent = $RSAKeyValueType->getExponent();
-        if( ! is_null( $exponent )) {
+        if( ! empty( $exponent )) {
             parent::SetWriterStartElement( $this->writer, self::EXPONENT, $XMLattributes );
             $this->writer->text( $exponent );
             $this->writer->endElement();

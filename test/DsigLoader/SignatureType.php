@@ -9,7 +9,7 @@
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
- * Version   0.965
+ * Version   0.971
  * License   Subject matter of licence is the software DsigSdk.
  *           The above copyright, link, package and version notices,
  *           this licence notice shall be included in all copies or substantial
@@ -28,33 +28,38 @@
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace Kigkonsult\DsigSdk\XMLWrite;
+namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Kigkonsult\DsigSdk\Dto\RetrievalMethodType;
+use Faker;
+use Kigkonsult\DsigSdk\Dto\SignatureType as Dto;
 
 /**
- * Class RetrievalMethodTypeWriter
+ * Class Signature
+ *
+ * schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
+ * namespace="http://www.w3.org/2000/09/xmldsig#"
  */
-class RetrievalMethodTypeWriter extends DsigWriterBase
+class SignatureType
 {
+
     /**
-     * Write
-     * @param RetrievalMethodType $retrievalMethodType
-     *
+     * @return Dto
+     * @access static
      */
-    public function write( RetrievalMethodType $retrievalMethodType ) {
-        parent::SetWriterStartElement(
-            $this->writer, self::RETRIEVALMETHOD, $retrievalMethodType->getXMLattributes()
-        );
+    public static function loadFromFaker() {
+        $faker = Faker\Factory::create();
 
-        parent::writeAttribute( $this->writer, self::URI,  $retrievalMethodType->getURI());
-        parent::writeAttribute( $this->writer, self::TYPE, $retrievalMethodType->getType());
-
-        $transforms = $retrievalMethodType->getTransforms();
-        if( ! empty( $transforms )) {
-            TransformsTypeWriter::factory( $this->writer)->write( $transforms );
+        $max = $faker->numberBetween( 1, 2 );
+        $objects = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            $objects[] = ObjectType::loadFromFaker();
         }
-
-        $this->writer->endElement();
+        return Dto::factory()
+                  ->setSignedInfo( SignedInfoType::loadFromFaker())
+                  ->setSignatureValue( SignatureValueType::loadFromFaker())
+                  ->setKeyInfo( KeyInfoType::loadFromFaker())
+                  ->setObject( $objects )
+                  ->setId( CommonFactory::getSalt());
     }
+
 }

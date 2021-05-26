@@ -6,19 +6,13 @@
 and provide
 
 * dto's for all element(type)s in [XSD]
-  * [src/Dto](src/Dto)
   * with getters and setters, no other logic
   
 * parse of XML into dto(s)
-  * [src/XMLParse/DsigParser::parse](src/XMLParse/DsigParser.php)
   
 * write of dto(s) to XML string / DomNode
-  * [src/XMLWrite/DsigWriter::write](src/XMLWrite/DsigWriter.php)
   
-* logic aid support
-
-For help finding a good PHP cryptography library, please review 
-* [Choosing the Right Cryptography Library for your PHP Project: A Guide ](https://paragonie.com/blog/2015/11/choosing-right-cryptography-library-for-your-php-project-guide)
+* logic support
   
 
 #### Usage, parse XML
@@ -53,14 +47,14 @@ use Kigkonsult\DsigSdk\Dto\CanonicalizationMethodType;
 use Kigkonsult\DsigSdk\Dto\KeyInfoType;
 use Kigkonsult\DsigSdk\Dto\SignedInfoType;
 use Kigkonsult\DsigSdk\Dto\SignatureType;
-use Kigkonsult\DsigSdk\Dto\SignatureValueType;
+use Kigkonsult\DsigSdk\Dto\SignatureValueType;use Kigkonsult\DsigSdk\Dto\X509DataType;
 
 $dsig = SignatureType::factory()
     ->setSignedInfo( 
         SignedInfoType::factory()
             ->setCanonicalizationMethod(
                 CanonicalizationMethodType::factory()
-                    ->setAlgorithm( SignatureType::MINICANONICAL )
+                    ->setAlgorithm( 'algorithm' )
                     ->setAny( [
                         AnyType::factory()
                             ->setElementName( 'nonSchemaElement1')
@@ -88,9 +82,9 @@ $dsig = SignatureType::factory()
             ->setKeyInfoType( [
                 [                 // one set of elements
                     [             // element
-                        SignatureType::X509DATA => 
+                        X509DataType::X509DATA => 
                             X509DataType::factory()
-                                ->setX509Certificate( ... )
+                                ->setX509DataTypes( ... )
                     ],
                 ],
         ] )
@@ -180,14 +174,14 @@ $domNode = DsigWriter::factory()->write( $dsig, true );
 
 For class structure and architecture, please review 
 * the [XSD]
-* [docs/Dsig.png](docs/Dsig.png) class design
-* the [src/DsigLoader](src/DtoLoader) directory
+* [docs/Dsig.png] class design
+* the [test/DsigLoader] directory
 
 You may find convenient constants in 
-- [src/DsigInterface](src/DsigInterface.php)
-- [src/XMLAttributesInterface](src/XMLAttributesInterface.php)
+- [src/DsigInterface]
+- [src/XMLAttributesInterface]
 
-For base64Encode/base64Decode/hash support, please review [src/Impl/Impl.md](src/Impl/Impl.md)
+For base64Encode/base64Decode/hash etc support, please review [OpenSSLToolbox]
 
 #### Installation
 
@@ -203,7 +197,7 @@ In your `composer.json`:
 ``` json
 {
     "require": {
-        "kigkonsult/dsigsdk": "dev-master"
+        "kigkonsult/dsigsdk": "*"
     }
 }
 ```
@@ -241,6 +235,11 @@ For support, please use [Github]/issues.
 This project is licensed under the LGPLv3 License
 
 [Composer]:https://getcomposer.org/
+[docs/Dsig.png]:docs/Dsig.png
 [Github]:https://github.com/iCalcreator/dsigsdk/issues
 [http://www.w3.org/2000/09/xmldsig#]:http://www.w3.org/2000/09/xmldsig#
+[OpenSSLToolbox]:https://github.com/iCalcreator/OpenSSLToolbox
+[src/DsigInterface]:src/DsigInterface.php
+[src/XMLAttributesInterface]:src/XMLAttributesInterface.php
+[test/DsigLoader]:test/DsigLoader
 [XSD]:https://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd
