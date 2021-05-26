@@ -47,7 +47,8 @@ use Kigkonsult\DsigSdk\Dto\CanonicalizationMethodType;
 use Kigkonsult\DsigSdk\Dto\KeyInfoType;
 use Kigkonsult\DsigSdk\Dto\SignedInfoType;
 use Kigkonsult\DsigSdk\Dto\SignatureType;
-use Kigkonsult\DsigSdk\Dto\SignatureValueType;use Kigkonsult\DsigSdk\Dto\X509DataType;
+use Kigkonsult\DsigSdk\Dto\SignatureValueType;
+use Kigkonsult\DsigSdk\Dto\X509DataType;
 
 $dsig = SignatureType::factory()
     ->setSignedInfo( 
