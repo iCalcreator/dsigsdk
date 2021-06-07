@@ -1,37 +1,33 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recommendation SDK,
- *           source http://www.w3.org/2000/09/xmldsig#
+ * DsigSdk    the PHP XML Digital Signature recommendation SDK,
+ *            source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * author    Kjell-Inge Gustafsson, kigkonsult
- * Link      https://kigkonsult.se
- * Package   DsigSdk
- * Version   0.9.8
- * License   Subject matter of licence is the software DsigSdk.
- *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial
- *           portions of the DsigSdk.
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software DsigSdk.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice shall be included in all copies or substantial
+ *            portions of the DsigSdk.
  *
- *           DsigSdk is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
+ *            DsigSdk is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as published
+ *            by the Free Software Foundation, either version 3 of the License,
+ *            or (at your option) any later version.
  *
- *           DsigSdk is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
+ *            DsigSdk is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
  *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
+declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
-
-use InvalidArgumentException;
-use Webmozart\Assert\Assert;
 
 /**
  * Class ReferenceType
@@ -77,9 +73,10 @@ class ReferenceType extends DsigBase
     use Traits\TypeTrait;
 
     /**
-     * @return TransformsType
+     * @return null|TransformsType
      */
-    public function getTransforms() {
+    public function getTransforms()
+    {
         return $this->transforms;
     }
 
@@ -87,15 +84,17 @@ class ReferenceType extends DsigBase
      * @param TransformsType $transforms
      * @return static
      */
-    public function setTransforms( TransformsType $transforms ) {
+    public function setTransforms( TransformsType $transforms ) : self
+    {
         $this->transforms = $transforms;
         return $this;
     }
 
     /**
-     * @return DigestMethodType
+     * @return null|DigestMethodType
      */
-    public function getDigestMethod() {
+    public function getDigestMethod()
+    {
         return $this->digestMethod;
     }
 
@@ -103,27 +102,27 @@ class ReferenceType extends DsigBase
      * @param DigestMethodType $digestMethod
      * @return static
      */
-    public function setDigestMethod( DigestMethodType $digestMethod ) {
+    public function setDigestMethod( DigestMethodType $digestMethod ) : self
+    {
         $this->digestMethod = $digestMethod;
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getDigestValue() {
+    public function getDigestValue()
+    {
         return $this->digestValue;
     }
 
     /**
      * @param string $digestValue
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setDigestValue( $digestValue ) {
-        Assert::string( $digestValue );
+    public function setDigestValue( string $digestValue ) : self
+    {
         $this->digestValue = $digestValue;
         return $this;
     }
-
 }

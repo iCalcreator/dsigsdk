@@ -1,33 +1,32 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK,
- *           source http://www.w3.org/2000/09/xmldsig#
+ * DsigSdk    the PHP XML Digital Signature recommendation SDK,
+ *            source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * author    Kjell-Inge Gustafsson, kigkonsult
- * Link      https://kigkonsult.se
- * Package   DsigSdk
- * Version   0.9.8
- * License   Subject matter of licence is the software DsigSdk.
- *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial
- *           portions of the DsigSdk.
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software DsigSdk.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice shall be included in all copies or substantial
+ *            portions of the DsigSdk.
  *
- *           DsigSdk is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
+ *            DsigSdk is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as published
+ *            by the Free Software Foundation, either version 3 of the License,
+ *            or (at your option) any later version.
  *
- *           DsigSdk is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
+ *            DsigSdk is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
  *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
+declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
 use Exception;
@@ -37,7 +36,6 @@ use Kigkonsult\LoggerDepot\LoggerDepot;
 use Kigkonsult\DsigSdk\Dto\SignatureType;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use Webmozart\Assert\Assert;
 use XMLReader;
 
 use function count;
@@ -58,14 +56,14 @@ class DsigParser extends DsigParserBase
     /**
      * Parse from file
      *
-     * @param string $fileName
-     * @param bool   $asDomNode
+     * @param string    $fileName
+     * @param null|bool $asDomNode
      * @return SignatureType|DOMNode
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function parseXmlFromFile( $fileName, $asDomNode = false ) {
-        Assert::string( $fileName );
+    public function parseXmlFromFile( string $fileName, $asDomNode = false )
+    {
         self::assertIsValidXML( $fileName );
         $content = $this->getContentFromFile( $fileName );
         $this->logger->debug( 'Got content from ' . $fileName );
@@ -75,12 +73,13 @@ class DsigParser extends DsigParserBase
     /**
      * Parse from string, alias of method parse
      *
-     * @param string $xml
-     * @param bool   $asDomNode
+     * @param string    $xml
+     * @param null|bool $asDomNode
      * @return SignatureType|DOMNode
      * @throws Exception
      */
-    public function parseXmlFromString( $xml, $asDomNode = false ) {
+    public function parseXmlFromString( string $xml, $asDomNode = false )
+    {
         return $this->parse( $xml, $asDomNode );
     }
 
@@ -91,9 +90,9 @@ class DsigParser extends DsigParserBase
      * @param string $fileName
      * @return string
      * @throws InvalidArgumentException
-     * @static
      */
-    private static function getContentFromFile( $fileName ) {
+    private static function getContentFromFile( string $fileName ) : string
+    {
         static $FMTerr      = 'Error reading %s';
         if( false === ( $content = @file_get_contents( $fileName ))) {
             throw new InvalidArgumentException( sprintf( $FMTerr, $fileName ));
@@ -111,24 +110,23 @@ class DsigParser extends DsigParserBase
     /**
      * Parse xml-string
      *
-     * @param string $xml
-     * @param bool   $asDomNode
+     * @param string    $xml
+     * @param null|bool $asDomNode
      * @return SignatureType|DOMNode
      * @throws Exception
      * @throws InvalidArgumentException
      * @throws RuntimeException
      */
-    public function parse( $xml, $asDomNode = false ) {
+    public function parse( string $xml, $asDomNode = false )
+    {
         static $FMTerr1 = 'Error #%d parsing xml';
         static $FMTerr2 = 'Unknown xml root element \'%s\'';
         static $FMTerr3 = 'No xml root element found';
-        Assert::string( $xml );
         $this->reader   = new XMLReader();
-        $xmlInitError   = false;
         $loadEntities         = libxml_disable_entity_loader( true );
         $useInternalXmlErrors = libxml_use_internal_errors( true ); // enable user error handling
         if( false === $this->reader->XML( $xml, null, self::$XMLReaderOptions )) {
-            $xmlInitError     = true;
+            throw new InvalidArgumentException( sprintf( $FMTerr1, 1 ));
         }
         else {
             $result = null;
@@ -165,9 +163,6 @@ class DsigParser extends DsigParserBase
                 throw new RuntimeException( sprintf( $FMTerr1, 2 ));
             }
         }
-        if( $xmlInitError ) {
-            throw new InvalidArgumentException( sprintf( $FMTerr1, 1 ));
-        }
         $this->reader->close();
         if( empty( $result )) {
             throw new RuntimeException( $FMTerr3 );
@@ -181,9 +176,9 @@ class DsigParser extends DsigParserBase
      * @param LoggerInterface $logger
      * @param array           $libXarr
      * @return bool           true on critical
-     * @static
      */
-    private static function LogLibxmlErrors( LoggerInterface $logger, array $libXarr ) {
+    private static function LogLibxmlErrors( LoggerInterface $logger, array $libXarr ) : bool
+    {
         $critical = false;
         foreach( $libXarr as $errorSets ) {
             foreach( $errorSets as $logLevel => $msg ) {

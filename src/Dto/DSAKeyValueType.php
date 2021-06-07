@@ -1,44 +1,39 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recommendation SDK,
- *           source http://www.w3.org/2000/09/xmldsig#
+ * DsigSdk    the PHP XML Digital Signature recommendation SDK,
+ *            source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * author    Kjell-Inge Gustafsson, kigkonsult
- * Link      https://kigkonsult.se
- * Package   DsigSdk
- * Version   0.9.8
- * License   Subject matter of licence is the software DsigSdk.
- *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial
- *           portions of the DsigSdk.
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software DsigSdk.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice shall be included in all copies or substantial
+ *            portions of the DsigSdk.
  *
- *           DsigSdk is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
+ *            DsigSdk is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as published
+ *            by the Free Software Foundation, either version 3 of the License,
+ *            or (at your option) any later version.
  *
- *           DsigSdk is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
+ *            DsigSdk is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
  *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
+declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
-
-use InvalidArgumentException;
-use Webmozart\Assert\Assert;
 
 /**
  * Class DSAKeyValueType
  */
 class DSAKeyValueType extends DsigBase
 {
-
     /**
      * @var string  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
@@ -79,129 +74,128 @@ class DSAKeyValueType extends DsigBase
     protected $pgenCounter = null;
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getP() {
+    public function getP()
+    {
         return $this->p;
     }
 
     /**
      * @param string $p
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setP( $p ) {
-        Assert::string( $p );
+    public function setP( string $p ) : self
+    {
         $this->p = $p;
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getQ() {
+    public function getQ()
+    {
         return $this->q;
     }
 
     /**
      * @param string $q
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setQ( $q ) {
-        Assert::string( $q );
+    public function setQ( string $q ) : self
+    {
         $this->q = $q;
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getG() {
+    public function getG()
+    {
         return $this->g;
     }
 
     /**
      * @param string $g
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setG( $g ) {
-        Assert::string( $g );
+    public function setG( string $g ) : self
+    {
         $this->g = $g;
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getY() {
+    public function getY()
+    {
         return $this->y;
     }
 
     /**
      * @param string $y
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setY( $y ) {
-        Assert::string( $y );
+    public function setY( string $y ) : self
+    {
         $this->y = $y;
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getJ() {
+    public function getJ()
+    {
         return $this->j;
     }
 
     /**
      * @param string $j
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setJ( $j ) {
-        Assert::string( $j );
+    public function setJ( string $j ) : self
+    {
         $this->j = $j;
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getSeed() {
+    public function getSeed()
+    {
         return $this->seed;
     }
 
     /**
      * @param string $seed
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setSeed( $seed ) {
-        Assert::string( $seed );
+    public function setSeed( string $seed ) : self
+    {
         $this->seed = $seed;
         return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getPgenCounter() {
+    public function getPgenCounter()
+    {
         return $this->pgenCounter;
     }
 
     /**
      * @param string $pgenCounter
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setPgenCounter( $pgenCounter ) {
-        Assert::string( $pgenCounter );
+    public function setPgenCounter( string $pgenCounter ) : self
+    {
         $this->pgenCounter = $pgenCounter;
         return $this;
     }
-
 }

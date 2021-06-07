@@ -1,33 +1,32 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK, 
- *           source http://www.w3.org/2000/09/xmldsig#
+ * DsigSdk    the PHP XML Digital Signature recommendation SDK,
+ *            source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * author    Kjell-Inge Gustafsson, kigkonsult
- * Link      https://kigkonsult.se
- * Package   DsigSdk
- * Version   0.965
- * License   Subject matter of licence is the software DsigSdk.
- *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial 
- *           portions of the DsigSdk.
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software DsigSdk.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice shall be included in all copies or substantial
+ *            portions of the DsigSdk.
  *
- *           DsigSdk is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
+ *            DsigSdk is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as published
+ *            by the Free Software Foundation, either version 3 of the License,
+ *            or (at your option) any later version.
  *
- *           DsigSdk is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
+ *            DsigSdk is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
  *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
+declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
 use InvalidArgumentException;
@@ -67,9 +66,9 @@ trait LibXmlUtilTrait
      * @param string $fileName
      * @return bool
      * @throws InvalidArgumentException
-     * @static
      */
-    public static function assertIsValidXML( $fileName ) {
+    public static function assertIsValidXML( string $fileName ) : bool
+    {
         static $CLASS  = 'SimpleXMLElement';
         static $FMTerr = 'Error validating %s, errors: %s';
         $useInternalXmlErrors = libxml_use_internal_errors( true ); // enable user error handling
@@ -91,15 +90,21 @@ trait LibXmlUtilTrait
      * Return rendered (array) XML error
      *
      * @param array $errors   array of libxml error object
-     * @param string $fileName
-     * @param string $content
+     * @param null|string $fileName
+     * @param null|string $content
      * @return array   [ *(logLevel => msg)]
      * @see http://php.net/manual/en/function.libxml-get-errors.php
      */
-    private static function renderXmlError( $errors, $fileName = null, $content = null ) {
+    private static function renderXmlError(
+        array $errors,
+        $fileName = null,
+        $content = null
+    ) : array
+    {
         static $CRITICAL = 'critical'; // MUST correspond to Psr\Log\LogLevel
         static $WARNING  = 'warning';  // "-
         static $INFO     = 'info';     // "-
+        static $SP0      = '';
         static $FMT0     = ' No XML to parse';
         static $FMT1     = ' %s #%d, errCode %s : %s';
         static $FMT2     = ' line: %d col: %d';
@@ -119,9 +124,10 @@ trait LibXmlUtilTrait
         }
         $xml     = ( false !== $content ) ? explode( PHP_EOL, $content ) : false;
         $libXarr = [];
+        $baseFileName = empty( $fileName ) ? $SP0 : basename( $fileName );
         foreach( $errors as $ex => $error ) {
             $str1   = sprintf(
-                $FMT1, basename( $fileName ), ( $ex + 1 ), $error->code, trim( $error->message )
+                $FMT1, $baseFileName, ( $ex + 1 ), $error->code, trim( $error->message )
             );
             $str2   = sprintf( $FMT2, $error->line, $error->column );
             if( false !== $xml ) {

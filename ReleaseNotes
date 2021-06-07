@@ -2,3 +2,33 @@
 0.966 Dto input validation, throw Exception on error
 
 0.973 upd composer.json
+
+0.9.8
+ upd tests
+ Class Object class renamed to Objekt
+ src/Impl removed
+
+
+1.0
+  PHP7 (PHPStan checks/strict types and rectifications)
+  new functions :
+     AnyTypesTrait : addAny()
+     KeyInfoType::addKeyInfoType(()
+     ManifestType::addReference()
+     ObjectType::addObjectType()
+     SignaturePropertiesType::addSignatureProperty()
+     SignatureMethodType::addSignatureMethodType()
+     SignatureType::addObject()
+     SignedInfoType::addReference()
+     TransformsType::addTransform()
+     TransformType::addTransformType()
+     SPKIDataType::addSPKIDataType()
+     X509DataType::addX509DataType()
+
+  Alter arg format SignatureMethodType::setSignatureMethodTypes()
+    array of *[ key => value ]
+  upd SignatureMethodTypeWriter::write() / SignatureMethodTypeParser::parse()
+
+  Alter arg format SPKIDataType::setSPKIDataType()
+    array of *[ key => value ]
+  upd SPKIDataTypeParser::parse() / SPKIDataTypeWriter::write()

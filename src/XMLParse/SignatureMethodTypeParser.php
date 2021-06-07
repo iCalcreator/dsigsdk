@@ -1,33 +1,32 @@
 <?php
 /**
- * DsigSdk   the PHP XML Digital Signature recomendation SDK,
- *           source http://www.w3.org/2000/09/xmldsig#
+ * DsigSdk    the PHP XML Digital Signature recommendation SDK,
+ *            source http://www.w3.org/2000/09/xmldsig#
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * author    Kjell-Inge Gustafsson, kigkonsult
- * Link      https://kigkonsult.se
- * Package   DsigSdk
- * Version   0.965
- * License   Subject matter of licence is the software DsigSdk.
- *           The above copyright, link, package and version notices,
- *           this licence notice shall be included in all copies or substantial
- *           portions of the DsigSdk.
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software DsigSdk.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice shall be included in all copies or substantial
+ *            portions of the DsigSdk.
  *
- *           DsigSdk is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
+ *            DsigSdk is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as published
+ *            by the Free Software Foundation, either version 3 of the License,
+ *            or (at your option) any later version.
  *
- *           DsigSdk is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
+ *            DsigSdk is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
  *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
+declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
 use Kigkonsult\DsigSdk\Dto\SignatureMethodType;
@@ -40,13 +39,13 @@ use function sprintf;
  */
 class SignatureMethodTypeParser extends DsigParserBase
 {
-
     /**
      * Parse
      *
      * @return SignatureMethodType
      */
-    public function parse() {
+    public function parse() : SignatureMethodType
+    {
         $signatureMethodType  = SignatureMethodType::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
@@ -70,8 +69,6 @@ class SignatureMethodTypeParser extends DsigParserBase
         $headElement          = $this->reader->localName;
         $currentElement       = null;
         $signatureMethodTypes = [];
-        $index                = 0;
-        $previousElement      = null;
         while( @$this->reader->read()) {
             if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
                 $this->logger->debug(
@@ -88,23 +85,18 @@ class SignatureMethodTypeParser extends DsigParserBase
                 case (( XMLReader::TEXT == $this->reader->nodeType ) && ! $this->reader->hasValue ) :
                     break;
                 case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::HMACOUTPUTLENGTH == $currentElement )) :
-                    $signatureMethodTypes[$index][] = [ self::HMACOUTPUTLENGTH => $this->reader->value ];
+                    $signatureMethodTypes[] = [ self::HMACOUTPUTLENGTH => $this->reader->value ];
                     break;
                 case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
                     break;
                 case ( self::HMACOUTPUTLENGTH == $this->reader->localName ) :
-                    if( ! empty( $previousElement )) {
-                        $index += 1;
-                    }
-                    $signatureMethodTypes[$index] = [];
-                    $currentElement = $previousElement = $this->reader->localName;
+                    $currentElement = $this->reader->localName;
                     break;
                 default :
-                    $signatureMethodTypes[$index][] = [
+                    $signatureMethodTypes[] = [
                         self::ANYTYPE => AnyTypeParser::factory( $this->reader )->parse()
                     ];
                     $currentElement  = null;
-                    $previousElement = $this->reader->localName;
                     break;
             } // end switch
         } // end while

@@ -28,10 +28,8 @@
  *           You should have received a copy of the GNU Lesser General Public License
  *           along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
+declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto\Traits;
-
-use InvalidArgumentException;
-use Webmozart\Assert\Assert;
 
 trait TypeTrait
 {
@@ -42,19 +40,19 @@ trait TypeTrait
     protected $type = null;
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
     /**
      * @param string $type
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setType( $type ) {
-        Assert::string( $type );
+    public function setType( string $type ) : self
+    {
         $this->type = $type;
         return $this;
     }

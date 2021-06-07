@@ -43,7 +43,7 @@
         "psr-4": { "Kigkonsult\\DsigSdk\\": ["src/"] }
     },
     "require": {
-        "php": "^5.6 || ^7.0",
+        "php": "^7.0",
         "ext-dom": "*",
         "ext-libxml": "*",
         "ext-openssl": "*",
