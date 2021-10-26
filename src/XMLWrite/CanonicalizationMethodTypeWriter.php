@@ -41,16 +41,13 @@ class CanonicalizationMethodTypeWriter extends DsigWriterBase
      * @param CanonicalizationMethodType $canonicalizationMethodType
      *
      */
-    public function write( CanonicalizationMethodType $canonicalizationMethodType ) {
-        parent::setWriterStartElement(
-            $this->writer, self::CANONICALIZATIONMETHOD, $canonicalizationMethodType->getXMLattributes()
-        );
+    public function write( CanonicalizationMethodType $canonicalizationMethodType ) : void
+    {
+        self::setWriterStartElement( $this->writer, self::CANONICALIZATIONMETHOD, $canonicalizationMethodType->getXMLattributes() );
 
-        parent::writeAttribute(
-            $this->writer,
+        self::writeAttribute( $this->writer,
             self::ALGORITM,
-            $canonicalizationMethodType->getAlgorithm()
-        );
+            $canonicalizationMethodType->getAlgorithm() );
 
         foreach( $canonicalizationMethodType->getAny() as $any) {
             AnyTypeWriter::factory( $this->writer )->write( $any );

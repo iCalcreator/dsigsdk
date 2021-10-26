@@ -35,10 +35,10 @@ namespace Kigkonsult\DsigSdk\Dto;
 class RetrievalMethodType extends DsigBase
 {
     /**
-     * @var TransformsType
+     * @var TransformsType|null
      *                     minOccurs="0"
      */
-    protected $transforms = null;
+    protected ?TransformsType $transforms = null;
 
     /**
      * Property, get- and setter methods for
@@ -57,7 +57,7 @@ class RetrievalMethodType extends DsigBase
     /**
      * @return null|TransformsType
      */
-    public function getTransforms()
+    public function getTransforms() : ?TransformsType
     {
         return $this->transforms;
     }

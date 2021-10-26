@@ -35,10 +35,10 @@ use Kigkonsult\DsigSdk\Dto\Util;
 trait AlgorithmTrait
 {
     /**
-     * @var string
+     * @var string|null
      *          type="anyURI"
      */
-    protected $algorithm = null;
+    protected ? string $algorithm = null;
 
     /**
      * Return (trailing)) algorithm from (URI) identifier
@@ -46,7 +46,7 @@ trait AlgorithmTrait
      * @return null|string
      * @throws InvalidArgumentException
      */
-    public function extractAlgorithmFromUriIdentifier()
+    public function extractAlgorithmFromUriIdentifier() : ?string
     {
         if( empty( $this->algorithm )) {
             return null;
@@ -57,7 +57,7 @@ trait AlgorithmTrait
     /**
      * @return null|string
      */
-    public function getAlgorithm()
+    public function getAlgorithm() : ?string
     {
         return $this->algorithm;
     }

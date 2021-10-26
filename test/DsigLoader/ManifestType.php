@@ -37,7 +37,6 @@ class ManifestType
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {

@@ -42,10 +42,10 @@ class SignaturePropertyType extends DsigBase
     use Traits\AnyTypesTrait;
 
     /**
-     * @var string
+     * @var string|null
      *            attribute name="Target" type="anyURI" use="required"
      */
-    protected $target = null;
+    protected ?string $target = null;
 
     /**
      * Property, get- and setter methods for
@@ -58,7 +58,7 @@ class SignaturePropertyType extends DsigBase
     /**
      * @return null|string
      */
-    public function getTarget()
+    public function getTarget() : ?string
     {
         return $this->target;
     }

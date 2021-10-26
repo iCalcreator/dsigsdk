@@ -37,7 +37,7 @@ class TransformsType extends DsigBase
     /**
      * @var TransformType[]
      */
-    protected $transform = [];
+    protected array $transform = [];
 
     /**
      * @return TransformType[]

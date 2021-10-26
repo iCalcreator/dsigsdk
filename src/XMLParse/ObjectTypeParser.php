@@ -75,25 +75,25 @@ class ObjectTypeParser extends DsigParserBase
         $headElement = $this->reader->localName;
         $objectTypes = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::MANIFEST == $this->reader->localName ) :
+                case ( self::MANIFEST === $this->reader->localName ) :
                     $objectTypes[] = [
                         self::MANIFEST => ManifestTypeParser::factory( $this->reader )->parse()
                     ];
                     break;
-                case ( self::SIGNATUREPROPERTIES == $this->reader->localName ) :
+                case ( self::SIGNATUREPROPERTIES === $this->reader->localName ) :
                     $objectTypes[] = [
                         self::SIGNATUREPROPERTIES => SignaturePropertiesTypeParser::factory( $this->reader )->parse()
                     ];

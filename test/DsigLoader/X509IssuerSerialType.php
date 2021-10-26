@@ -36,7 +36,6 @@ class X509IssuerSerialType
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {

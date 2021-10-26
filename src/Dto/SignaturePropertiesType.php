@@ -41,7 +41,7 @@ class SignaturePropertiesType extends DsigBase
      * @var SignaturePropertyType[]
      *                     maxOccurs="unbounded"
      */
-    protected $signatureProperty = [];
+    protected array $signatureProperty = [];
 
     /**
      * @return SignaturePropertyType[]

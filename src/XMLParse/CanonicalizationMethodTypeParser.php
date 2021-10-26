@@ -56,10 +56,8 @@ class CanonicalizationMethodTypeParser extends DsigParserBase
                 $this->logger->debug(
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
-                switch( $this->reader->localName ) {
-                    case self::ALGORITM :
-                        $canonicalizationMethodType->setAlgorithm( $this->reader->value );
-                        break;
+                if( self::ALGORITM === $this->reader->localName ) {
+                    $canonicalizationMethodType->setAlgorithm( $this->reader->value );
                 }
             }
             $this->reader->moveToElement();
@@ -70,18 +68,18 @@ class CanonicalizationMethodTypeParser extends DsigParserBase
         $headElement = $this->reader->localName;
         $anyTypes    = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 default :
                     $anyTypes[] = AnyTypeParser::factory( $this->reader )->parse();

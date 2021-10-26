@@ -32,15 +32,15 @@ namespace Kigkonsult\DsigSdk\Dto\Traits;
 trait URITrait
 {
     /**
-     * @var string
+     * @var string|null
      *            type="anyURI"
      */
-    protected $URI = null;
+    protected ?string $URI = null;
 
     /**
      * @return null|string
      */
-    public function getURI()
+    public function getURI() : ?string
     {
         return $this->URI;
     }

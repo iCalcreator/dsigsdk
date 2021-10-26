@@ -41,30 +41,28 @@ class ReferenceTypeWriter extends DsigWriterBase
      * @param ReferenceType $referenceType
      *
      */
-    public function write( ReferenceType $referenceType )
+    public function write( ReferenceType $referenceType ) : void
     {
         $XMLattributes = $referenceType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::REFERENS, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::REFERENS, $XMLattributes );
 
-        parent::writeAttribute( $this->writer, self::URI,  $referenceType->getURI());
-        parent::writeAttribute( $this->writer, self::TYPE, $referenceType->getType());
+        self::writeAttribute( $this->writer, self::URI, $referenceType->getURI() );
+        self::writeAttribute( $this->writer, self::TYPE, $referenceType->getType() );
 
         $transforms = $referenceType->getTransforms();
-        if( ! empty( $transforms )) {
+        if( $transforms !== null ) {
             TransformsTypeWriter::factory( $this->writer)->write( $transforms );
         }
         $digestMethod = $referenceType->getDigestMethod();
-        if( ! empty( $digestMethod )) {
+        if( $digestMethod !== null ) {
             DigestMethodTypeWriter::factory( $this->writer)->write( $digestMethod );
         }
         $digestValue = $referenceType->getDigestValue();
         if( ! empty( $digestValue )) {
-            parent::writeTextElement(
-                $this->writer,
+            self::writeTextElement( $this->writer,
                 self::DIGESTVALUE,
                 $XMLattributes,
-                $digestValue
-            );
+                $digestValue );
         }
 
         $this->writer->endElement();

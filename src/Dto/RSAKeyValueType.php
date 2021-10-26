@@ -35,19 +35,19 @@ namespace Kigkonsult\DsigSdk\Dto;
 class RSAKeyValueType  extends DsigBase
 {
     /**
-     * @var string   type="ds:CryptoBinary" - base="base64Binary"
+     * @var string|null   type="ds:CryptoBinary" - base="base64Binary"
      */
-    protected $modulus = null;
+    protected ?string $modulus = null;
 
     /**
-     * @var string   type="ds:CryptoBinary" - base="base64Binary"
+     * @var string|null   type="ds:CryptoBinary" - base="base64Binary"
      */
-    protected $exponent = null;
+    protected ?string $exponent = null;
 
     /**
      * @return null|string
      */
-    public function getModulus()
+    public function getModulus() : ?string
     {
         return $this->modulus;
     }
@@ -65,7 +65,7 @@ class RSAKeyValueType  extends DsigBase
     /**
      * @return null|string
      */
-    public function getExponent()
+    public function getExponent() : ?string
     {
         return $this->exponent;
     }

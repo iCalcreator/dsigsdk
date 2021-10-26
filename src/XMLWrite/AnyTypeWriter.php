@@ -41,11 +41,12 @@ class AnyTypeWriter extends DsigWriterBase
      *
      * @param AnyType $anyType
      */
-    public function write( AnyType $anyType ) {
-        parent::setWriterStartElement( $this->writer, $anyType->getElementName(), $anyType->getXMLattributes());
+    public function write( AnyType $anyType ) : void
+    {
+        self::setWriterStartElement( $this->writer, $anyType->getElementName(), $anyType->getXMLattributes() );
 
         foreach( $anyType->getAttributes() as $key => $value ) {
-            parent::writeAttribute( $this->writer, $key, $value );
+            self::writeAttribute( $this->writer, $key, $value );
         }
 
         $content = $anyType->getContent();
@@ -54,7 +55,7 @@ class AnyTypeWriter extends DsigWriterBase
         }
         else {
             foreach( $anyType->getAny() as $element ) {
-                AnyTypeWriter::factory( $this->writer )->write( $element );
+                self::factory( $this->writer )->write( $element );
             }
         }
 

@@ -56,62 +56,62 @@ class DSAKeyValueTypeParser extends DsigParserBase
         $headElement    = $this->reader->localName;
         $currentElement = null;
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     $currentElement = null;
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ! $this->reader->hasValue ) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::P == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::P === $currentElement )) :
                     $DSAKeyValueType->setP( $this->reader->value );
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::Q == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::Q === $currentElement )) :
                     $DSAKeyValueType->setQ( $this->reader->value );
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::G == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::G === $currentElement )) :
                     $DSAKeyValueType->setG( $this->reader->value );
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::Y == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::Y === $currentElement )) :
                     $DSAKeyValueType->setY( $this->reader->value );
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::J == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::J === $currentElement )) :
                     $DSAKeyValueType->setJ( $this->reader->value );
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::SEED == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::SEED === $currentElement )) :
                     $DSAKeyValueType->setSeed( $this->reader->value );
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::PGENCOUNTER == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::PGENCOUNTER === $currentElement )) :
                     $DSAKeyValueType->setPgenCounter( $this->reader->value );
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::P == $this->reader->localName ) :
+                case ( self::P === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
-                case ( self::Q == $this->reader->localName ) :
+                case ( self::Q === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
-                case ( self::G == $this->reader->localName ) :
+                case ( self::G === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
-                case ( self::Y == $this->reader->localName ) :
+                case ( self::Y === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
-                case ( self::J == $this->reader->localName ) :
+                case ( self::J === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
-                case ( self::SEED == $this->reader->localName ) :
+                case ( self::SEED === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
-                case ( self::PGENCOUNTER == $this->reader->localName ) :
+                case ( self::PGENCOUNTER === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
             } // end switch

@@ -39,7 +39,6 @@ class SignatureValueType
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {

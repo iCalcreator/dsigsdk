@@ -73,29 +73,29 @@ class RetrievalMethodTypeParser extends DsigParserBase
         $headElement    = $this->reader->localName;
         $currentElement = null;
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     $currentElement = null;
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ! $this->reader->hasValue ) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::URI == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::URI === $currentElement )) :
                     $retrievalMethodType->setURI( $this->reader->value);
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::TRANSFORMS == $this->reader->localName ) :
+                case ( self::TRANSFORMS === $this->reader->localName ) :
                     $retrievalMethodType->setTransforms( TransformsTypeParser::factory( $this->reader )->parse());
                     break;
-                case ( self::URI == $this->reader->localName ) :
+                case ( self::URI === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
             } // end switch

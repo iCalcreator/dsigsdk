@@ -41,23 +41,21 @@ class KeyInfoTypeWriter extends DsigWriterBase
      * @param KeyInfoType $keyInfoType
      *
      */
-    public function write( KeyInfoType $keyInfoType )
+    public function write( KeyInfoType $keyInfoType ) : void
     {
         $XMLattributes = $keyInfoType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::KEYINFO, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::KEYINFO, $XMLattributes );
 
-        parent::writeAttribute( $this->writer, self::ID, $keyInfoType->getId());
+        self::writeAttribute( $this->writer, self::ID, $keyInfoType->getId() );
 
         foreach( $keyInfoType->getKeyInfoType() as $element ) {
             foreach( $element as $key => $value ) {
                 switch( $key ) {
                     case self::KEYNAME :
-                        parent::writeTextElement(
-                            $this->writer,
+                        self::writeTextElement( $this->writer,
                             self::KEYNAME,
                             $XMLattributes,
-                            $value
-                        );
+                            $value );
                         break;
                     case self::KEYVALUE :
                         KeyValueTypeWriter::factory( $this->writer )->write( $value );
@@ -75,12 +73,10 @@ class KeyInfoTypeWriter extends DsigWriterBase
                         SPKIDataTypeWriter::factory( $this->writer )->write( $value );
                         break;
                     case self::MGMTDATA :
-                        parent::writeTextElement(
-                            $this->writer,
+                        self::writeTextElement( $this->writer,
                             self::MGMTDATA,
                             $XMLattributes,
-                            $value
-                        );
+                            $value );
                         break;
                     case self::ANYTYPE :
                         AnyTypeWriter::factory( $this->writer )->write( $value );

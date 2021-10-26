@@ -55,14 +55,12 @@ class ManifestTypeParser extends DsigParserBase
                 $this->logger->debug(
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
-                switch( $this->reader->localName ) {
-                    case self::ID :
-                        $manifestType->setId( $this->reader->value );
-                        break;
-                    default :
-                        $manifestType->setXMLattribute( $this->reader->name, $this->reader->value );
-                        break;
-                } // end switch
+                if( self::ID === $this->reader->localName ) {
+                    $manifestType->setId( $this->reader->value );
+                }
+                else {
+                    $manifestType->setXMLattribute( $this->reader->name, $this->reader->value );
+                }
             } // end while
             $this->reader->moveToElement();
         }
@@ -72,20 +70,20 @@ class ManifestTypeParser extends DsigParserBase
         $headElement = $this->reader->localName;
         $references  = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::REFERENS == $this->reader->localName ) :
+                case ( self::REFERENS === $this->reader->localName ) :
                     $references[] = ReferenceTypeParser::factory( $this->reader )->parse();
                     break;
             } // end switch

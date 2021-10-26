@@ -41,12 +41,12 @@ class ManifestTypeWriter extends DsigWriterBase
      *
      * @param ManifestType $manifestType
      */
-    public function write( ManifestType $manifestType )
+    public function write( ManifestType $manifestType ) : void
     {
         $XMLattributes = $manifestType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::MANIFEST, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::MANIFEST, $XMLattributes );
 
-        parent::writeAttribute( $this->writer, self::ID, $manifestType->getId());
+        self::writeAttribute( $this->writer, self::ID, $manifestType->getId() );
 
         foreach( $manifestType->getReference() as $reference) {
             ReferenceTypeWriter::factory( $this->writer )->write( $reference );

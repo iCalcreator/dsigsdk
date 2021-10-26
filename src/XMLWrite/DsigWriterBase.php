@@ -34,7 +34,6 @@ use XMLWriter;
 
 use function get_called_class;
 use function sprintf;
-use function substr;
 
 /**
  * Class DsigWriterBase
@@ -44,22 +43,22 @@ abstract class DsigWriterBase extends DsigBase
     /**
      * @var string
      */
-    protected static $SP0 = '';
+    protected static string $SP0 = '';
 
     /**
      * const XML Schema keys
      */
-    const XMLSchemaKeys = [ self::XMLNS, self::XMLNS_XSI, self::XMLNS_XSD, self::XSI_SCHEMALOCATION ];
+    public const XMLSchemaKeys = [ self::XMLNS, self::XMLNS_XSI, self::XMLNS_XSD, self::XSI_SCHEMALOCATION ];
 
     /**
-     * @var XMLWriter
+     * @var XMLWriter|null
      */
-    protected $writer = null;
+    protected ?XMLWriter $writer = null;
 
     /**
      * Constructor
      *
-     * @param XMLWriter $writer
+     * @param XMLWriter|null $writer
      */
     public function __construct( XMLWriter $writer = null )
     {
@@ -75,7 +74,7 @@ abstract class DsigWriterBase extends DsigBase
      * @param null|XMLWriter $writer
      * @return static
      */
-    public static function factory( $writer = null ) : self
+    public static function factory( ? XMLWriter $writer = null ) : self
     {
         $class = get_called_class();
         return new $class( $writer );
@@ -85,14 +84,14 @@ abstract class DsigWriterBase extends DsigBase
      * Set writer start element, incl opt XML-attributes
      *
      * @param XMLWriter   $writer
-     * @param null|string $elementName
+     * @param string      $elementName
      * @param array       $XMLattributes
      */
     protected static function setWriterStartElement(
         XMLWriter $writer,
-        $elementName = null,
-        array $XMLattributes = []
-    )
+        string $elementName,
+        array $XMLattributes
+    ) : void
     {
         $FMTNAME = '%s:%s';
         if( empty( $elementName )) {
@@ -103,8 +102,8 @@ abstract class DsigWriterBase extends DsigBase
         }
         $writer->startElement( $elementName );
         foreach( $XMLattributes as $key => $value ) {
-            if( in_array( $key, self::XMLSchemaKeys ) ||
-                ( self::XMLNS == substr( $key, 0, 5 ))) {
+            if( in_array( $key, self::XMLSchemaKeys, true ) ||
+                ( 0 === strpos( $key, self::XMLNS ))) {
                 self::writeAttribute( $writer, $key, $value );
             }
         }
@@ -113,17 +112,17 @@ abstract class DsigWriterBase extends DsigBase
     /**
      * Set writer start element, incl opt XML-attributes
      *
-     * @param XMLWriter   $writer
-     * @param null|string $elementName
-     * @param array       $XMLattributes
-     * @param mixed       $value
+     * @param XMLWriter $writer
+     * @param string    $elementName
+     * @param array     $XMLattributes
+     * @param mixed     $value
      */
     protected static function writeTextElement(
         XMLWriter $writer,
-        $elementName = null,
-        array $XMLattributes = [],
-        $value = null
-    )
+        string $elementName,
+        array $XMLattributes,
+        $value
+    ) : void
     {
         self::setWriterStartElement( $writer, $elementName, $XMLattributes );
         $writer->text( $value );
@@ -135,17 +134,17 @@ abstract class DsigWriterBase extends DsigBase
      *
      * @param XMLWriter   $writer
      * @param string      $elementName
-     * @param null|string $value
+     * @param string|null $value
      */
     protected static function writeAttribute(
         XMLWriter $writer,
         string $elementName,
-        $value = null
-    )
+        ? string $value = null
+    ) : void
     {
         if( null !==  $value ) {
             $writer->startAttribute($elementName );
-            $writer->text((string) $value );
+            $writer->text( $value );
             $writer->endAttribute();
         }
     }

@@ -34,7 +34,7 @@ use Kigkonsult\DsigSdk\DsigInterface;
 
 interface DsigLoaderInterface extends DsigInterface, DsigIdentifiersInterface
 {
-    const ALGORITHMS = [
+    public const ALGORITHMS = [
         self::ALGO_ID_MD5,
         self::ALGO_ID_SHA_224,
         self::ALGO_ID_SHA_384,

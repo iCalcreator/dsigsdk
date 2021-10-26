@@ -56,32 +56,32 @@ class X509IssuerSerialTypeParser extends DsigParserBase
         $headElement    = $this->reader->localName;
         $currentElement = null;
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     $currentElement = null;
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ! $this->reader->hasValue ) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::X509ISSUERNAME == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::X509ISSUERNAME === $currentElement )) :
                     $X509IssuerSerialType->setX509IssuerName( $this->reader->value );
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::X509SERIALNUBER == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::X509SERIALNUBER === $currentElement )) :
                     $X509IssuerSerialType->setX509SerialNumber( $this->reader->value );
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::X509ISSUERNAME == $this->reader->localName ) :
+                case ( self::X509ISSUERNAME === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
-                case ( self::X509SERIALNUBER == $this->reader->localName ) :
+                case ( self::X509SERIALNUBER === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
             } // end switch

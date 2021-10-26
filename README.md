@@ -203,6 +203,8 @@ In your `composer.json`:
 }
 ```
 
+Version 1.2 supports PHP 7.4, 1.0 7.0.
+
 Acquire access
 ``` php
 namespace Kigkonsult\DsigSdk;

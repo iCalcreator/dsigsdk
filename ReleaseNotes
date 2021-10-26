@@ -32,3 +32,5 @@
   Alter arg format SPKIDataType::setSPKIDataType()
     array of *[ key => value ]
   upd SPKIDataTypeParser::parse() / SPKIDataTypeWriter::write()
+
+1.2 PHP 7.4

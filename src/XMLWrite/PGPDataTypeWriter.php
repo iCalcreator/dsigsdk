@@ -41,28 +41,24 @@ class PGPDataTypeWriter extends DsigWriterBase
      * @param PGPDataType $PGPDataType
      *
      */
-    public function write( PGPDataType $PGPDataType )
+    public function write( PGPDataType $PGPDataType ) : void
     {
         $XMLattributes = $PGPDataType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::PGPDATA, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::PGPDATA, $XMLattributes );
 
         $PGPKeyID = $PGPDataType->getPGPKeyID();
         if( ! empty( $PGPKeyID )) {
-            parent::writeTextElement(
-                $this->writer,
+            self::writeTextElement( $this->writer,
                 self::PGPKEYID,
                 $XMLattributes,
-                $PGPKeyID
-            );
+                $PGPKeyID );
         }
         $PGPKeyPacket = $PGPDataType->getPGPKeyPacket();
         if( ! empty( $PGPKeyPacket )) {
-            parent::writeTextElement(
-                $this->writer,
+            self::writeTextElement( $this->writer,
                 self::PGPKEYPACKET,
                 $XMLattributes,
-                $PGPKeyPacket
-            );
+                $PGPKeyPacket );
         }
         foreach( $PGPDataType->getAny() as $any ) {
             AnyTypeWriter::factory( $this->writer )->write( $any );

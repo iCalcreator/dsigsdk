@@ -42,14 +42,14 @@ abstract class DsigParserBase extends DsigBase
     /**
      * @var string
      */
-    protected static $FMTnodeFound = '%s Found (%s) %s';
-    protected static $FMTattrFound = '%s Found attribute %s = %s';
-    protected static $FMTreadNode  = '%s reading (%s) %s';
+    protected static string $FMTnodeFound = '%s Found (%s) %s';
+    protected static string $FMTattrFound = '%s Found attribute %s = %s';
+    protected static string $FMTreadNode  = '%s reading (%s) %s';
 
     /**
      * @var array $nodeTypes
      */
-    protected static $nodeTypes = [
+    protected static array $nodeTypes = [
         0  => 'NONE',
         1  => 'ELEMENT',
         2  => 'ATTRIBUTE',
@@ -71,16 +71,16 @@ abstract class DsigParserBase extends DsigBase
     ];
 
     /**
-     * @var XMLReader
+     * @var XMLReader|null
      */
-    protected $reader = null;
+    protected ?XMLReader $reader = null;
 
     /**
      * Constructor
      *
      * @param null|XMLReader $reader
      */
-    public function __construct( $reader = null  )
+    public function __construct( ? XMLReader $reader = null  )
     {
         parent::__construct();
         if( ! empty( $reader )) {
@@ -94,7 +94,7 @@ abstract class DsigParserBase extends DsigBase
      * @param null|XMLReader $reader
      * @return static
      */
-    public static function factory( $reader = null  ) : self
+    public static function factory( ? XMLReader $reader = null  ) : self
     {
         $class = get_called_class();
         return new $class( $reader );

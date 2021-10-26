@@ -33,7 +33,6 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         syntaxCheck="false"
          bootstrap="autoload.php"
         >
     <testsuites>
@@ -41,8 +40,12 @@
             <file>./test/SignatureTest.php</file>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist='true' processUncoveredFilesFromWhitelist="true">
+    <coverage
+            includeUncoveredFiles="true"
+            processUncoveredFiles="true"
+            ignoreDeprecatedCodeUnits="false"
+            disableCodeCoverageIgnore="true">
+        <include>
             <file>./src/DsigBase.php</file>
             <file>./src/DsigInterface.php</file>
             <file>./src/DsigIdentifiersInterface.php</file>
@@ -149,34 +152,30 @@
             <file>./src/XMLWrite/TransformTypeWriter.php</file>
             <file>./src/XMLWrite/X509DataTypeWriter.php</file>
             <file>./src/XMLWrite/X509IssuerSerialTypeWriter.php</file>
-        </whitelist>
-    </filter>
-  <logging>
-      <!-- Remove or comment after your own choice-->
-      <!-- All logs will be saved in 'testDocs' folder -->
-      <log type="coverage-html"
-           target="testDocs/PHPUnitCoverage"
-           lowUpperBound="35"
-           highLowerBound="70"/>
-      <!-- log type="coverage-clover"
-           target="testDocs/coverage.xml"/ -->
-      <!-- log type="coverage-php"
-           target="testDocs/coverage.serialized"/ -->
-      <!-- log type="coverage-text"
-           target="testDocs/PHPUnitReport.txt"
-           showUncoveredFiles="true"/ -->
-      <!-- log type="json"
-           target="testDocs/logfile.json"/ -->
-      <!-- log type="tap"
-           target="testDocs/logfile.tap"/ -->
-      <!-- log type="junit"
-           target="testDocs/logfile.xml"
-           logIncompleteSkipped="false"/ -->
-      <!-- log type="testdox-html"
-           target="testDocs/testdox.html"/ -->
-      <!-- log type="testdox-text"
-           target="testDocs/testdox.txt"/ -->
-  </logging>
+        </include>
+        <!-- Require the PHP Xdebug (2.7.0 or later) and tokenizer extensions-->
+        <!-- Remove or comment after your own choice-->
+        <!-- Note, all output in report/logging will be saved in 'testDocs' folder -->
+        <report>
+            <!-- clover outputFile="testDocs/clover.xml"/ -->
+            <!-- crap4j outputFile="testDocs/crap4j.xml" threshold="50"/ -->
+            <html outputDirectory="testDocs/PHPUnitCoverage" lowUpperBound="60" highLowerBound="80"/>
+            <php outputFile="testDocs/coverage.php"/>
+            <text outputFile="testDocs/coverage.txt" showUncoveredFiles="false" showOnlySummary="false"/>
+            <!-- xml outputDirectory="testDocs/xml-coverage"/ -->
+        </report>
+    </coverage>
+    <logging>
+        <!-- Remove or comment after your own choice-->
+        <!-- All logs will be saved in 'testDocs' folder -->
+
+        <!-- junit outputFile="testDocs/junit.xml"/ -->
+        <!-- teamcity outputFile="testDocs/teamcity.txt"/ -->
+        <!-- testdoxHtml outputFile="testDocs/testdox.html"/ -->
+        <!-- testdoxText outputFile="testDocs/testdox.txt"/ -->
+        <!-- testdoxXml outputFile="testDocs/testdox.xml"/ -->
+        <text outputFile="testDocs/logfile.txt"/>
+    </logging>
     <php>
         <!-- if LOG set, will (debug-)log to dir "testDocs", named '__FUNCTION__'.log -->
         <const name="LOG" value="testDocs"/>

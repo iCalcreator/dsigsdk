@@ -35,16 +35,16 @@ namespace Kigkonsult\DsigSdk\Dto;
 class PGPDataType extends DsigBase
 {
     /**
-     * @var string -  type="base64Binary"
+     * @var string|null -  type="base64Binary"
      *             choice opt 1
      */
-    protected $PGPKeyID = null;
+    protected ?string $PGPKeyID = null;
 
     /**
-     * @var string -  type="base64Binary" minOccurs="0"
+     * @var string|null -  type="base64Binary" minOccurs="0"
      *             choice op 1 and 2
      */
-    protected $PGPKeyPacket = null;
+    protected ?string $PGPKeyPacket = null;
 
     /**
      * Property, get- and setter methods
@@ -57,7 +57,7 @@ class PGPDataType extends DsigBase
     /**
      * @return null|string
      */
-    public function getPGPKeyID()
+    public function getPGPKeyID() : ?string
     {
         return $this->PGPKeyID;
     }
@@ -75,7 +75,7 @@ class PGPDataType extends DsigBase
     /**
      * @return null|string
      */
-    public function getPGPKeyPacket()
+    public function getPGPKeyPacket() : ?string
     {
         return $this->PGPKeyPacket;
     }

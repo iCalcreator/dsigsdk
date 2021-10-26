@@ -70,27 +70,27 @@ class AnyTypeParser extends DsigParserBase
         $contentIsSet = false;
         $anys         = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch (true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && $this->reader->hasValue ) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && $this->reader->hasValue ) :
                     $anyType->setContent( $this->reader->value );
                     $contentIsSet = true;
                     break;
                 case ( $contentIsSet ) :
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 default :
-                    $anys[] = AnyTypeParser::factory( $this->reader )->parse();
+                    $anys[] = self::factory( $this->reader )->parse();
                     break;
             } // end switch
         } // end while

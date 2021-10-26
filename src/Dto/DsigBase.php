@@ -43,16 +43,16 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
     /**
      * @var string
      */
-    protected static $FMTERR0 = 'Unknown %s type (%s) \'%s\'';
-    protected static $FMTERR1 = 'Unknown %s type #%s \'%s\'';
-    protected static $FMTERR2 = 'Unknown %s type #%s:%s \'%s\'';
-    protected static $PLCHDLR = '%s';
-    protected static $TYPE    = 'Type';
+    protected static string $FMTERR0 = 'Unknown %s type (%s) \'%s\'';
+    protected static string $FMTERR1 = 'Unknown %s type #%s \'%s\'';
+    protected static string $FMTERR2 = 'Unknown %s type #%s:%s \'%s\'';
+    protected static string $PLCHDLR = '%s';
+    protected static string $TYPE    = 'Type';
 
     /**
      * @var array
      */
-    protected $XMLattributes = [];
+    protected array $XMLattributes = [];
 
     /**
      * Factory method
@@ -80,14 +80,14 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      *
      * @param string    $key
      * @param string    $value
-     * @param null|bool $propagateDown
+     * @param bool|null $propagateDown
      * @return static
      * @throws InvalidArgumentException
      */
     public function setXMLattribute(
         string $key,
         string $value,
-        $propagateDown = false
+        ? bool $propagateDown = false
     ) : self
     {
         Assert::string( $key );
@@ -104,11 +104,11 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      * Unset XML attribute, opt down
      *
      * @param string    $key
-     * @param null|bool $propagateDown
+     * @param bool|null $propagateDown
      * @return static
      * @throws InvalidArgumentException
      */
-    public function unsetXMLattribute( string $key, $propagateDown = false ) : self
+    public function unsetXMLattribute( string $key, ?bool $propagateDown ) : self
     {
         Assert::string( $key );
         unset( $this->XMLattributes[$key] );
@@ -125,22 +125,22 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      * @param DsigBase     $dsigBase
      * @param string       $key
      * @param null|string  $value
-     * @param null|bool    $unset
+     * @param bool|null $unset
      * @throws InvalidArgumentException
      */
     protected static function propagateDown(
         DsigBase $dsigBase,
         string $key,
-        $value = null,
-        $unset = false
-    )
+        ? string $value = null,
+        ? bool $unset = false
+    ) : void
     {
         Assert::boolean( $unset );
         if( $unset ) {
             unset( $dsigBase->XMLattributes[$key] );
         }
         foreach( get_object_vars( $dsigBase ) as $propertyValue ) {
-            if( $propertyValue instanceof DsigBase ) {
+            if( $propertyValue instanceof self ) {
                 if( $unset ) {
                     $propertyValue->unsetXMLattribute( $key, true );
                 }
@@ -166,13 +166,13 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
     protected static function propagateDownArray(
         array $arrayValue,
         string $key,
-        $value = null,
-        $unset = false
-    )
+        ? string $value = null,
+        ? bool $unset = false
+    ) : void
     {
         Assert::boolean( $unset );
         foreach( $arrayValue as $arrayValue2 ) {
-            if( $arrayValue2 instanceof DsigBase ) {
+            if( $arrayValue2 instanceof self ) {
                 if( $unset ) {
                     $arrayValue2->unsetXMLattribute( $key, true );
                 }

@@ -56,32 +56,32 @@ class RSAKeyValueTypeParser extends DsigParserBase
         $headElement    = $this->reader->localName;
         $currentElement = null;
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     $currentElement = null;
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ! $this->reader->hasValue ) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::MODULUS == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::MODULUS === $currentElement )) :
                     $RSAKeyValueType->setModulus( $this->reader->value );
                     break;
-                case (( XMLReader::TEXT == $this->reader->nodeType ) && ( self::EXPONENT == $currentElement )) :
+                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::EXPONENT === $currentElement )) :
                     $RSAKeyValueType->setExponent( $this->reader->value );
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::MODULUS == $this->reader->localName ) :
+                case ( self::MODULUS === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
-                case ( self::EXPONENT == $this->reader->localName ) :
+                case ( self::EXPONENT === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
             } // end switch

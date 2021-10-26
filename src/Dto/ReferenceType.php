@@ -35,21 +35,21 @@ namespace Kigkonsult\DsigSdk\Dto;
 class ReferenceType extends DsigBase
 {
     /**
-     * @var TransformsType
+     * @var TransformsType|null
      *                     minOccurs="0"
      */
-    protected $transforms = null;
+    protected ?TransformsType $transforms = null;
 
     /**
-     * @var DigestMethodType
+     * @var DigestMethodType|null
      */
-    protected $digestMethod = null;
+    protected ?DigestMethodType $digestMethod = null;
 
     /**
-     * @var string
+     * @var string|null
      *            base="base64Binary"
      */
-    protected $digestValue = null;
+    protected ?string $digestValue = null;
 
     /**
      * Property, get- and setter methods for
@@ -75,7 +75,7 @@ class ReferenceType extends DsigBase
     /**
      * @return null|TransformsType
      */
-    public function getTransforms()
+    public function getTransforms() : ?TransformsType
     {
         return $this->transforms;
     }
@@ -93,7 +93,7 @@ class ReferenceType extends DsigBase
     /**
      * @return null|DigestMethodType
      */
-    public function getDigestMethod()
+    public function getDigestMethod() : ?DigestMethodType
     {
         return $this->digestMethod;
     }
@@ -111,7 +111,7 @@ class ReferenceType extends DsigBase
     /**
      * @return null|string
      */
-    public function getDigestValue()
+    public function getDigestValue() : ?string
     {
         return $this->digestValue;
     }

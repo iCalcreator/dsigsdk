@@ -57,38 +57,38 @@ class PGPDataTypeParser extends DsigParserBase
         $currentElement = null;
         $anyTypes       = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     $currentElement = null;
                     break;
-                case ( XMLReader::TEXT == $this->reader->nodeType ) :
+                case ( XMLReader::TEXT === $this->reader->nodeType ) :
                     switch( true ) {
                         case( empty( $currentElement )) :
                             break;
                         case( ! $this->reader->hasValue ) :
                             break;
-                        case ( self::PGPKEYID == $currentElement ) :
+                        case ( self::PGPKEYID === $currentElement ) :
                             $PGPDataType->setPGPKeyID( $this->reader->value );
                             break;
-                        case ( self::PGPKEYPACKET == $currentElement ) :
+                        case ( self::PGPKEYPACKET === $currentElement ) :
                             $PGPDataType->setPGPKeyPacket( $this->reader->value );
                             break;
                     }
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::PGPKEYID == $this->reader->localName ) :
+                case ( self::PGPKEYID === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
-                case ( self::PGPKEYPACKET == $this->reader->localName ) :
+                case ( self::PGPKEYPACKET === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
                 default :

@@ -34,16 +34,16 @@ use InvalidArgumentException;
 trait IdTrait
 {
     /**
-     * @var string
+     * @var string|null
      *          type="ID"
      */
-    protected $id = null;
+    protected ?string $id = null;
 
 
     /**
      * @return null|string
      */
-    public function getId()
+    public function getId() : ?string
     {
         return $this->id;
     }

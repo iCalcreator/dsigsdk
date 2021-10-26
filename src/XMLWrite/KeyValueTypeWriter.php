@@ -41,21 +41,21 @@ class KeyValueTypeWriter extends DsigWriterBase
      * @param KeyValueType $keyValueType
      *
      */
-    public function write( KeyValueType $keyValueType )
+    public function write( KeyValueType $keyValueType ) : void
     {
         $XMLattributes = $keyValueType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::KEYVALUE, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::KEYVALUE, $XMLattributes );
 
         $DSAKeyValue = $keyValueType->getDSAKeyValue();
         $RSAKeyValue = $keyValueType->getRSAKeyValue();
         $any         = $keyValueType->getAny();
-        if( ! empty( $DSAKeyValue )) {
+        if( $DSAKeyValue !== null ) {
             DSAKeyValueTypeWriter::factory( $this->writer)->write( $DSAKeyValue );
         }
-        elseif( ! empty( $RSAKeyValue )) {
+        elseif( $RSAKeyValue !== null ) {
             RSAKeyValueTypeWriter::factory( $this->writer)->write( $RSAKeyValue );
         }
-        elseif( ! empty( $any )) {
+        elseif( $any !== null ) {
             AnyTypeWriter::factory( $this->writer)->write( $any );
         }
 

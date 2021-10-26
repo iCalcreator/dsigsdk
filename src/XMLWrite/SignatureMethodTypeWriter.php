@@ -41,23 +41,21 @@ class SignatureMethodTypeWriter extends DsigWriterBase
      * @param SignatureMethodType $signatureMethodType
      *
      */
-    public function write( SignatureMethodType $signatureMethodType )
+    public function write( SignatureMethodType $signatureMethodType ) : void
     {
         $XMLattributes = $signatureMethodType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::SIGNATUREMETHOD, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::SIGNATUREMETHOD, $XMLattributes );
 
-        parent::writeAttribute( $this->writer, self::ALGORITM, $signatureMethodType->getAlgorithm());
+        self::writeAttribute( $this->writer, self::ALGORITM, $signatureMethodType->getAlgorithm() );
 
         foreach( $signatureMethodType->getSignatureMethodTypes() as $elementSet ) {
             foreach( $elementSet as $key => $value ) {
                 switch( $key ) {
                     case self::HMACOUTPUTLENGTH :
-                        parent::writeTextElement(
-                            $this->writer,
+                        self::writeTextElement( $this->writer,
                             self::HMACOUTPUTLENGTH,
                             $XMLattributes,
-                            (string) $value
-                        );
+                            (string)$value );
                         break;
                     case  self::ANYTYPE :
                         AnyTypeWriter::factory( $this->writer )->write( $value );

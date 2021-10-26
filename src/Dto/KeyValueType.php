@@ -32,29 +32,29 @@ namespace Kigkonsult\DsigSdk\Dto;
 class KeyValueType extends DsigBase
 {
     /**
-     * @var DSAKeyValueType
+     * @var DSAKeyValueType|null
      *                     choice opt 1
      */
-    protected $DSAKeyValue = null;
+    protected ?DSAKeyValueType $DSAKeyValue = null;
 
     /**
-     * @var RSAKeyValueType
+     * @var RSAKeyValueType|null
      *                     choice opt 2
      */
-    protected $RSAKeyValue = null;
+    protected ?RSAKeyValueType $RSAKeyValue = null;
 
     /**
-     * @var AnyType
+     * @var AnyType|null
      *           any namespace="##other" processContents="lax"
      *                     choice opt 3
      */
-    protected $any = null;
+    protected ?AnyType $any = null;
 
 
     /**
      * @return null|DSAKeyValueType
      */
-    public function getDSAKeyValue()
+    public function getDSAKeyValue() : ?DSAKeyValueType
     {
         return $this->DSAKeyValue;
     }
@@ -72,7 +72,7 @@ class KeyValueType extends DsigBase
     /**
      * @return null|RSAKeyValueType
      */
-    public function getRSAKeyValue()
+    public function getRSAKeyValue() : ?RSAKeyValueType
     {
         return $this->RSAKeyValue;
     }
@@ -90,7 +90,7 @@ class KeyValueType extends DsigBase
     /**
      * @return null|AnyType
      */
-    public function getAny()
+    public function getAny() : ?AnyType
     {
         return $this->any;
     }

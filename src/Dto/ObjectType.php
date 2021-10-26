@@ -48,7 +48,7 @@ class ObjectType extends DsigBase
      *
      *
      */
-    protected $objectTypes = [];
+    protected array $objectTypes = [];
 
     /**
      * Property, get- and setter methods for
@@ -58,16 +58,16 @@ class ObjectType extends DsigBase
     use Traits\IdTrait;
 
     /**
-     * @var string
+     * @var string|null
      *            attribute name="MimeType" type="string" use="optional"
      */
-    protected $mimeType = null;
+    protected ?string $mimeType = null;
 
     /**
-     * @var string
+     * @var string|null
      *            attribute name="Encoding" type="anyURI" use="optional"
      */
-    protected $encoding = null;
+    protected ?string $encoding = null;
 
     /**
      * @return array Manifest[]|SignaturePropertiesType[]|AnyType[] mixed
@@ -85,11 +85,11 @@ class ObjectType extends DsigBase
      */
     public function addObjectType( string $type, $objectType ) : self
     {
-        if((( self::MANIFEST == $type ) &&
+        if((( self::MANIFEST === $type ) &&
                 ( $objectType instanceof ManifestType )) ||
-            (( self::SIGNATUREPROPERTIES == $type ) &&
+            (( self::SIGNATUREPROPERTIES === $type ) &&
                 ( $objectType instanceof SignaturePropertiesType )) ||
-            (( self::ANYTYPE == $type ) &&
+            (( self::ANYTYPE === $type ) &&
                 ( $objectType instanceof AnyType ))) {
             $this->objectTypes[] = [ $type => $objectType ];
             return $this;
@@ -120,7 +120,7 @@ class ObjectType extends DsigBase
     /**
      * @return null|string
      */
-    public function getMimeType()
+    public function getMimeType() : ?string
     {
         return $this->mimeType;
     }
@@ -138,7 +138,7 @@ class ObjectType extends DsigBase
     /**
      * @return null|string
      */
-    public function getEncoding()
+    public function getEncoding() : ?string
     {
         return $this->encoding;
     }

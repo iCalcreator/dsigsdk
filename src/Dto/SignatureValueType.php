@@ -35,10 +35,10 @@ namespace Kigkonsult\DsigSdk\Dto;
 class SignatureValueType extends DsigBase
 {
     /**
-     * @var string
+     * @var string|null
      *            base="base64Binary"
      */
-    protected $signatureValueType = null;
+    protected ?string $signatureValueType = null;
 
     /**
      * Property, get- and setter methods for
@@ -50,7 +50,7 @@ class SignatureValueType extends DsigBase
     /**
      * @return null|string
      */
-    public function getSignatureValueType()
+    public function getSignatureValueType() : ?string
     {
         return $this->signatureValueType;
     }

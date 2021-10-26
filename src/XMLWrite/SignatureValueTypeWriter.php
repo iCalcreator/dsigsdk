@@ -41,17 +41,15 @@ class SignatureValueTypeWriter extends DsigWriterBase
      * @param SignatureValueType $signatureValueType
      *
      */
-    public function write( SignatureValueType $signatureValueType )
+    public function write( SignatureValueType $signatureValueType ) : void
     {
-        parent::setWriterStartElement(
-            $this->writer, self::SIGNATUREVALUE, $signatureValueType->getXMLattributes()
-        );
+        self::setWriterStartElement( $this->writer, self::SIGNATUREVALUE, $signatureValueType->getXMLattributes() );
 
-        parent::writeAttribute( $this->writer, self::ID, $signatureValueType->getId());
+        self::writeAttribute( $this->writer, self::ID, $signatureValueType->getId() );
 
-        $signatureValueType = $signatureValueType->getSignatureValueType();
-        if( ! empty( $signatureValueType )) {
-            $this->writer->text( $signatureValueType );
+        $signatureValueType2 = $signatureValueType->getSignatureValueType();
+        if( ! empty( $signatureValueType2 )) {
+            $this->writer->text( $signatureValueType2 );
         }
 
         $this->writer->endElement();

@@ -41,13 +41,13 @@ class ObjectTypeWriter extends DsigWriterBase
      * @param ObjectType $objectType
      *
      */
-    public function write( ObjectType $objectType )
+    public function write( ObjectType $objectType ) : void
     {
-        parent::setWriterStartElement( $this->writer, self::OBJECT, $objectType->getXMLattributes());
+        self::setWriterStartElement( $this->writer, self::OBJECT, $objectType->getXMLattributes() );
 
-        parent::writeAttribute( $this->writer, self::ID,       $objectType->getId());
-        parent::writeAttribute( $this->writer, self::MIMETYPE, $objectType->getMimeType());
-        parent::writeAttribute( $this->writer, self::ENCODING, $objectType->getEncoding());
+        self::writeAttribute( $this->writer, self::ID, $objectType->getId() );
+        self::writeAttribute( $this->writer, self::MIMETYPE, $objectType->getMimeType() );
+        self::writeAttribute( $this->writer, self::ENCODING, $objectType->getEncoding() );
 
         foreach( $objectType->getObjectTypes() as $element ) {
             foreach( $element as $key => $value ) {

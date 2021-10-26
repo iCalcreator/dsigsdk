@@ -41,12 +41,11 @@ class DigestMethodTypeWriter extends DsigWriterBase
      * @param DigestMethodType $digestMethodType
      *
      */
-    public function write( DigestMethodType $digestMethodType ) {
-        parent::setWriterStartElement(
-            $this->writer, self::DIGESTMETHOD, $digestMethodType->getXMLattributes()
-        );
+    public function write( DigestMethodType $digestMethodType ) : void
+    {
+        self::setWriterStartElement( $this->writer, self::DIGESTMETHOD, $digestMethodType->getXMLattributes() );
 
-        parent::writeAttribute( $this->writer, self::ALGORITM, $digestMethodType->getAlgorithm());
+        self::writeAttribute( $this->writer, self::ALGORITM, $digestMethodType->getAlgorithm() );
 
         foreach( $digestMethodType->getAny() as $any) {
             AnyTypeWriter::factory( $this->writer )->write( $any );

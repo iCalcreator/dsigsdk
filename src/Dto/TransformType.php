@@ -48,7 +48,7 @@ class TransformType extends DsigBase
      *   [ self::ANYTYPE => AnyType ]
      *
      */
-    protected $transformTypes = [];
+    protected array $transformTypes = [];
 
     /**
      * Property, get- and setter methods for

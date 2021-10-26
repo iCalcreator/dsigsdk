@@ -29,6 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
 use Kigkonsult\DsigSdk\Dto\CanonicalizationMethodType as Dto;
 use Faker;
 
@@ -36,7 +37,7 @@ class CanonicalizationMethodType implements DsigLoaderInterface
 {
     /**
      * @return Dto
-     * @access static
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
@@ -50,6 +51,6 @@ class CanonicalizationMethodType implements DsigLoaderInterface
 
         return Dto::factory()
                   ->setAny( $anys )
-                  ->setAlgorithm( self::ALGORITHMS[mt_rand( 0, count( self::ALGORITHMS ) - 1 )] );
+                  ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] );
     }
 }

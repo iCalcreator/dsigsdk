@@ -38,7 +38,6 @@ class PGPDataType
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {
@@ -49,16 +48,14 @@ class PGPDataType
         for( $x = 0; $x <= $max; $x++ ) {
             $anys[] = AnyType::loadFromFaker();
         }
-        switch( $faker->numberBetween( 1, 2 )) {
-            case 1 :
-                return Dto::factory()
-                    ->setAny( $anys )
-                    ->setPGPKeyID( base64_encode( $faker->sha256 ))
-                    ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
-            default :
-                return Dto::factory()
-                    ->setAny( $anys )
-                    ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
-        } // end switch
+        if( 1 === $faker->numberBetween( 1, 2 )) {
+            return Dto::factory()
+                ->setAny( $anys )
+                ->setPGPKeyID( base64_encode( $faker->sha256 ))
+                ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
+        }
+        return Dto::factory()
+            ->setAny( $anys )
+            ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
     }
 }

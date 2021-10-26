@@ -41,7 +41,7 @@ class X509DataTypeWriter extends DsigWriterBase
      * @param X509DataType $X509DataType
      *
      */
-    public function write( X509DataType $X509DataType )
+    public function write( X509DataType $X509DataType ) : void
     {
         static $textElements = [
             self::X509SKI,
@@ -50,18 +50,18 @@ class X509DataTypeWriter extends DsigWriterBase
             self::X509CRL
         ];
         $XMLattributes = $X509DataType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::X509DATA, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::X509DATA, $XMLattributes );
 
-        foreach( $X509DataType->getX509DataTypes() as $X509DataType ) {
-            foreach( $X509DataType as $key => $value ) {
+        foreach( $X509DataType->getX509DataTypes() as $type ) {
+            foreach( $type as $key => $value ) {
                 switch( true ) {
-                    case ( self::X509ISSUERSERIAL == $key ) :
+                    case ( self::X509ISSUERSERIAL === $key ) :
                         X509IssuerSerialTypeWriter::factory( $this->writer )->write( $value );
                         break;
-                    case in_array( $key, $textElements ) :
-                        parent::writeTextElement( $this->writer, $key, $XMLattributes, $value );
+                    case in_array( $key, $textElements, true ) :
+                        self::writeTextElement( $this->writer, $key, $XMLattributes, $value );
                         break;
-                    case ( self::ANYTYPE == $key ) :
+                    case ( self::ANYTYPE === $key ) :
                         AnyTypeWriter::factory( $this->writer )->write( $value );
                         break;
                 } // end switch

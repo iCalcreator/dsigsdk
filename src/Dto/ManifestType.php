@@ -41,7 +41,7 @@ class ManifestType extends DsigBase
      * @var ReferenceType[]
      *                  maxOccurs="unbounded"
      */
-    protected $reference = [];
+    protected array $reference = [];
 
     /**
      * Property, get- and setter methods for

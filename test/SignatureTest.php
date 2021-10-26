@@ -30,6 +30,7 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk;
 
 use DOMNode;
+use Exception;
 use InvalidArgumentException;
 use Katzgrau\KLogger\Logger as KLogger;
 use Kigkonsult\DsigSdk\Dto\SignatureType;
@@ -52,35 +53,42 @@ class SignatureTest extends TestCase
     /**
      * const int
      */
-    const XMLReaderOptions = LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NSCLEAN | LIBXML_HTML_NODEFDTD;
+    public const XMLReaderOptions = LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NSCLEAN | LIBXML_HTML_NODEFDTD;
 
-    public static $SieXMLAttributes = [
+    public static array $SieXMLAttributes = [
         'xmlns:xsi'          => "http://www.w3.org/2001/XMLSchema-instance",
         'xmlns:xsd'          => "http://www.w3.org/2001/XMLSchema",
         'xsi:schemaLocation' => "http://www.sie.se/sie5 http://www.sie.se/sie5.xsd",
         'xmlns'              => "http://www.sie.se/sie5"
     ];
 
-    public static $DsigXMLAttributes = [
+    public static array $DsigXMLAttributes = [
         'xmlns' => "http://www.w3.org/2000/09/xmldsig#"
     ];
 
-    public static function getCm( $name ) : string
+    /**
+     * @param string $name
+     * @return string
+     */
+    public static function getCm( string $name ) : string
     {
         return substr( $name, ( strrpos($name,  '\\' ) + 1 ));
     }
 
+    /**
+     * @return string
+     */
     public static function getBasePath() : string
     {
         $dir0 = $dir = __DIR__;
         $level = 6;
         while( ! is_dir( $dir . DIRECTORY_SEPARATOR . 'test' )) {
             $dir = realpath( __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR );
-            if( false == $dir ) {
+            if( false === $dir ) {
                 $dir = $dir0;
                 break;
             }
-            $level -= 1;
+            --$level;
             if( empty( $level )) {
                 $dir = $dir0;
                 break;
@@ -89,7 +97,10 @@ class SignatureTest extends TestCase
         return $dir . DIRECTORY_SEPARATOR;
     }
 
-    public static function setUpBeforeClass()
+    /**
+     * @return void
+     */
+    public static function setUpBeforeClass() : void
     {
         if( defined( 'LOG' ) && ( false !== LOG )) {
             $basePath = self::getBasePath() . LOG . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
@@ -110,7 +121,10 @@ class SignatureTest extends TestCase
         }
     }
 
-    public static function tearDownAfterClass()
+    /**
+     * @return void
+     */
+    public static function tearDownAfterClass() : void
     {
         foreach( LoggerDepot::getLoggerKeys() as $key ) {
             LoggerDepot::unregisterLogger( $key );
@@ -121,8 +135,9 @@ class SignatureTest extends TestCase
      * Create minimal sie-instance loaded with Faker-data, write xml1 and parse again, write xml2 and compare
      *
      * @test
+     * @throws Exception
      */
-    public function signatureTest2()
+    public function signatureTest2() : void
     {
 
         echo PHP_EOL . ' START  (min) ' . __FUNCTION__ . PHP_EOL;
@@ -132,8 +147,8 @@ class SignatureTest extends TestCase
 
         $signature1->setXMLattribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
         $signature1->setXMLattribute( 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema' );
-        $signature1->setXMLattribute( 'xsi:schemaLocation', 'http://www.w3.org/2000/09/xmldsig# http://www.w3.org/2000/09/xmldsig#' );
         $signature1->setXMLattribute( 'xmlns', 'http://www.w3.org/2000/09/xmldsig#' );
+        $signature1->setXMLattribute( 'xsi:schemaLocation', 'http://www.w3.org/2000/09/xmldsig# http://www.w3.org/2000/09/xmldsig#' );
         // echo 'XML attr first ' . var_export( $signature1->getXMLattributes(), true ) . PHP_EOL; // test ###
 
         $startTime = microtime( true );               // ---- write to XML
@@ -160,20 +175,37 @@ class SignatureTest extends TestCase
             touch( $fileName2 );
             file_put_contents( $fileName2, $xml2 );
         }
-        $this->assertXmlStringEqualsXmlString(
+        echo 'xml1 : ' . substr( $xml1, 0, 50 ) . PHP_EOL; // test ###
+        echo 'xml2 : ' . substr( $xml2, 0, 50 ) . PHP_EOL; // test ###
+
+        $this->assertSame(
             $xml1,
             $xml2,
-            'Failed asserting that two Dsig (signatureTest2) documents are equal.'
-
+            'Failed (#1) asserting that two Dsig (signatureTest2) documents are equal.'
         );
+        /* will not work... TypeError...
+        try {
+//            $this->assertXmlStringEqualsXmlString(
+            self::assertXmlStringEqualsXmlString(
+                $xml1,
+                $xml2,
+                'Failed asserting that two Dsig (signatureTest2) documents are equal.'
+            );
+        }
+        catch( \ValueError $te ) {
+            echo $te->getMessage() . PHP_EOL . $te->getTraceAsString() . PHP_EOL; // test ###
+            $this->fail();
+        }
+        */
     }
 
     /**
      * Create full signature-instance loaded with Faker-data, write xml1 and parse again, write xml2 and compare
      *
      * @test
+     * @throws Exception
      */
-    public function signatureTest3()
+    public function signatureTest3() : void
     {
 
         echo PHP_EOL . ' START (full) ' . __FUNCTION__ . PHP_EOL;
@@ -184,8 +216,8 @@ class SignatureTest extends TestCase
 
         $signature1->setXMLattribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
         $signature1->setXMLattribute( 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema' );
-        $signature1->setXMLattribute( 'xsi:schemaLocation', 'http://www.w3.org/2000/09/xmldsig# http://www.w3.org/2000/09/xmldsig#' );
         $signature1->setXMLattribute( 'xmlns', 'http://www.w3.org/2000/09/xmldsig#' );
+        $signature1->setXMLattribute( 'xsi:schemaLocation', 'http://www.w3.org/2000/09/xmldsig# http://www.w3.org/2000/09/xmldsig#' );
 
         // ---- write XML
         $startTime = microtime( true );
@@ -208,26 +240,36 @@ class SignatureTest extends TestCase
         $xml2      = DsigWriter::factory()->write( $signature2 );
         echo sprintf( '%s write time 2 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
-        // compare
-        $this->assertXmlStringEqualsXmlString(
-            $xml1,
-            $xml2,
-            'Failed asserting that two Signature (signatureTest3) documents are equal.'
-
-        );
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
             $fileName2 = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '2.xml';
             touch( $fileName2 );
             file_put_contents( $fileName2, $xml2 );
         }
+
+        // compare
+        $this->assertSame(
+            $xml1,
+            $xml2,
+            'Failed (#1) asserting that two Dsig (signatureTest2) documents are equal.'
+        );
+        /* will not work... TypeError
+//        $this->assertXmlStringEqualsXmlString(
+        self::assertXmlStringEqualsXmlString(
+            $xml1,
+            $xml2,
+            'Failed asserting that two Signature (signatureTest3) documents are equal.'
+
+        );
+        */
     }
 
     /**
      * Same as signatureTest2 but with prefix set
      *
      * @test
+     * @throws Exception
      */
-    public function signatureTest5()
+    public function signatureTest5() : void
     {
 
         echo PHP_EOL . ' START (min+prefix) ' . __FUNCTION__ . PHP_EOL;
@@ -287,15 +329,15 @@ class SignatureTest extends TestCase
             'Missing XMLNS denom propagated down.'
 
         );
-
     }
 
     /**
      * Same as signatureTest2 but output as DomNode
      *
      * @test
+     * @throws Exception
      */
-    public function signatureTest6()
+    public function signatureTest6() : void
     {
         echo PHP_EOL . ' START  (domNode) ' . __FUNCTION__ . PHP_EOL;
         $signature = SignatureType2::loadFromFaker();
@@ -309,14 +351,15 @@ class SignatureTest extends TestCase
 
         $domNode   = DsigParser::factory()->parse( $xml, true );
 
-        $this->assertTrue( $domNode instanceof DOMNode );
+        $this->assertInstanceOf( DOMNode::class, $domNode );
     }
 
     /**
      * @test
      */
-    public function algorithmTest()
+    public function algorithmTest() : void
     {
+        echo PHP_EOL . ' START ' . __FUNCTION__ . PHP_EOL;
         foreach( SignatureType1::ALGORITHMS as $algorithmIdentifier ) {
             $algorithm = Util::extractAlgorithmFromUriIdentifier( $algorithmIdentifier );
             $offset    = 0 - strlen( $algorithm ) - 2;

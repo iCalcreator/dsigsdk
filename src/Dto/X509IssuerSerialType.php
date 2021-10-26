@@ -38,19 +38,19 @@ use Webmozart\Assert\Assert;
 class X509IssuerSerialType extends DsigBase
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $X509IssuerName = null;
+    protected ?string $X509IssuerName = null;
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected $X509SerialNumber = null;
+    protected ?int $X509SerialNumber = null;
 
     /**
      * @return null|string
      */
-    public function getX509IssuerName()
+    public function getX509IssuerName() : ?string
     {
         return $this->X509IssuerName;
     }
@@ -68,7 +68,7 @@ class X509IssuerSerialType extends DsigBase
     /**
      * @return null|int
      */
-    public function getX509SerialNumber()
+    public function getX509SerialNumber() : ?int
     {
         return $this->X509SerialNumber;
     }

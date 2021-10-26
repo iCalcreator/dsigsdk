@@ -55,12 +55,11 @@ class DsigWriter extends DsigWriterBase
         $this->writer->openMemory();
         $this->writer->setIndent( true );
         $this->writer->startDocument( '1.0', 'UTF-8' );
-        switch ( true ) {
-            case ( $dsigBase instanceof SignatureType ) :
-                SignatureTypeWriter::factory( $this->writer)->write( $dsigBase );
-                break;
-            default :
-                throw new InvalidArgumentException( sprintf( $FMTerr1, get_class( $dsigBase )));
+        if( $dsigBase instanceof SignatureType ) {
+            SignatureTypeWriter::factory( $this->writer )->write( $dsigBase );
+        }
+        else {
+            throw new InvalidArgumentException( sprintf( $FMTerr1, get_class( $dsigBase )));
         }
         return $this->writer->outputMemory();
     }

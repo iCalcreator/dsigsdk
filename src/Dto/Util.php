@@ -48,16 +48,16 @@ class Util
      * Return cryptographically strong arg byteCnt bytes - uses openssl_random_pseudo_bytes
      *
      * @param int $byteCnt
-     * @param bool $cStrong
+     * @param null|bool $cStrong
      * @return string
      */
-    public static function getRandomPseudoBytes( int $byteCnt, & $cStrong = false ) : string
+    public static function getRandomPseudoBytes( int $byteCnt, ? bool & $cStrong = false ) : string
     {
         static $MAX = 10;
         $cnt = 0;
         do {
             $bytes = openssl_random_pseudo_bytes( $byteCnt, $cStrong );
-            $cnt += 1;
+            ++$cnt;
         } while(( $MAX > $cnt ) && ( false === $cStrong ));
         return $bytes;
     }
@@ -65,12 +65,12 @@ class Util
     /**
      * Return (hex) cryptographically strong salt, default 64 bytes
      *
-     * @param int $byteCnt
+     * @param null|int $byteCnt
      * @return string
      */
-    public static function getSalt( $byteCnt = null ) : string
+    public static function getSalt( ? int $byteCnt = null ) : string
     {
-        if( empty( $byteCnt )) {
+        if( $byteCnt === null ) {
             $byteCnt = 64;
         }
         $byteCnt2 = (int) floor( $byteCnt / 2 );
@@ -91,10 +91,10 @@ class Util
         static $HS    = [ '#', '/' ];
         static $WC    = '#WithComments';
         static $FMT   = 'Algorithm not found in \'%s\'';
-        if( in_array( substr( $identifier, -1 ), $HS ))  {
+        if( in_array( substr( $identifier, -1 ), $HS, true ) )  {
             $identifier = substr( $identifier, 0, -1 );
         }
-        if(( $WC == substr( $identifier, -13 )) &&
+        if(( $WC === substr( $identifier, -13 )) &&
             ( false !== ( $pos = strrpos( $identifier, $SLASH )))) {
             return substr( $identifier, ( $pos + 1 ));
         }

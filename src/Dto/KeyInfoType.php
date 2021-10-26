@@ -56,7 +56,7 @@ class KeyInfoType extends DsigBase
      *
      * choice maxOccurs="unbounded"
      */
-    protected $keyInfoType = [];
+    protected array $keyInfoType = [];
 
     /**
      * Property, get- and setter methods for

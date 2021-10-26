@@ -37,7 +37,6 @@ class TransformType implements DsigInterface, DsigLoaderInterface
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {
@@ -46,7 +45,7 @@ class TransformType implements DsigInterface, DsigLoaderInterface
         $max = $faker->numberBetween( 2, 3 );
         $transformTypes = [];
         for( $x = 0; $x <= $max; $x++ ) {
-            if( 1 == $faker->numberBetween( 1, 2 )) {
+            if( 1 === $faker->numberBetween( 1, 2 )) {
                 $transformTypes[] = [ self::XPATH => $faker->word ];
             }
             else {
@@ -54,7 +53,7 @@ class TransformType implements DsigInterface, DsigLoaderInterface
             }
         } // end for
         return Dto::factory()
-            ->setAlgorithm( self::ALGORITHMS[mt_rand( 0, count( self::ALGORITHMS ) - 1 )] )
+            ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] )
             ->setTransformTypes( $transformTypes );
     }
 }

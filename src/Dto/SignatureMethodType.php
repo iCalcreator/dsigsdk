@@ -47,7 +47,7 @@ class SignatureMethodType extends DsigBase
      * each pair *[ key => type ]
      * key : self::HMACOUTPUTLENGTH / self::ANYTYPE
      */
-    protected $signatureMethodTypes = [];
+    protected array $signatureMethodTypes = [];
 
     /**
      * Property, get- and setter methods for

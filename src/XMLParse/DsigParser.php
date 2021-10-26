@@ -57,15 +57,15 @@ class DsigParser extends DsigParserBase
      * Parse from file
      *
      * @param string    $fileName
-     * @param null|bool $asDomNode
+     * @param bool|null $asDomNode
      * @return SignatureType|DOMNode
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function parseXmlFromFile( string $fileName, $asDomNode = false )
+    public function parseXmlFromFile( string $fileName, ?bool $asDomNode = false )
     {
         self::assertIsValidXML( $fileName );
-        $content = $this->getContentFromFile( $fileName );
+        $content = self::getContentFromFile( $fileName );
         $this->logger->debug( 'Got content from ' . $fileName );
         return $this->parse( $content, $asDomNode );
     }
@@ -74,11 +74,11 @@ class DsigParser extends DsigParserBase
      * Parse from string, alias of method parse
      *
      * @param string    $xml
-     * @param null|bool $asDomNode
+     * @param bool|null $asDomNode
      * @return SignatureType|DOMNode
      * @throws Exception
      */
-    public function parseXmlFromString( string $xml, $asDomNode = false )
+    public function parseXmlFromString( string $xml, ?bool $asDomNode = false )
     {
         return $this->parse( $xml, $asDomNode );
     }
@@ -111,27 +111,28 @@ class DsigParser extends DsigParserBase
      * Parse xml-string
      *
      * @param string    $xml
-     * @param null|bool $asDomNode
+     * @param bool|null $asDomNode
      * @return SignatureType|DOMNode
      * @throws Exception
      * @throws InvalidArgumentException
      * @throws RuntimeException
      */
-    public function parse( string $xml, $asDomNode = false )
+    public function parse( string $xml, ?bool $asDomNode = false )
     {
         static $FMTerr1 = 'Error #%d parsing xml';
         static $FMTerr2 = 'Unknown xml root element \'%s\'';
         static $FMTerr3 = 'No xml root element found';
-        $this->reader   = new XMLReader();
         $loadEntities         = libxml_disable_entity_loader( true );
         $useInternalXmlErrors = libxml_use_internal_errors( true ); // enable user error handling
-        if( false === $this->reader->XML( $xml, null, self::$XMLReaderOptions )) {
+//      $this->reader   = new XMLReader();
+//      if( false === $this->reader::XML( $xml, null, self::$XMLReaderOptions )) {
+        if( false === ( $this->reader = XMLReader::XML( $xml, null, self::$XMLReaderOptions ))) {
             throw new InvalidArgumentException( sprintf( $FMTerr1, 1 ));
         }
         else {
             $result = null;
             while( @$this->reader->read() ) {
-                if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+                if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                     $this->logger->debug(
                         sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType],
                                  $this->reader->localName
@@ -139,9 +140,9 @@ class DsigParser extends DsigParserBase
                     );
                 }
                 switch( true ) {
-                    case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                    case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                         break;
-                    case ( self::SIGNATURE == $this->reader->localName ) :
+                    case ( self::SIGNATURE === $this->reader->localName ) :
                         if( $asDomNode ) {
                             $result = $this->reader->expand();
                             break 2;
@@ -158,10 +159,9 @@ class DsigParser extends DsigParserBase
         libxml_use_internal_errors( $useInternalXmlErrors ); // disable user error handling
         libxml_clear_errors();
         $libXarr = self::renderXmlError( $libxmlErrors, null, $xml );
-        if( 0 < count( $libXarr )) {
-            if( self::LogLibxmlErrors( LoggerDepot::getLogger( get_class()), $libXarr )) {
-                throw new RuntimeException( sprintf( $FMTerr1, 2 ));
-            }
+        if(( 0 < count( $libXarr )) &&
+            self::LogLibxmlErrors( LoggerDepot::getLogger( __CLASS__ ), $libXarr )) {
+            throw new RuntimeException( sprintf( $FMTerr1, 2 ));
         }
         $this->reader->close();
         if( empty( $result )) {
@@ -183,7 +183,7 @@ class DsigParser extends DsigParserBase
         foreach( $libXarr as $errorSets ) {
             foreach( $errorSets as $logLevel => $msg ) {
                 $logger->log( $logLevel, $msg );
-                if( self::CRITICAL == $logLevel ) {
+                if( self::CRITICAL === $logLevel ) {
                     $critical = true;
                 }
             } // end foreach

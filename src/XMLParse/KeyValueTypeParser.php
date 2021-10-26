@@ -55,23 +55,23 @@ class KeyValueTypeParser extends DsigParserBase
         }
         $headElement = $this->reader->localName;
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::DSAKEYVALUE == $this->reader->localName ) :
+                case ( self::DSAKEYVALUE === $this->reader->localName ) :
                     $keyValueType->setDSAKeyValue( DSAKeyValueTypeParser::factory( $this->reader)->parse());
                     break;
-                case ( self::RSAKEYVALUE == $this->reader->localName ) :
+                case ( self::RSAKEYVALUE === $this->reader->localName ) :
                     $keyValueType->setRSAKeyValue( RSAKeyValueTypeParser::factory( $this->reader)->parse());
                     break;
                 default :

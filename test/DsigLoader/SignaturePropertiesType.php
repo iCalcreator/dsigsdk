@@ -36,7 +36,6 @@ class SignaturePropertiesType
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {

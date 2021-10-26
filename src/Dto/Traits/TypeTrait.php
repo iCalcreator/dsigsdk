@@ -34,15 +34,15 @@ namespace Kigkonsult\DsigSdk\Dto\Traits;
 trait TypeTrait
 {
     /**
-     * @var string
+     * @var string|null
      *          type="anyURI"
      */
-    protected $type = null;
+    protected ?string $type = null;
 
     /**
      * @return null|string
      */
-    public function getType()
+    public function getType() : ?string
     {
         return $this->type;
     }

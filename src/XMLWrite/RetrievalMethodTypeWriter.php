@@ -41,17 +41,15 @@ class RetrievalMethodTypeWriter extends DsigWriterBase
      * @param RetrievalMethodType $retrievalMethodType
      *
      */
-    public function write( RetrievalMethodType $retrievalMethodType )
+    public function write( RetrievalMethodType $retrievalMethodType ) : void
     {
-        parent::setWriterStartElement(
-            $this->writer, self::RETRIEVALMETHOD, $retrievalMethodType->getXMLattributes()
-        );
+        self::setWriterStartElement( $this->writer, self::RETRIEVALMETHOD, $retrievalMethodType->getXMLattributes() );
 
-        parent::writeAttribute( $this->writer, self::URI,  $retrievalMethodType->getURI());
-        parent::writeAttribute( $this->writer, self::TYPE, $retrievalMethodType->getType());
+        self::writeAttribute( $this->writer, self::URI, $retrievalMethodType->getURI() );
+        self::writeAttribute( $this->writer, self::TYPE, $retrievalMethodType->getType() );
 
         $transforms = $retrievalMethodType->getTransforms();
-        if( ! empty( $transforms )) {
+        if( $transforms !== null ) {
             TransformsTypeWriter::factory( $this->writer)->write( $transforms );
         }
 

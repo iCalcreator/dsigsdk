@@ -41,18 +41,18 @@ class SignedInfoTypeWriter extends DsigWriterBase
      * @param SignedInfoType $signedInfoType
      *
      */
-    public function write( SignedInfoType $signedInfoType )
+    public function write( SignedInfoType $signedInfoType ) : void
     {
-        parent::setWriterStartElement( $this->writer, self::SIGNEDINFO, $signedInfoType->getXMLattributes());
+        self::setWriterStartElement( $this->writer, self::SIGNEDINFO, $signedInfoType->getXMLattributes() );
 
-        parent::writeAttribute( $this->writer, self::ID, $signedInfoType->getId());
+        self::writeAttribute( $this->writer, self::ID, $signedInfoType->getId() );
 
         $canonicalizationMethod = $signedInfoType->getCanonicalizationMethod();
-        if( ! empty( $canonicalizationMethod )) {
+        if( $canonicalizationMethod !== null ) {
             CanonicalizationMethodTypeWriter::factory( $this->writer)->write( $canonicalizationMethod );
         }
         $signatureMethod = $signedInfoType->getSignatureMethod();
-        if( ! empty( $signatureMethod )) {
+        if( $signatureMethod !== null ) {
             SignatureMethodTypeWriter::factory( $this->writer)->write( $signatureMethod );
         }
         foreach( $signedInfoType->getReference() as $reference ) {

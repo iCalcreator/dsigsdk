@@ -42,7 +42,6 @@ class SignatureType1
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {

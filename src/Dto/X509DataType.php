@@ -59,7 +59,7 @@ class X509DataType extends DsigBase
      *         AnyType
      * maxOccurs="unbounded"
      */
-    protected $X509DataTypes = [];
+    protected array $X509DataTypes = [];
 
     /**
      * @return array

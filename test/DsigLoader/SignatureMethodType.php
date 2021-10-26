@@ -29,6 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
 use Kigkonsult\DsigSdk\DsigInterface;
 use Kigkonsult\DsigSdk\Dto\SignatureMethodType as Dto;
 use Faker;
@@ -37,7 +38,7 @@ class SignatureMethodType implements DsigInterface, DsigLoaderInterface
 {
     /**
      * @return Dto
-     * @access static
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
@@ -46,7 +47,7 @@ class SignatureMethodType implements DsigInterface, DsigLoaderInterface
         $max = $faker->numberBetween( 1, 5 );
         $signatureMethodTypes = [];
         for( $x = 0; $x <= $max; $x++ ) {
-            if( 1 == $faker->numberBetween( 1, 2 )) {
+            if( 1 === $faker->numberBetween( 1, 2 )) {
                 $signatureMethodTypes[] =
                     [ self::HMACOUTPUTLENGTH => ( 8 * $faker->numberBetween( 11, 14 )) ];
             }
@@ -57,7 +58,7 @@ class SignatureMethodType implements DsigInterface, DsigLoaderInterface
             }
         } // end for
         return Dto::factory()
-            ->setAlgorithm( self::ALGORITHMS[mt_rand( 0, count( self::ALGORITHMS ) - 1 )] )
+            ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] )
             ->setSignatureMethodTypes( $signatureMethodTypes );
     }
 }

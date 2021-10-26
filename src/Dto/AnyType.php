@@ -35,9 +35,9 @@ namespace Kigkonsult\DsigSdk\Dto;
 class AnyType extends DsigBase
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $elementName = null;
+    protected ?string $elementName = null;
 
     /**
      * @var string[]
@@ -49,14 +49,14 @@ class AnyType extends DsigBase
                      processContents = (lax | skip | strict) : strict
                      {any attributes with non-schema Namespace...}>
      */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /**
      * content
      *
-     * @var string
+     * @var string|null
      */
-    protected $content = null;
+    protected ?string $content = null;
 
     /**
      * Property, get- and setter methods
@@ -68,7 +68,7 @@ class AnyType extends DsigBase
     /**
      * @return null|string
      */
-    public function getElementName()
+    public function getElementName() : ?string
     {
         return $this->elementName;
     }
@@ -117,7 +117,7 @@ class AnyType extends DsigBase
     /**
      * @return null|string
      */
-    public function getContent()
+    public function getContent() : ?string
     {
         return $this->content;
     }

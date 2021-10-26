@@ -35,20 +35,20 @@ namespace Kigkonsult\DsigSdk\Dto;
 class SignedInfoType extends DsigBase
 {
     /**
-     * @var CanonicalizationMethodType
+     * @var CanonicalizationMethodType|null
      */
-    protected $canonicalizationMethod = null;
+    protected ?CanonicalizationMethodType $canonicalizationMethod = null;
 
     /**
-     * @var SignatureMethodType
+     * @var SignatureMethodType|null
      */
-    protected $signatureMethod = null;
+    protected ?SignatureMethodType $signatureMethod = null;
 
     /**
      * @var ReferenceType[]
      *                    maxOccurs="unbounded"
      */
-    protected $reference = [];
+    protected array $reference = [];
 
     /**
      * Property, get- and setter methods for
@@ -60,7 +60,7 @@ class SignedInfoType extends DsigBase
     /**
      * @return null|CanonicalizationMethodType
      */
-    public function getCanonicalizationMethod()
+    public function getCanonicalizationMethod() : ?CanonicalizationMethodType
     {
         return $this->canonicalizationMethod;
     }
@@ -80,7 +80,7 @@ class SignedInfoType extends DsigBase
     /**
      * @return null|SignatureMethodType
      */
-    public function getSignatureMethod()
+    public function getSignatureMethod() : ?SignatureMethodType
     {
         return $this->signatureMethod;
     }

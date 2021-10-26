@@ -55,11 +55,9 @@ class TransformTypeParser extends DsigParserBase
                 $this->logger->debug(
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
-                switch( $this->reader->localName ) {
-                    case self::ALGORITM :
-                        $transformType->setAlgorithm( $this->reader->value );
-                        break;
-                } // end switch
+                if( self::ALGORITM === $this->reader->localName ) {
+                    $transformType->setAlgorithm( $this->reader->value );
+                }
             } // end while
             $this->reader->moveToElement();
         }
@@ -70,26 +68,26 @@ class TransformTypeParser extends DsigParserBase
         $currentElement = null;
         $transformTypes = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
                     sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
                 );
             }
             switch( true ) {
-                case ( XMLReader::END_ELEMENT == $this->reader->nodeType ) :
-                    if( $headElement == $this->reader->localName ) {
+                case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
+                    if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     $currentElement = null;
                     break;
-                case ( XMLReader::TEXT == $this->reader->nodeType ) :
-                    if( $this->reader->hasValue  && ( self::XPATH == $currentElement )) {
+                case ( XMLReader::TEXT === $this->reader->nodeType ) :
+                    if( $this->reader->hasValue  && ( self::XPATH === $currentElement )) {
                         $transformTypes[] = [ self::XPATH => $this->reader->value ];
                     }
                     break;
-                case ( XMLReader::ELEMENT != $this->reader->nodeType ) :
+                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::XPATH == $this->reader->localName ) :
+                case ( self::XPATH === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
                 default :

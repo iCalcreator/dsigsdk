@@ -29,6 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
 use Kigkonsult\DsigSdk\Dto\AnyType as Dto;
 use Faker;
 
@@ -37,7 +38,7 @@ class AnyType implements DsigLoaderInterface
     /**
      * @param int $iterateCnt
      * @return Dto
-     * @access static
+     * @throws Exception
      */
     public static function loadFromFaker( int $iterateCnt = 3 ) : Dto
     {
@@ -49,32 +50,32 @@ class AnyType implements DsigLoaderInterface
             $elementNamePart[] = ucfirst( strtolower( preg_replace( $search, '', $part )));
         }
         $uri = str_replace( '.html', '§', $faker->url );
-        if( '/' == substr( $uri, -1 )) {
+        if( '/' === substr( $uri, -1 )) {
             $uri .= 'abc§';
         }
         $dto = Dto::factory()
                   ->setXMLattribute( Dto::XMLNS, $uri )
                   ->setElementName( implode( '', $elementNamePart ));
         $attributes = [];
-        if( 1 == $faker->numberBetween( 1, 3 )) {
-            $attributes[self::ALGORITM] = self::ALGORITHMS[mt_rand( 0, count( self::ALGORITHMS ) - 1 )];
+        if( 1 === $faker->numberBetween( 1, 3 )) {
+            $attributes[self::ALGORITM] = self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )];
         }
-        if( 1 == $faker->numberBetween( 1, 3 )) {
+        if( 1 === $faker->numberBetween( 1, 3 )) {
             $attributes[self::ID] = $faker->swiftBicNumber;
         }
         if( ! empty( $attributes )) {
             $dto->setAttributes( $attributes );
         }
 
-        $iterateCnt -= 1;
-        if( empty( $iterateCnt ) || ( 1 == $faker->numberBetween( 1, 3 ))) {
+        --$iterateCnt;
+        if( empty( $iterateCnt ) || ( 1 === $faker->numberBetween( 1, 3 ))) {
             $dto->setContent( $faker->md5 );
         }
         else {
             $max  = $faker->numberBetween( 1, 3 );
             $anys = [];
             for( $x = 0; $x <= $max; $x++ ) {
-                $anys[] = AnyType::loadFromFaker( $iterateCnt );
+                $anys[] = self::loadFromFaker( $iterateCnt );
             }
             $dto->setAny( $anys );
         }

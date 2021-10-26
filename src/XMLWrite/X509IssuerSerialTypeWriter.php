@@ -41,28 +41,24 @@ class X509IssuerSerialTypeWriter extends DsigWriterBase
      * @param X509IssuerSerialType $X509IssuerSerialType
      *
      */
-    public function write( X509IssuerSerialType $X509IssuerSerialType )
+    public function write( X509IssuerSerialType $X509IssuerSerialType ) : void
     {
         $XMLattributes = $X509IssuerSerialType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::X509ISSUERSERIAL, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::X509ISSUERSERIAL, $XMLattributes );
 
         $X509IssuerName = $X509IssuerSerialType->getX509IssuerName();
         if( ! empty( $X509IssuerName )) {
-            parent::writeTextElement(
-                $this->writer,
+            self::writeTextElement( $this->writer,
                 self::X509ISSUERNAME,
                 $XMLattributes,
-                $X509IssuerName
-            );
+                $X509IssuerName );
         }
         $X509SerialNumber = $X509IssuerSerialType->getX509SerialNumber();
-        if( ! empty( $X509SerialNumber )) {
-            parent::writeTextElement(
-                $this->writer,
+        if( $X509SerialNumber !== null ) {
+            self::writeTextElement( $this->writer,
                 self::X509SERIALNUBER,
                 $XMLattributes,
-                (string) $X509SerialNumber
-            );
+                (string)$X509SerialNumber );
         }
 
         $this->writer->endElement();

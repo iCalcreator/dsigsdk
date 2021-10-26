@@ -41,48 +41,45 @@ class DSAKeyValueTypeWriter extends DsigWriterBase
      * @param DSAKeyValueType $DSAKeyValueType
      *
      */
-    public function write( DSAKeyValueType $DSAKeyValueType ) {
+    public function write( DSAKeyValueType $DSAKeyValueType ) : void
+    {
         $XMLattributes = $DSAKeyValueType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::DSAKEYVALUE, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::DSAKEYVALUE, $XMLattributes );
 
 
         $p = $DSAKeyValueType->getP();
         if( ! empty( $p )) {
-            parent::writeTextElement( $this->writer, self::P, $XMLattributes, $p );
+            self::writeTextElement( $this->writer, self::P, $XMLattributes, $p );
         }
         $q = $DSAKeyValueType->getQ();
         if( ! empty( $q )) {
-            parent::writeTextElement( $this->writer, self::Q, $XMLattributes, $q );
+            self::writeTextElement( $this->writer, self::Q, $XMLattributes, $q );
         }
         $g = $DSAKeyValueType->getG();
         if( ! empty( $g )) {
-            parent::writeTextElement( $this->writer, self::G, $XMLattributes, $g );
+            self::writeTextElement( $this->writer, self::G, $XMLattributes, $g );
         }
         $y = $DSAKeyValueType->getY();
         if( ! empty( $y )) {
-            parent::writeTextElement( $this->writer, self::Y, $XMLattributes, $y );
+            self::writeTextElement( $this->writer, self::Y, $XMLattributes, $y );
         }
         $j = $DSAKeyValueType->getJ();
         if( ! empty( $j )) {
-            parent::writeTextElement( $this->writer, self::J, $XMLattributes, $j );
+            self::writeTextElement( $this->writer, self::J, $XMLattributes, $j );
         }
         $seed = $DSAKeyValueType->getSeed();
         if( ! empty( $seed )) {
-            parent::writeTextElement(
-                $this->writer,
+            self::writeTextElement( $this->writer,
                 self::SEED,
                 $XMLattributes,
-                $seed
-            );
+                $seed );
         }
         $pgenCounter = $DSAKeyValueType->getPgenCounter();
         if( ! empty( $pgenCounter )) {
-            parent::writeTextElement(
-                $this->writer,
+            self::writeTextElement( $this->writer,
                 self::PGENCOUNTER,
                 $XMLattributes,
-                $pgenCounter
-            );
+                $pgenCounter );
         }
 
         $this->writer->endElement();

@@ -48,7 +48,7 @@ class SPKIDataType extends DsigBase
      *         [ self::SPKISEXP => "base64Binary" ]
      *         [ self::ANYTYPE  => AnyType ]
      */
-    protected $SPKIDataType = [];
+    protected array $SPKIDataType = [];
 
     /**
      * @return array

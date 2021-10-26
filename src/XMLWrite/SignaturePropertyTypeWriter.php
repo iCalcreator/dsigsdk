@@ -41,13 +41,13 @@ class SignaturePropertyTypeWriter extends DsigWriterBase
      * @param SignaturePropertyType $signaturePropertyType
      *
      */
-    public function write( SignaturePropertyType $signaturePropertyType )
+    public function write( SignaturePropertyType $signaturePropertyType ) : void
     {
         $XMLattributes = $signaturePropertyType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::SIGNATUREPROPERTY, $XMLattributes);
+        self::setWriterStartElement( $this->writer, self::SIGNATUREPROPERTY, $XMLattributes );
 
-        parent::writeAttribute( $this->writer, self::ID,     $signaturePropertyType->getId());
-        parent::writeAttribute( $this->writer, self::TARGET, $signaturePropertyType->getTarget());
+        self::writeAttribute( $this->writer, self::ID, $signaturePropertyType->getId() );
+        self::writeAttribute( $this->writer, self::TARGET, $signaturePropertyType->getTarget() );
 
         foreach( $signaturePropertyType->getAny() as $any) {
             AnyTypeWriter::factory( $this->writer )->write( $any );

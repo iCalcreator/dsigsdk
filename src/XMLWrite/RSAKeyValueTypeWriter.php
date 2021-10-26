@@ -41,29 +41,25 @@ class RSAKeyValueTypeWriter extends DsigWriterBase
      * @param RSAKeyValueType $RSAKeyValueType
      *
      */
-    public function write( RSAKeyValueType $RSAKeyValueType )
+    public function write( RSAKeyValueType $RSAKeyValueType ) : void
     {
         $XMLattributes = $RSAKeyValueType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::RSAKEYVALUE, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::RSAKEYVALUE, $XMLattributes );
 
 
         $modulus = $RSAKeyValueType->getModulus();
         if( ! empty( $modulus )) {
-            parent::writeTextElement(
-                $this->writer,
+            self::writeTextElement( $this->writer,
                 self::MODULUS,
                 $XMLattributes,
-                $modulus
-            );
+                $modulus );
         }
         $exponent = $RSAKeyValueType->getExponent();
         if( ! empty( $exponent )) {
-            parent::writeTextElement(
-                $this->writer,
+            self::writeTextElement( $this->writer,
                 self::EXPONENT,
                 $XMLattributes,
-                $exponent
-            );
+                $exponent );
         }
 
         $this->writer->endElement();

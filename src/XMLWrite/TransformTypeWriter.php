@@ -41,23 +41,21 @@ class TransformTypeWriter extends DsigWriterBase
      * @param TransformType $transformType
      *
      */
-    public function write( TransformType $transformType )
+    public function write( TransformType $transformType ) : void
     {
         $XMLattributes = $transformType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::TRANSFORM, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::TRANSFORM, $XMLattributes );
 
-        parent::writeAttribute( $this->writer, self::ALGORITM, $transformType->getAlgorithm());
+        self::writeAttribute( $this->writer, self::ALGORITM, $transformType->getAlgorithm() );
 
         foreach( $transformType->getTransformTypes() as $element ) {
             foreach( $element as $key => $value ) {
                 switch( $key ) {
                     case self::XPATH :
-                        parent::writeTextElement(
-                            $this->writer,
+                        self::writeTextElement( $this->writer,
                             self::XPATH,
                             $XMLattributes,
-                            $value
-                        );
+                            $value );
                         break;
                     case self::ANYTYPE :
                         AnyTypeWriter::factory( $this->writer )->write( $value );

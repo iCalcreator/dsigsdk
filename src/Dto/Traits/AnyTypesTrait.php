@@ -36,7 +36,7 @@ trait AnyTypesTrait
     /**
      * @var AnyType[]
      */
-    protected $any = [];
+    protected array $any = [];
 
     /**
      * @return AnyType[]

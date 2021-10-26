@@ -38,7 +38,6 @@ class RSAKeyValueType
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {

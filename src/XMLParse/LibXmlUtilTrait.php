@@ -143,7 +143,7 @@ trait LibXmlUtilTrait
                     break;
                 case LIBXML_ERR_ERROR:      // 2
                     $str3     = $LIBXML_recoverable_Error;
-                    $logLevel = ( 522 == $error->code ) ? $INFO : $WARNING; // Validation failed: no DTD found !
+                    $logLevel = ( 522 === $error->code ) ? $INFO : $WARNING; // Validation failed: no DTD found !
                     break;
                 case LIBXML_ERR_FATAL:      // 3
                 default :

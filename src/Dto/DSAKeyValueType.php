@@ -35,48 +35,48 @@ namespace Kigkonsult\DsigSdk\Dto;
 class DSAKeyValueType extends DsigBase
 {
     /**
-     * @var string  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
      */
-    protected $p = null;
+    protected ?string $p = null;
 
     /**
-     * @var string  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
      */
-    protected $q = null;
+    protected ?string $q = null;
 
     /**
-     * @var string  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
      */
-    protected $g = null;
+    protected ?string $g = null;
 
     /**
-     * @var string  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
      */
-    protected $y = null;
+    protected ?string $y = null;
 
     /**
-     * @var string  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
      */
-    protected $j = null;
+    protected ?string $j = null;
 
     /**
-     * @var string  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
      */
-    protected $seed = null;
+    protected ?string $seed = null;
 
     /**
-     * @var string  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
      */
-    protected $pgenCounter = null;
+    protected ?string $pgenCounter = null;
 
     /**
      * @return null|string
      */
-    public function getP()
+    public function getP() : ?string
     {
         return $this->p;
     }
@@ -94,7 +94,7 @@ class DSAKeyValueType extends DsigBase
     /**
      * @return null|string
      */
-    public function getQ()
+    public function getQ() : ?string
     {
         return $this->q;
     }
@@ -112,7 +112,7 @@ class DSAKeyValueType extends DsigBase
     /**
      * @return null|string
      */
-    public function getG()
+    public function getG() : ?string
     {
         return $this->g;
     }
@@ -130,7 +130,7 @@ class DSAKeyValueType extends DsigBase
     /**
      * @return null|string
      */
-    public function getY()
+    public function getY() : ?string
     {
         return $this->y;
     }
@@ -148,7 +148,7 @@ class DSAKeyValueType extends DsigBase
     /**
      * @return null|string
      */
-    public function getJ()
+    public function getJ() : ?string
     {
         return $this->j;
     }
@@ -166,7 +166,7 @@ class DSAKeyValueType extends DsigBase
     /**
      * @return null|string
      */
-    public function getSeed()
+    public function getSeed() : ?string
     {
         return $this->seed;
     }
@@ -184,7 +184,7 @@ class DSAKeyValueType extends DsigBase
     /**
      * @return null|string
      */
-    public function getPgenCounter()
+    public function getPgenCounter() : ?string
     {
         return $this->pgenCounter;
     }

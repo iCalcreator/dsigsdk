@@ -43,7 +43,6 @@ class SignatureType implements DsigLoaderInterface
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {

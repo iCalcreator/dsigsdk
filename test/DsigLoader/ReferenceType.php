@@ -39,7 +39,6 @@ class ReferenceType
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {

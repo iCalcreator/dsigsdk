@@ -41,21 +41,19 @@ class SPKIDataTypeWriter extends DsigWriterBase
      * @param SPKIDataType $SPKIDataType
      *
      */
-    public function write( SPKIDataType $SPKIDataType )
+    public function write( SPKIDataType $SPKIDataType ) : void
     {
         $XMLattributes = $SPKIDataType->getXMLattributes();
-        parent::setWriterStartElement( $this->writer, self::SPKIDATA, $XMLattributes );
+        self::setWriterStartElement( $this->writer, self::SPKIDATA, $XMLattributes );
 
         foreach( $SPKIDataType->getSPKIDataType() as $elementSet ) {
             foreach( $elementSet as $key => $value ) {
                 switch( $key ) {
                     case self::SPKISEXP :
-                        parent::writeTextElement(
-                            $this->writer,
+                        self::writeTextElement( $this->writer,
                             self::SPKISEXP,
                             $XMLattributes,
-                            $value
-                        );
+                            $value );
                         break;
                     case self::ANYTYPE :
                         AnyTypeWriter::factory( $this->writer )->write( $value );

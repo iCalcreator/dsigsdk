@@ -39,7 +39,6 @@ class X509DataType  implements DsigInterface
 {
     /**
      * @return Dto
-     * @access static
      */
     public static function loadFromFaker() : Dto
     {

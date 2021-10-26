@@ -38,26 +38,26 @@ namespace Kigkonsult\DsigSdk\Dto;
 class SignatureType extends DsigBase
 {
     /**
-     * @var SignedInfoType
+     * @var SignedInfoType|null
      */
-    protected $signedInfo = null;
+    protected ?SignedInfoType $signedInfo = null;
 
     /**
-     * @var SignatureValueType
+     * @var SignatureValueType|null
      */
-    protected $signatureValue = null;
+    protected ?SignatureValueType $signatureValue = null;
 
     /**
-     * @var KeyInfoType
+     * @var KeyInfoType|null
      *                  minOccurs="0"
      */
-    protected $keyInfo = null;
+    protected ?KeyInfoType $keyInfo = null;
 
     /**
      * @var ObjectType[]
      *           minOccurs="0" maxOccurs="unbounded"
      */
-    protected $object = [];
+    protected array $object = [];
 
     /**
      * Property, get- and setter methods for
@@ -69,7 +69,7 @@ class SignatureType extends DsigBase
     /**
      * @return null|SignedInfoType
      */
-    public function getSignedInfo()
+    public function getSignedInfo() : ?SignedInfoType
     {
         return $this->signedInfo;
     }
@@ -87,7 +87,7 @@ class SignatureType extends DsigBase
     /**
      * @return null|SignatureValueType
      */
-    public function getSignatureValue()
+    public function getSignatureValue() : ?SignatureValueType
     {
         return $this->signatureValue;
     }
@@ -105,7 +105,7 @@ class SignatureType extends DsigBase
     /**
      * @return null|KeyInfoType
      */
-    public function getKeyInfo()
+    public function getKeyInfo() : ?KeyInfoType
     {
         return $this->keyInfo;
     }

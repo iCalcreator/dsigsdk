@@ -56,14 +56,12 @@ class SignatureValueTypeParser extends DsigParserBase
                 $this->logger->debug(
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
-                switch( $this->reader->localName ) {
-                    case self::ID :
-                        $signatureValueType->setId( $this->reader->value );
-                        break;
-                    default :
-                        $signatureValueType->setXMLattribute( $this->reader->name, $this->reader->value );
-                        break;
-                } // end switch
+                if( self::ID === $this->reader->localName ) {
+                    $signatureValueType->setId( $this->reader->value );
+                }
+                else {
+                    $signatureValueType->setXMLattribute( $this->reader->name, $this->reader->value );
+                }
             } // end while
             $this->reader->moveToElement();
         }
@@ -71,15 +69,19 @@ class SignatureValueTypeParser extends DsigParserBase
             return $signatureValueType;
         }
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE != $this->reader->nodeType ) {
+            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
+                    sprintf( self::$FMTreadNode,
+                        __METHOD__,
+                        self::$nodeTypes[$this->reader->nodeType],
+                        $this->reader->localName
+                    )
                 );
             }
-            if( XMLReader::END_ELEMENT == $this->reader->nodeType ) {
+            if( XMLReader::END_ELEMENT === $this->reader->nodeType ) {
                 break;
             }
-            if( XMLReader::TEXT == $this->reader->nodeType ) {
+            if( XMLReader::TEXT === $this->reader->nodeType ) {
                 if( $this->reader->hasValue ) {
                     $signatureValueType->setSignatureValueType( $this->reader->value );
                 }
