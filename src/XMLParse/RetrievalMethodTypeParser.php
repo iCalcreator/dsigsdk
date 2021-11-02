@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\RetrievalMethodType;
+use Kigkonsult\DsigSdk\Dto\RetrievalMethod;
 use XMLReader;
 
 use function sprintf;
@@ -43,11 +43,11 @@ class RetrievalMethodTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return RetrievalMethodType
+     * @return RetrievalMethod
      */
-    public function parse() : RetrievalMethodType
+    public function parse() : RetrievalMethod
     {
-        $retrievalMethodType = RetrievalMethodType::factory()->setXMLattributes( $this->reader );
+        $retrievalMethod = RetrievalMethod::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -58,17 +58,17 @@ class RetrievalMethodTypeParser extends DsigParserBase
                 );
                 switch( $this->reader->localName ) {
                     case ( self::URI ) :
-                        $retrievalMethodType->setURI( $this->reader->value );
+                        $retrievalMethod->setURI( $this->reader->value );
                         break;
                     case ( self::TYPE ) :
-                        $retrievalMethodType->setType( $this->reader->value );
+                        $retrievalMethod->setType( $this->reader->value );
                         break;
                 } // end switch
             } // end while
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $retrievalMethodType;
+            return $retrievalMethod;
         }
         $headElement    = $this->reader->localName;
         $currentElement = null;
@@ -88,18 +88,18 @@ class RetrievalMethodTypeParser extends DsigParserBase
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::URI === $currentElement )) :
-                    $retrievalMethodType->setURI( $this->reader->value);
+                    $retrievalMethod->setURI( $this->reader->value);
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 case ( self::TRANSFORMS === $this->reader->localName ) :
-                    $retrievalMethodType->setTransforms( TransformsTypeParser::factory( $this->reader )->parse());
+                    $retrievalMethod->setTransforms( TransformsTypeParser::factory( $this->reader )->parse());
                     break;
                 case ( self::URI === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
             } // end switch
         } // end while
-        return $retrievalMethodType;
+        return $retrievalMethod;
     }
 }

@@ -30,10 +30,11 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
 use Exception;
-use Kigkonsult\DsigSdk\Dto\CanonicalizationMethodType as Dto;
-use Faker;
+// use Faker;
+use Kigkonsult\DsigSdk\Dto\SignedInfo as Dto;
+use Kigkonsult\DsigSdk\Dto\Util;
 
-class CanonicalizationMethodType implements DsigLoaderInterface
+class SignedInfo
 {
     /**
      * @return Dto
@@ -41,16 +42,11 @@ class CanonicalizationMethodType implements DsigLoaderInterface
      */
     public static function loadFromFaker() : Dto
     {
-        $faker = Faker\Factory::create();
-
-        $max  = $faker->numberBetween( 1, 2 );
-        $anys = [];
-        for( $x = 0; $x < $max; $x++ ) {
-            $anys[] = AnyType::loadFromFaker();
-        }
+//        $faker = Faker\Factory::create();
 
         return Dto::factory()
-                  ->setAny( $anys )
-                  ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] );
+            ->setId( Util::getSalt())
+            ->setCanonicalizationMethod( CanonicalizationMethod::loadFromFaker())
+            ->setSignatureMethod( SignatureMethod::loadFromFaker());
     }
 }

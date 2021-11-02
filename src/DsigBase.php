@@ -41,17 +41,16 @@ abstract class DsigBase extends LogLevel implements DsigInterface, XMLAttributes
     /**
      * @var mixed
      */
-    protected $logger = null;
+    protected mixed $logger;
 
     /**
      * Constructor
      *
-     * @param mixed $dummy
+     * @param null|mixed $dummy
      */
-    public function __construct( $dummy = null )
+    public function __construct( mixed $dummy = null )
     {
-        $class = get_called_class();
-        $this->logger = LoggerDepot::getLogger( $class );
+        $this->logger = LoggerDepot::getLogger( __NAMESPACE__ );
         if( empty( $this->logger )) {
             $this->logger = new NullLogger();
         }

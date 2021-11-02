@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\TransformsType;
+use Kigkonsult\DsigSdk\Dto\Transforms;
 use XMLReader;
 
 use function sprintf;
@@ -42,19 +42,19 @@ class TransformsTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return TransformsType
+     * @return Transforms
      */
-    public function parse() : TransformsType
+    public function parse() : Transforms
     {
-        $transformsType = TransformsType::factory()->setXMLattributes( $this->reader );
+        $transforms = Transforms::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
         if( $this->reader->isEmptyElement ) {
-            return $transformsType;
+            return $transforms;
         }
-        $headElement = $this->reader->localName;
-        $transforms  = [];
+        $headElement   = $this->reader->localName;
+        $subTransforms = [];
         while( @$this->reader->read()) {
             if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
@@ -70,11 +70,11 @@ class TransformsTypeParser extends DsigParserBase
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 case ( self::TRANSFORM === $this->reader->localName ) :
-                    $transforms[] = TransformTypeParser::factory( $this->reader )->parse();
+                    $subTransforms[] = TransformTypeParser::factory( $this->reader )->parse();
                     break;
             } // end switch
         } // end while
-        $transformsType->setTransform( $transforms );
-        return $transformsType;
+        $transforms->setTransform( $subTransforms );
+        return $transforms;
     }
 }

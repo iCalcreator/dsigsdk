@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\CanonicalizationMethodType;
+use Kigkonsult\DsigSdk\Dto\CanonicalizationMethod;
 
 /**
  * Class CanonicalizationMethodTypeWriter
@@ -38,12 +38,17 @@ class CanonicalizationMethodTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param CanonicalizationMethodType $canonicalizationMethodType
      *
+     * @param CanonicalizationMethod $canonicalizationMethodType
+     * @return void
      */
-    public function write( CanonicalizationMethodType $canonicalizationMethodType ) : void
+    public function write( CanonicalizationMethod $canonicalizationMethodType ) : void
     {
-        self::setWriterStartElement( $this->writer, self::CANONICALIZATIONMETHOD, $canonicalizationMethodType->getXMLattributes() );
+        self::setWriterStartElement(
+            $this->writer,
+            self::CANONICALIZATIONMETHOD,
+            $canonicalizationMethodType->getXMLattributes()
+        );
 
         self::writeAttribute( $this->writer,
             self::ALGORITM,

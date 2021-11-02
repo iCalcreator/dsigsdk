@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\X509DataType;
+use Kigkonsult\DsigSdk\Dto\X509Data;
 use XMLReader;
 
 use function sprintf;
@@ -42,11 +42,11 @@ class X509DataTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return X509DataType
+     * @return X509Data
      */
-    public function parse() : X509DataType
+    public function parse() : X509Data
     {
-        $x509DataType  = X509DataType::factory()->setXMLattributes( $this->reader );
+        $x509Data = X509Data::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -97,7 +97,7 @@ class X509DataTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $x509DataType->setX509DataTypes( $x509DataTypes );
-        return $x509DataType;
+        $x509Data->setX509DataTypes( $x509DataTypes );
+        return $x509Data;
     }
 }

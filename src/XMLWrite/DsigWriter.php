@@ -30,7 +30,7 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\Dto\DsigBase;
-use Kigkonsult\DsigSdk\Dto\SignatureType;
+use Kigkonsult\DsigSdk\Dto\Signature;
 use XMLWriter;
 use InvalidArgumentException;
 
@@ -55,7 +55,7 @@ class DsigWriter extends DsigWriterBase
         $this->writer->openMemory();
         $this->writer->setIndent( true );
         $this->writer->startDocument( '1.0', 'UTF-8' );
-        if( $dsigBase instanceof SignatureType ) {
+        if( $dsigBase instanceof Signature ) {
             SignatureTypeWriter::factory( $this->writer )->write( $dsigBase );
         }
         else {

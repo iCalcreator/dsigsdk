@@ -29,13 +29,15 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\IdTrait;
+
 /**
  * Class SignatureValueType
  */
 class SignatureValueType extends DsigBase
 {
     /**
-     * @var string|null
+     * @var null|string
      *            base="base64Binary"
      */
     protected ?string $signatureValueType = null;
@@ -45,7 +47,7 @@ class SignatureValueType extends DsigBase
      * var string id
      *            attribute name="Id" type="ID" use="optional"
      */
-    use Traits\IdTrait;
+    use IdTrait;
 
     /**
      * @return null|string
@@ -59,7 +61,7 @@ class SignatureValueType extends DsigBase
      * @param string $signatureValueType
      * @return static
      */
-    public function setSignatureValueType( string $signatureValueType ) : self
+    public function setSignatureValueType( string $signatureValueType ) : static
     {
         $this->signatureValueType = $signatureValueType;
         return $this;

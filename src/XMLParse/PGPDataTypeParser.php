@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\PGPDataType;
+use Kigkonsult\DsigSdk\Dto\PGPData;
 use XMLReader;
 
 use function sprintf;
@@ -42,16 +42,16 @@ class PGPDataTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return PGPDataType
+     * @return PGPData
      */
-    public function parse() :PGPDataType
+    public function parse() :PGPData
     {
-        $PGPDataType  = PGPDataType::factory()->setXMLattributes( $this->reader );
+        $PGPData = PGPData::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
         if( $this->reader->isEmptyElement ) {
-            return $PGPDataType;
+            return $PGPData;
         }
         $headElement    = $this->reader->localName;
         $currentElement = null;
@@ -76,10 +76,10 @@ class PGPDataTypeParser extends DsigParserBase
                         case( ! $this->reader->hasValue ) :
                             break;
                         case ( self::PGPKEYID === $currentElement ) :
-                            $PGPDataType->setPGPKeyID( $this->reader->value );
+                            $PGPData->setPGPKeyID( $this->reader->value );
                             break;
                         case ( self::PGPKEYPACKET === $currentElement ) :
-                            $PGPDataType->setPGPKeyPacket( $this->reader->value );
+                            $PGPData->setPGPKeyPacket( $this->reader->value );
                             break;
                     }
                     break;
@@ -97,7 +97,7 @@ class PGPDataTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $PGPDataType->setAny( $anyTypes );
-        return $PGPDataType;
+        $PGPData->setAny( $anyTypes );
+        return $PGPData;
     }
 }

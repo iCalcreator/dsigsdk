@@ -30,56 +30,28 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
 use Exception;
-use Kigkonsult\DsigSdk\Dto\AnyType as Dto;
 use Faker;
+use Kigkonsult\DsigSdk\Dto\SignatureProperty as Dto;
+use Kigkonsult\DsigSdk\Dto\Util;
 
-class AnyType implements DsigLoaderInterface
+class SignatureProperty
 {
     /**
-     * @param int $iterateCnt
      * @return Dto
      * @throws Exception
      */
-    public static function loadFromFaker( int $iterateCnt = 3 ) : Dto
+    public static function loadFromFaker() : Dto
     {
-        static $search = '/[^A-Za-z0-9]/';
         $faker = Faker\Factory::create();
 
-        $elementNamePart = [];
-        foreach( explode( ' ', $faker->catchPhrase ) as $part ) {
-            $elementNamePart[] = ucfirst( strtolower( preg_replace( $search, '', $part )));
+        $max = $faker->numberBetween( 1, 2 );
+        $anys = [];
+        for( $x = 0; $x < $max; $x++ ) {
+            $anys[] = Any::loadFromFaker();
         }
-        $uri = str_replace( '.html', '§', $faker->url );
-        if( '/' === substr( $uri, -1 )) {
-            $uri .= 'abc§';
-        }
-        $dto = Dto::factory()
-                  ->setXMLattribute( Dto::XMLNS, $uri )
-                  ->setElementName( implode( '', $elementNamePart ));
-        $attributes = [];
-        if( 1 === $faker->numberBetween( 1, 3 )) {
-            $attributes[self::ALGORITM] = self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )];
-        }
-        if( 1 === $faker->numberBetween( 1, 3 )) {
-            $attributes[self::ID] = $faker->swiftBicNumber;
-        }
-        if( ! empty( $attributes )) {
-            $dto->setAttributes( $attributes );
-        }
-
-        --$iterateCnt;
-        if( empty( $iterateCnt ) || ( 1 === $faker->numberBetween( 1, 3 ))) {
-            $dto->setContent( $faker->md5 );
-        }
-        else {
-            $max  = $faker->numberBetween( 1, 3 );
-            $anys = [];
-            for( $x = 0; $x <= $max; $x++ ) {
-                $anys[] = self::loadFromFaker( $iterateCnt );
-            }
-            $dto->setAny( $anys );
-        }
-
-        return $dto;
+        return Dto::factory()
+                  ->setAny( $anys )
+                  ->setTarget( $faker->url )
+                  ->setId( Util::getSalt());
     }
 }

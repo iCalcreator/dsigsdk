@@ -44,9 +44,9 @@ class SPKIDataType extends DsigBase
     /**
      * @var array
      *
-     * each element is a keyed pair of SPKISexp/AnyType
+     * each element is a keyed pair of SPKISexp/Any
      *         [ self::SPKISEXP => "base64Binary" ]
-     *         [ self::ANYTYPE  => AnyType ]
+     *         [ self::ANYTYPE  => Any ]
      */
     protected array $SPKIDataType = [];
 
@@ -64,14 +64,17 @@ class SPKIDataType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function addSPKIDataType( string $type, $SPKIData ) : self
+    public function addSPKIDataType( string $type, mixed $SPKIData ) : static
     {
         switch( $type ) {
             case self::SPKISEXP :
                 Assert::string( $SPKIData );
                 break;
+            case  self::ANY :
+                $type = self::ANYTYPE;
+                // fall through
             case self::ANYTYPE :
-                Assert::isInstanceOf( $SPKIData, AnyType::class );
+                Assert::isInstanceOf( $SPKIData, Any::class );
                 break;
             default :
                 throw new InvalidArgumentException(
@@ -87,7 +90,7 @@ class SPKIDataType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function setSPKIDataType( array $SPKIData ) : self
+    public function setSPKIDataType( array $SPKIData ) : static
     {
         foreach( $SPKIData as $ix1 => $elementSet ) {
             if( ! is_array( $elementSet )) {

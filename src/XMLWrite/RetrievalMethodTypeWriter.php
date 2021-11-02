@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\RetrievalMethodType;
+use Kigkonsult\DsigSdk\Dto\RetrievalMethod;
 
 /**
  * Class RetrievalMethodTypeWriter
@@ -38,10 +38,10 @@ class RetrievalMethodTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param RetrievalMethodType $retrievalMethodType
+     * @param RetrievalMethod $retrievalMethodType
      *
      */
-    public function write( RetrievalMethodType $retrievalMethodType ) : void
+    public function write( RetrievalMethod $retrievalMethodType ) : void
     {
         self::setWriterStartElement( $this->writer, self::RETRIEVALMETHOD, $retrievalMethodType->getXMLattributes() );
 

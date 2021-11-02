@@ -34,7 +34,7 @@ namespace Kigkonsult\DsigSdk\Dto\Traits;
 trait TypeTrait
 {
     /**
-     * @var string|null
+     * @var null|string
      *          type="anyURI"
      */
     protected ?string $type = null;
@@ -51,7 +51,7 @@ trait TypeTrait
      * @param string $type
      * @return static
      */
-    public function setType( string $type ) : self
+    public function setType( string $type ) : static
     {
         $this->type = $type;
         return $this;

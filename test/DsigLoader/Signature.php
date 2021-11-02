@@ -29,8 +29,9 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\SignatureType as Dto;
+use Kigkonsult\DsigSdk\Dto\Signature as Dto;
 use Kigkonsult\DsigSdk\Dto\Util;
 
 /**
@@ -39,10 +40,11 @@ use Kigkonsult\DsigSdk\Dto\Util;
  * schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
  * namespace="http://www.w3.org/2000/09/xmldsig#"
  */
-class SignatureType implements DsigLoaderInterface
+class Signature implements DsigLoaderInterface
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
@@ -51,13 +53,13 @@ class SignatureType implements DsigLoaderInterface
         $max = $faker->numberBetween( 1, 2 );
         $objects = [];
         for( $x = 0; $x <= $max; $x++ ) {
-            $objects[] = ObjectType::loadFromFaker();
+            $objects[] = Objekt::loadFromFaker();
         }
         return Dto::factory()
             ->setId( Util::getSalt())
-            ->setSignedInfo( SignedInfoType::loadFromFaker())
-            ->setSignatureValue( SignatureValueType::loadFromFaker())
-            ->setKeyInfo( KeyInfoType::loadFromFaker())
+            ->setSignedInfo( SignedInfo::loadFromFaker())
+            ->setSignatureValue( SignatureValue::loadFromFaker())
+            ->setKeyInfo( KeyInfo::loadFromFaker())
             ->setObject( $objects );
     }
 }

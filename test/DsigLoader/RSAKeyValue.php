@@ -27,12 +27,22 @@
  *            along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 declare( strict_types = 1 );
-namespace Kigkonsult\DsigSdk\Dto;
+namespace Kigkonsult\DsigSdk\DsigLoader;
 
-/**
- * Class Reference
- */
-class Reference extends ReferenceType
+use Faker;
+use Kigkonsult\DsigSdk\Dto\RSAKeyValue as Dto;
+
+class RSAKeyValue
 {
+    /**
+     * @return Dto
+     */
+    public static function loadFromFaker() : Dto
+    {
+        $faker = Faker\Factory::create();
 
+        return Dto::factory()
+                  ->setModulus( base64_encode( $faker->sha256 ))
+                  ->setExponent( base64_encode( $faker->sha256 ));
+    }
 }

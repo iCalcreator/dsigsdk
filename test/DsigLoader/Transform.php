@@ -29,28 +29,33 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
+use Kigkonsult\DsigSdk\DsigInterface;
+use Kigkonsult\DsigSdk\Dto\Transform as Dto;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\DSAKeyValueType as Dto;
-use Kigkonsult\DsigSdk\Dto\Util;
 
-use function base64_encode;
-
-class DSAKeyValueType
+class Transform implements DsigInterface, DsigLoaderInterface
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
+        $max = $faker->numberBetween( 2, 3 );
+        $transformTypes = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            if( 1 === $faker->numberBetween( 1, 2 )) {
+                $transformTypes[] = [ self::XPATH => $faker->word ];
+            }
+            else {
+                $transformTypes[] = [ self::ANYTYPE => Any::loadFromFaker() ];
+            }
+        } // end for
         return Dto::factory()
-                  ->setP( base64_encode( $faker->sha256 ))
-                  ->setQ( base64_encode( $faker->sha256 ))
-                  ->setG( base64_encode( $faker->sha256 ))
-                  ->setY( base64_encode( $faker->sha256 ))
-                  ->setJ( base64_encode( $faker->sha256 ))
-                  ->setSeed( Util::getSalt())
-                  ->setPgenCounter( Util::getSalt( 256 ));
+            ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] )
+            ->setTransformTypes( $transformTypes );
     }
 }

@@ -29,44 +29,47 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\TypeTrait;
+use Kigkonsult\DsigSdk\Dto\Traits\URITrait;
+
 /**
  * Class RetrievalMethodType
  */
 class RetrievalMethodType extends DsigBase
 {
     /**
-     * @var TransformsType|null
+     * @var Transforms|null
      *                     minOccurs="0"
      */
-    protected ?TransformsType $transforms = null;
+    protected ?Transforms $transforms = null;
 
     /**
      * Property, get- and setter methods for
      * var string type
      *            attribute name="URI" type="anyURI"
      */
-    use Traits\URITrait;
+    use URITrait;
 
     /**
      * Property, get- and setter methods for
      * var string type
      *            attribute name="Type" type="anyURI" use="optional"
      */
-    use Traits\TypeTrait;
+    use TypeTrait;
 
     /**
-     * @return null|TransformsType
+     * @return null|Transforms
      */
-    public function getTransforms() : ?TransformsType
+    public function getTransforms() : ?Transforms
     {
         return $this->transforms;
     }
 
     /**
-     * @param TransformsType $transforms
+     * @param Transforms $transforms
      * @return static
      */
-    public function setTransforms( TransformsType $transforms ) : self
+    public function setTransforms( Transforms $transforms ) : static
     {
         $this->transforms = $transforms;
         return $this;

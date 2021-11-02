@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\ObjectType;
+use Kigkonsult\DsigSdk\Dto\Objekt;
 
 /**
  * Class ObjectTypeWriter
@@ -38,10 +38,10 @@ class ObjectTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param ObjectType $objectType
+     * @param Objekt $objectType
      *
      */
-    public function write( ObjectType $objectType ) : void
+    public function write( Objekt $objectType ) : void
     {
         self::setWriterStartElement( $this->writer, self::OBJECT, $objectType->getXMLattributes() );
 
@@ -58,6 +58,7 @@ class ObjectTypeWriter extends DsigWriterBase
                     case self::SIGNATUREPROPERTIES :
                         SignaturePropertiesTypeWriter::factory( $this->writer )->write( $value );
                         break;
+                    case self::ANY : // fall through
                     case self::ANYTYPE :
                         AnyTypeWriter::factory( $this->writer )->write( $value );
                         break;

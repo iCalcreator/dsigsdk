@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\SignatureMethodType;
+use Kigkonsult\DsigSdk\Dto\SignatureMethod;
 use XMLReader;
 
 use function sprintf;
@@ -42,11 +42,11 @@ class SignatureMethodTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return SignatureMethodType
+     * @return SignatureMethod
      */
-    public function parse() : SignatureMethodType
+    public function parse() : SignatureMethod
     {
-        $signatureMethodType  = SignatureMethodType::factory()->setXMLattributes( $this->reader );
+        $signatureMethod  = SignatureMethod::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -56,13 +56,13 @@ class SignatureMethodTypeParser extends DsigParserBase
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
                 if( self::ALGORITM === $this->reader->localName ) {
-                    $signatureMethodType->setAlgorithm( $this->reader->value );
+                    $signatureMethod->setAlgorithm( $this->reader->value );
                 }
             } // end while
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $signatureMethodType;
+            return $signatureMethod;
         }
         $headElement          = $this->reader->localName;
         $currentElement       = null;
@@ -98,7 +98,7 @@ class SignatureMethodTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $signatureMethodType->setSignatureMethodTypes( $signatureMethodTypes );
-        return $signatureMethodType;
+        $signatureMethod->setSignatureMethodTypes( $signatureMethodTypes );
+        return $signatureMethod;
     }
 }

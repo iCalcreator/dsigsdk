@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\SignaturePropertiesType;
+use Kigkonsult\DsigSdk\Dto\SignatureProperties;
 use XMLReader;
 
 use function sprintf;
@@ -42,11 +42,11 @@ class SignaturePropertiesTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return SignaturePropertiesType
+     * @return SignatureProperties
      */
-    public function parse() : SignaturePropertiesType
+    public function parse() : SignatureProperties
     {
-        $signaturePropertiesType = SignaturePropertiesType::factory()->setXMLattributes( $this->reader );
+        $signatureProperties = SignatureProperties::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -55,15 +55,15 @@ class SignaturePropertiesTypeParser extends DsigParserBase
                 $this->logger->debug(
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->name, $this->reader->value )
                 );
-                $signaturePropertiesType->setXMLattribute( $this->reader->name, $this->reader->value );
+                $signatureProperties->setXMLattribute( $this->reader->name, $this->reader->value );
             }
             $this->reader->moveToElement();
         } // end if
         if( $this->reader->isEmptyElement ) {
-            return $signaturePropertiesType;
+            return $signatureProperties;
         }
-        $headElement         = $this->reader->localName;
-        $signatureProperties = [];
+        $headElement   = $this->reader->localName;
+        $subProperties = [];
         while( @$this->reader->read()) {
             if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
                 $this->logger->debug(
@@ -79,11 +79,11 @@ class SignaturePropertiesTypeParser extends DsigParserBase
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 case ( self::SIGNATUREPROPERTY === $this->reader->localName ) :
-                    $signatureProperties[] = SignaturePropertyTypeParser::factory( $this->reader )->parse();
+                    $subProperties[] = SignaturePropertyTypeParser::factory( $this->reader )->parse();
                     break;
             } // end switch
         } // end while
-        $signaturePropertiesType->setSignatureProperty( $signatureProperties );
-        return $signaturePropertiesType;
+        $signatureProperties->setSignatureProperty( $subProperties );
+        return $signatureProperties;
     }
 }

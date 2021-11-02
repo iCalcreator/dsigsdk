@@ -32,74 +32,74 @@ namespace Kigkonsult\DsigSdk\Dto;
 class KeyValueType extends DsigBase
 {
     /**
-     * @var DSAKeyValueType|null
+     * @var DSAKeyValue|null
      *                     choice opt 1
      */
-    protected ?DSAKeyValueType $DSAKeyValue = null;
+    protected ?DSAKeyValue $DSAKeyValue = null;
 
     /**
-     * @var RSAKeyValueType|null
+     * @var RSAKeyValue|null
      *                     choice opt 2
      */
-    protected ?RSAKeyValueType $RSAKeyValue = null;
+    protected ?RSAKeyValue $RSAKeyValue = null;
 
     /**
-     * @var AnyType|null
+     * @var Any|null
      *           any namespace="##other" processContents="lax"
      *                     choice opt 3
      */
-    protected ?AnyType $any = null;
+    protected ?Any $any = null;
 
 
     /**
-     * @return null|DSAKeyValueType
+     * @return null|DSAKeyValue
      */
-    public function getDSAKeyValue() : ?DSAKeyValueType
+    public function getDSAKeyValue() : ?DSAKeyValue
     {
         return $this->DSAKeyValue;
     }
 
     /**
-     * @param DSAKeyValueType $DSAKeyValue
+     * @param DSAKeyValue $DSAKeyValue
      * @return static
      */
-    public function setDSAKeyValue( DSAKeyValueType $DSAKeyValue ) : self
+    public function setDSAKeyValue( DSAKeyValue $DSAKeyValue ) : static
     {
         $this->DSAKeyValue = $DSAKeyValue;
         return $this;
     }
 
     /**
-     * @return null|RSAKeyValueType
+     * @return null|RSAKeyValue
      */
-    public function getRSAKeyValue() : ?RSAKeyValueType
+    public function getRSAKeyValue() : ?RSAKeyValue
     {
         return $this->RSAKeyValue;
     }
 
     /**
-     * @param RSAKeyValueType $RSAKeyValue
+     * @param RSAKeyValue $RSAKeyValue
      * @return static
      */
-    public function setRSAKeyValue( RSAKeyValueType $RSAKeyValue ) : self
+    public function setRSAKeyValue( RSAKeyValue $RSAKeyValue ) : static
     {
         $this->RSAKeyValue = $RSAKeyValue;
         return $this;
     }
 
     /**
-     * @return null|AnyType
+     * @return null|Any
      */
-    public function getAny() : ?AnyType
+    public function getAny() : ?Any
     {
         return $this->any;
     }
 
     /**
-     * @param AnyType $anyType
+     * @param Any $anyType
      * @return static
      */
-    public function setAny( AnyType $anyType ) : self
+    public function setAny( Any $anyType ) : static
     {
         $this->any = $anyType;
         return $this;

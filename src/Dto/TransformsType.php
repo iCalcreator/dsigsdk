@@ -30,17 +30,17 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
 /**
- * Class TransformsTyped
+ * Class TransformsType
  */
 class TransformsType extends DsigBase
 {
     /**
-     * @var TransformType[]
+     * @var Transform[]
      */
     protected array $transform = [];
 
     /**
-     * @return TransformType[]
+     * @return Transform[]
      */
     public function getTransform() : array
     {
@@ -48,20 +48,20 @@ class TransformsType extends DsigBase
     }
 
     /**
-     * @param TransformType $transform
+     * @param Transform $transform
      * @return static
      */
-    public function addTransform( TransformType $transform ) : self
+    public function addTransform( Transform $transform ) : static
     {
         $this->transform[] = $transform;
         return $this;
     }
 
     /**
-     * @param TransformType[] $transform
+     * @param Transform[] $transform
      * @return static
      */
-    public function setTransform( array $transform ) : self
+    public function setTransform( array $transform ) : static
     {
         foreach( $transform as $tForm ) {
             $this->addTransform( $tForm );

@@ -33,12 +33,12 @@ use DOMNode;
 use Exception;
 use InvalidArgumentException;
 use Katzgrau\KLogger\Logger as KLogger;
-use Kigkonsult\DsigSdk\Dto\SignatureType;
+use Kigkonsult\DsigSdk\Dto\Signature;
 use Kigkonsult\DsigSdk\Dto\Util;
 use Kigkonsult\DsigSdk\XMLParse\DsigParser;
 use Kigkonsult\DsigSdk\XMLWrite\DsigWriter;
-use Kigkonsult\DsigSdk\DsigLoader\SignatureType as SignatureType1;
-use Kigkonsult\DsigSdk\DsigLoader\SignatureType2;
+use Kigkonsult\DsigSdk\DsigLoader\Signature as SignatureType1;
+use Kigkonsult\DsigSdk\DsigLoader\Signature2;
 use Kigkonsult\LoggerDepot\LoggerDepot;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
@@ -104,7 +104,7 @@ class SignatureTest extends TestCase
     {
         if( defined( 'LOG' ) && ( false !== LOG )) {
             $basePath = self::getBasePath() . LOG . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
-            $fileName = self::getCm( get_called_class()) . '.log';
+            $fileName = self::getCm( static::class ) . '.log';
             file_put_contents( $basePath . $fileName, '' ); // empty if exists
             $logger   = new KLogger(
                 $basePath,
@@ -142,7 +142,7 @@ class SignatureTest extends TestCase
 
         echo PHP_EOL . ' START  (min) ' . __FUNCTION__ . PHP_EOL;
         $startTime  = microtime( true );               // ---- load
-        $signature1 = SignatureType2::loadFromFaker();
+        $signature1 = Signature2::loadFromFaker();
         echo sprintf( '%s load time    : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         $signature1->setXMLattribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
@@ -275,7 +275,7 @@ class SignatureTest extends TestCase
         echo PHP_EOL . ' START (min+prefix) ' . __FUNCTION__ . PHP_EOL;
         // ---- load
         $startTime  = microtime( true );
-        $signature1 = SignatureType2::loadFromFaker();
+        $signature1 = Signature2::loadFromFaker();
         echo sprintf( '%s load time    : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         $signature1->setXMLattribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
@@ -302,13 +302,13 @@ class SignatureTest extends TestCase
         // echo 'XML attr before ' . var_export( $XMLattributes, true ) . PHP_EOL; // test ###
 
         // ---- set XML schema attrs
-        $signature2->unsetXMLattribute( SignatureType::XMLNS, true );
-        $XMLnsDenom = SignatureType::XMLNS . ':dsig';
-        $signature2->setXMLattribute( SignatureType::PREFIX, 'dsig', true );
-        $signature2->setXMLattribute( $XMLnsDenom, self::$DsigXMLAttributes[SignatureType::XMLNS], false );
+        $signature2->unsetXMLattribute( Signature::XMLNS, true );
+        $XMLnsDenom = Signature::XMLNS . ':dsig';
+        $signature2->setXMLattribute( Signature::PREFIX, 'dsig', true );
+        $signature2->setXMLattribute( $XMLnsDenom, self::$DsigXMLAttributes[Signature::XMLNS], false );
 
         $XMLattributes = $signature2->getXMLattributes();
-        $this->assertFalse( isset( $XMLattributes[SignatureType::XMLNS] ));
+        $this->assertFalse( isset( $XMLattributes[Signature::XMLNS] ));
         $this->assertTrue( isset( $XMLattributes[$XMLnsDenom] ));
         // echo 'XML attr after ' . var_export( $XMLattributes, true ) . PHP_EOL; // test ###
 
@@ -340,7 +340,7 @@ class SignatureTest extends TestCase
     public function signatureTest6() : void
     {
         echo PHP_EOL . ' START  (domNode) ' . __FUNCTION__ . PHP_EOL;
-        $signature = SignatureType2::loadFromFaker();
+        $signature = Signature2::loadFromFaker();
 
         $xml       = DsigWriter::factory()->write( $signature );
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {

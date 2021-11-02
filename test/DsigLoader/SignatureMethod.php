@@ -29,31 +29,36 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
 use Kigkonsult\DsigSdk\DsigInterface;
-use Kigkonsult\DsigSdk\Dto\TransformType as Dto;
+use Kigkonsult\DsigSdk\Dto\SignatureMethod as Dto;
 use Faker;
 
-class TransformType implements DsigInterface, DsigLoaderInterface
+class SignatureMethod implements DsigInterface, DsigLoaderInterface
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 2, 3 );
-        $transformTypes = [];
+        $max = $faker->numberBetween( 1, 5 );
+        $signatureMethodTypes = [];
         for( $x = 0; $x <= $max; $x++ ) {
             if( 1 === $faker->numberBetween( 1, 2 )) {
-                $transformTypes[] = [ self::XPATH => $faker->word ];
+                $signatureMethodTypes[] =
+                    [ self::HMACOUTPUTLENGTH => ( 8 * $faker->numberBetween( 11, 14 )) ];
             }
-            else {
-                $transformTypes[] = [ self::ANYTYPE => AnyType::loadFromFaker() ];
+            $max2 = $faker->numberBetween( 0, 2 );
+            for( $x2 = 0; $x2 < $max2; $x2++ ) {
+                $signatureMethodTypes[] =
+                    [ self::ANYTYPE => Any::loadFromFaker() ];
             }
         } // end for
         return Dto::factory()
             ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] )
-            ->setTransformTypes( $transformTypes );
+            ->setSignatureMethodTypes( $signatureMethodTypes );
     }
 }

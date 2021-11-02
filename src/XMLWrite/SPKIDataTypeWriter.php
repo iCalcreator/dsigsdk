@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\SPKIDataType;
+use Kigkonsult\DsigSdk\Dto\SPKIData;
 
 /**
  * Class SPKIDataTypeWriter
@@ -38,10 +38,10 @@ class SPKIDataTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param SPKIDataType $SPKIDataType
+     * @param SPKIData $SPKIDataType
      *
      */
-    public function write( SPKIDataType $SPKIDataType ) : void
+    public function write( SPKIData $SPKIDataType ) : void
     {
         $XMLattributes = $SPKIDataType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::SPKIDATA, $XMLattributes );
@@ -55,6 +55,7 @@ class SPKIDataTypeWriter extends DsigWriterBase
                             $XMLattributes,
                             $value );
                         break;
+                    case self::ANY : // fall through
                     case self::ANYTYPE :
                         AnyTypeWriter::factory( $this->writer )->write( $value );
                         break;

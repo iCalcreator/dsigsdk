@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\TransformType;
+use Kigkonsult\DsigSdk\Dto\Transform;
 use XMLReader;
 
 use function sprintf;
@@ -42,11 +42,11 @@ class TransformTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return TransformType
+     * @return Transform
      */
-    public function parse() : TransformType
+    public function parse() : Transform
     {
-        $transformType  = TransformType::factory()->setXMLattributes( $this->reader );
+        $transform  = Transform::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -56,13 +56,13 @@ class TransformTypeParser extends DsigParserBase
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
                 if( self::ALGORITM === $this->reader->localName ) {
-                    $transformType->setAlgorithm( $this->reader->value );
+                    $transform->setAlgorithm( $this->reader->value );
                 }
             } // end while
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $transformType;
+            return $transform;
         }
         $headElement    = $this->reader->localName;
         $currentElement = null;
@@ -96,7 +96,7 @@ class TransformTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $transformType->setTransformTypes( $transformTypes );
-        return $transformType;
+        $transform->setTransformTypes( $transformTypes );
+        return $transform;
     }
 }

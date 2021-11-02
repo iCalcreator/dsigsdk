@@ -32,7 +32,7 @@ namespace Kigkonsult\DsigSdk\Dto\Traits;
 trait URITrait
 {
     /**
-     * @var string|null
+     * @var null|string
      *            type="anyURI"
      */
     protected ?string $URI = null;
@@ -49,7 +49,7 @@ trait URITrait
      * @param string $URI
      * @return static
      */
-    public function setURI( string $URI ) : self
+    public function setURI( string $URI ) : static
     {
         $this->URI = $URI;
         return $this;

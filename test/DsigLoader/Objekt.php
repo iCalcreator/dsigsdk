@@ -29,22 +29,38 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-// use Faker;
-use Kigkonsult\DsigSdk\Dto\SignedInfoType as Dto;
+use Exception;
+use Faker;
+use Kigkonsult\DsigSdk\DsigInterface;
+use Kigkonsult\DsigSdk\Dto\Objekt as Dto;
 use Kigkonsult\DsigSdk\Dto\Util;
 
-class SignedInfoType
+/**
+ * Class Objekt
+ */
+class Objekt implements DsigInterface
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
-//        $faker = Faker\Factory::create();
+        $faker = Faker\Factory::create();
 
+        $max         = $faker->numberBetween( 4, 6 );
+        $objectTypes = [];
+        for( $x = 0; $x < $max; $x++ ) {
+            $objectTypes[] = match ( $faker->numberBetween( 1, 3 ) ) {
+                1 => [ self::MANIFEST => Manifest::loadFromFaker() ],
+                2 => [ self::SIGNATUREPROPERTIES => SignatureProperties::loadFromFaker() ],
+                3 => [ self::ANYTYPE => Any::loadFromFaker() ],
+            }; // end switch
+        } // end foreach
         return Dto::factory()
-            ->setId( Util::getSalt())
-            ->setCanonicalizationMethod( CanonicalizationMethodType::loadFromFaker())
-            ->setSignatureMethod( SignatureMethodType::loadFromFaker());
+                  ->setObjectTypes( $objectTypes )
+                  ->setId( Util::getSalt())
+                  ->setMimeType( $faker->mimeType )
+                  ->setEncoding( 'UTF-8' );
     }
 }

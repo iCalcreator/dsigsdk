@@ -39,34 +39,35 @@ if set (more info below).
 #### Usage, build up structure
  
 To build up dsig structure:
+
 ```php
 <?php
 namespace Kigkonsult\DsigSdk;
-use Kigkonsult\DsigSdk\Dto\AnyType;
-use Kigkonsult\DsigSdk\Dto\CanonicalizationMethodType;
-use Kigkonsult\DsigSdk\Dto\KeyInfoType;
-use Kigkonsult\DsigSdk\Dto\SignedInfoType;
-use Kigkonsult\DsigSdk\Dto\SignatureType;
-use Kigkonsult\DsigSdk\Dto\SignatureValueType;
-use Kigkonsult\DsigSdk\Dto\X509DataType;
+use Kigkonsult\DsigSdk\Dto\Any;
+use Kigkonsult\DsigSdk\Dto\CanonicalizationMethod;
+use Kigkonsult\DsigSdk\Dto\KeyInfo;
+use Kigkonsult\DsigSdk\Dto\SignedInfo;
+use Kigkonsult\DsigSdk\Dto\Signature;
+use Kigkonsult\DsigSdk\Dto\SignatureValue;
+use Kigkonsult\DsigSdk\Dto\X509Data;
 
-$dsig = SignatureType::factory()
+$dsig = Signature::factory()
     ->setSignedInfo( 
-        SignedInfoType::factory()
+        SignedInfo::factory()
             ->setCanonicalizationMethod(
-                CanonicalizationMethodType::factory()
+                CanonicalizationMethod::factory()
                     ->setAlgorithm( 'algorithm' )
                     ->setAny( [
-                        AnyType::factory()
+                        Any::factory()
                             ->setElementName( 'nonSchemaElement1')
                             ->setAttributes( [
                                 'id' => '12345' 
                                 ] )
                              ->setContent( 'Lr1mKGxP7VAgMB...' ),
-                        AnyType::factory()
+                        Any::factory()
                             ->setElementName( 'nonSchemaElement2')
                             ->setAny( [
-                                AnyType::factory()
+                                Any::factory()
                                     ->setElementName( 'nonSchemaElement3')
                                     ->setContent( 'Lr1mKGxP7VAgMB...' ),
                             ] )
@@ -75,16 +76,16 @@ $dsig = SignatureType::factory()
             )
     )
     ->setSignatureValue(
-        SignatureValueType::factory()
+        SignatureValue::factory()
             ->setSignatureValueType( 'vgGZnRlm8...' )
     )
     ->setKeyInfo(
-        KeyInfoType::factory()
+        KeyInfo::factory()
             ->setKeyInfoType( [
                 [                 // one set of elements
                     [             // element
-                        X509DataType::X509DATA => 
-                            X509DataType::factory()
+                        X509Data::X509DATA => 
+                            X509Data::factory()
                                 ->setX509DataTypes( ... )
                     ],
                 ],
@@ -198,24 +199,18 @@ In your `composer.json`:
 ``` json
 {
     "require": {
-        "kigkonsult/dsigsdk": "*"
+        "kigkonsult/dsigsdk": "dev-master"
     }
 }
 ```
 
-Version 1.2 supports PHP 7.4, 1.0 7.0.
+Version 1.4 supports PHP 8.0, 1.2 7.4, 1.0 7.0.
 
 Acquire access
 ``` php
 namespace Kigkonsult\DsigSdk;
 ...
 include 'vendor/autoload.php';
-```
-
-Run tests
-```
-cd pathToSource/DsigSdk
-vendor/bin/phpunit
 ```
 
 ###### Or

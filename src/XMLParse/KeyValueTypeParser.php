@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\KeyValueType;
+use Kigkonsult\DsigSdk\Dto\KeyValue;
 use XMLReader;
 
 use function sprintf;
@@ -42,16 +42,16 @@ class KeyValueTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return KeyValueType
+     * @return KeyValue
      */
-    public function parse() :KeyValueType
+    public function parse() :KeyValue
     {
-        $keyValueType = KeyValueType::factory()->setXMLattributes( $this->reader );
+        $keyValue = KeyValue::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
         if( $this->reader->isEmptyElement ) {
-            return $keyValueType;
+            return $keyValue;
         }
         $headElement = $this->reader->localName;
         while( @$this->reader->read()) {
@@ -69,16 +69,16 @@ class KeyValueTypeParser extends DsigParserBase
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 case ( self::DSAKEYVALUE === $this->reader->localName ) :
-                    $keyValueType->setDSAKeyValue( DSAKeyValueTypeParser::factory( $this->reader)->parse());
+                    $keyValue->setDSAKeyValue( DSAKeyValueTypeParser::factory( $this->reader)->parse());
                     break;
                 case ( self::RSAKEYVALUE === $this->reader->localName ) :
-                    $keyValueType->setRSAKeyValue( RSAKeyValueTypeParser::factory( $this->reader)->parse());
+                    $keyValue->setRSAKeyValue( RSAKeyValueTypeParser::factory( $this->reader)->parse());
                     break;
                 default :
-                    $keyValueType->setAny( AnyTypeParser::factory( $this->reader)->parse());
+                    $keyValue->setAny( AnyTypeParser::factory( $this->reader)->parse());
                     break;
             }  // end switch
         }  // end while
-        return $keyValueType;
+        return $keyValue;
     }
 }

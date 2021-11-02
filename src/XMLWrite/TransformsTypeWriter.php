@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\TransformsType;
+use Kigkonsult\DsigSdk\Dto\Transforms;
 
 /**
  * Class TransformsTypeWriter
@@ -38,10 +38,10 @@ class TransformsTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param TransformsType $transformsType
+     * @param Transforms $transformsType
      *
      */
-    public function write( TransformsType $transformsType ) : void
+    public function write( Transforms $transformsType ) : void
     {
         $XMLattributes = $transformsType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::TRANSFORMS, $XMLattributes );

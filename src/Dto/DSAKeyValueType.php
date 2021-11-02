@@ -35,41 +35,41 @@ namespace Kigkonsult\DsigSdk\Dto;
 class DSAKeyValueType extends DsigBase
 {
     /**
-     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var null|string  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
      */
     protected ?string $p = null;
 
     /**
-     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var null|string  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
      */
     protected ?string $q = null;
 
     /**
-     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var null|string  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
      */
     protected ?string $g = null;
 
     /**
-     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var null|string  type="ds:CryptoBinary" -  base="base64Binary"
      */
     protected ?string $y = null;
 
     /**
-     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var null|string  type="ds:CryptoBinary" -  base="base64Binary"
      *              minOccurs="0"
      */
     protected ?string $j = null;
 
     /**
-     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var null|string  type="ds:CryptoBinary" -  base="base64Binary"
      */
     protected ?string $seed = null;
 
     /**
-     * @var string|null  type="ds:CryptoBinary" -  base="base64Binary"
+     * @var null|string  type="ds:CryptoBinary" -  base="base64Binary"
      */
     protected ?string $pgenCounter = null;
 
@@ -85,7 +85,7 @@ class DSAKeyValueType extends DsigBase
      * @param string $p
      * @return static
      */
-    public function setP( string $p ) : self
+    public function setP( string $p ) : static
     {
         $this->p = $p;
         return $this;
@@ -103,7 +103,7 @@ class DSAKeyValueType extends DsigBase
      * @param string $q
      * @return static
      */
-    public function setQ( string $q ) : self
+    public function setQ( string $q ) : static
     {
         $this->q = $q;
         return $this;
@@ -121,7 +121,7 @@ class DSAKeyValueType extends DsigBase
      * @param string $g
      * @return static
      */
-    public function setG( string $g ) : self
+    public function setG( string $g ) : static
     {
         $this->g = $g;
         return $this;
@@ -139,7 +139,7 @@ class DSAKeyValueType extends DsigBase
      * @param string $y
      * @return static
      */
-    public function setY( string $y ) : self
+    public function setY( string $y ) : static
     {
         $this->y = $y;
         return $this;
@@ -157,7 +157,7 @@ class DSAKeyValueType extends DsigBase
      * @param string $j
      * @return static
      */
-    public function setJ( string $j ) : self
+    public function setJ( string $j ) : static
     {
         $this->j = $j;
         return $this;
@@ -175,7 +175,7 @@ class DSAKeyValueType extends DsigBase
      * @param string $seed
      * @return static
      */
-    public function setSeed( string $seed ) : self
+    public function setSeed( string $seed ) : static
     {
         $this->seed = $seed;
         return $this;
@@ -193,7 +193,7 @@ class DSAKeyValueType extends DsigBase
      * @param string $pgenCounter
      * @return static
      */
-    public function setPgenCounter( string $pgenCounter ) : self
+    public function setPgenCounter( string $pgenCounter ) : static
     {
         $this->pgenCounter = $pgenCounter;
         return $this;

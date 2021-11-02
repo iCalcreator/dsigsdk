@@ -38,13 +38,13 @@ namespace Kigkonsult\DsigSdk\Dto;
 class SignaturePropertiesType extends DsigBase
 {
     /**
-     * @var SignaturePropertyType[]
+     * @var SignatureProperty[]
      *                     maxOccurs="unbounded"
      */
     protected array $signatureProperty = [];
 
     /**
-     * @return SignaturePropertyType[]
+     * @return SignatureProperty[]
      */
     public function getSignatureProperty() : array
     {
@@ -52,20 +52,20 @@ class SignaturePropertiesType extends DsigBase
     }
 
     /**
-     * @param SignaturePropertyType $signatureProperty
+     * @param SignatureProperty $signatureProperty
      * @return static
      */
-    public function addSignatureProperty( SignaturePropertyType $signatureProperty ) : self
+    public function addSignatureProperty( SignatureProperty $signatureProperty ) : static
     {
         $this->signatureProperty[] = $signatureProperty;
         return $this;
     }
 
     /**
-     * @param SignaturePropertyType[] $signatureProperty
+     * @param SignatureProperty[] $signatureProperty
      * @return static
      */
-    public function setSignatureProperty( array $signatureProperty ) : self
+    public function setSignatureProperty( array $signatureProperty ) : static
     {
         foreach( $signatureProperty as $signProp ) {
             $this->addSignatureProperty( $signProp );

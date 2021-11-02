@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\SignedInfoType;
+use Kigkonsult\DsigSdk\Dto\SignedInfo;
 use XMLReader;
 
 use function sprintf;
@@ -42,11 +42,11 @@ class SignedInfoTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return SignedInfoType
+     * @return SignedInfo
      */
-    public function parse() : SignedInfoType
+    public function parse() : SignedInfo
     {
-        $signedInfoType = SignedInfoType::factory()->setXMLattributes( $this->reader );
+        $signedInfo = SignedInfo::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -56,13 +56,13 @@ class SignedInfoTypeParser extends DsigParserBase
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
                 if( self::ID === $this->reader->localName ) {
-                    $signedInfoType->setId( $this->reader->value );
+                    $signedInfo->setId( $this->reader->value );
                 }
             } // end while
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $signedInfoType;
+            return $signedInfo;
         }
         $headElement = $this->reader->localName;
         $references  = [];
@@ -81,19 +81,19 @@ class SignedInfoTypeParser extends DsigParserBase
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 case ( self::CANONICALIZATIONMETHOD === $this->reader->localName ) :
-                    $signedInfoType->setCanonicalizationMethod(
+                    $signedInfo->setCanonicalizationMethod(
                         CanonicalizationMethodTypeParser::factory( $this->reader )->parse()
                     );
                     break;
                 case ( self::SIGNATUREMETHOD === $this->reader->localName ) :
-                    $signedInfoType->setSignatureMethod( SignatureMethodTypeParser::factory( $this->reader )->parse());
+                    $signedInfo->setSignatureMethod( SignatureMethodTypeParser::factory( $this->reader )->parse());
                     break;
                 case ( self::REFERENS === $this->reader->localName ) :
                     $references[] = ReferenceTypeParser::factory( $this->reader )->parse();
                     break;
             } // end switch
         } // end while
-        $signedInfoType->setReference( $references );
-        return $signedInfoType;
+        $signedInfo->setReference( $references );
+        return $signedInfo;
     }
 }

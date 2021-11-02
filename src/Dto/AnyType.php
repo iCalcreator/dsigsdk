@@ -29,15 +29,17 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\AnyTypesTrait;
+
 /**
  * Class AnyType
  */
 class AnyType extends DsigBase
 {
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $elementName = null;
+    protected string $elementName;
 
     /**
      * @var string[]
@@ -54,21 +56,21 @@ class AnyType extends DsigBase
     /**
      * content
      *
-     * @var string|null
+     * @var null|string
      */
     protected ?string $content = null;
 
     /**
      * Property, get- and setter methods
-     * var AnyType[]  any
+     * var Any[]  any
      */
-    use Traits\AnyTypesTrait;
+    use AnyTypesTrait;
 
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getElementName() : ?string
+    public function getElementName() : string
     {
         return $this->elementName;
     }
@@ -77,7 +79,7 @@ class AnyType extends DsigBase
      * @param string $elementName
      * @return static
      */
-    public function setElementName( string $elementName ) : self
+    public function setElementName( string $elementName ) : static
     {
         $this->elementName = $elementName;
         return $this;
@@ -96,7 +98,7 @@ class AnyType extends DsigBase
      * @param string $value
      * @return static
      */
-    public function addAttribute( string $key, string $value ) : self
+    public function addAttribute( string $key, string $value ) : static
     {
         $this->attributes[$key] = $value;
         return $this;
@@ -106,7 +108,7 @@ class AnyType extends DsigBase
      * @param string[] $attributes
      * @return static
      */
-    public function setAttributes( array $attributes ) : self
+    public function setAttributes( array $attributes ) : static
     {
         foreach( $attributes as $key => $value ) {
             $this->addAttribute( $key, $value );
@@ -126,7 +128,7 @@ class AnyType extends DsigBase
      * @param string $content
      * @return static
      */
-    public function setContent( string $content ) : self
+    public function setContent( string $content ) : static
     {
         $this->content = $content;
         return $this;

@@ -29,29 +29,33 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
 use Faker;
-use Kigkonsult\DsigSdk\DsigInterface;
-use Kigkonsult\DsigSdk\Dto\X509DataType as Dto;
+use Kigkonsult\DsigSdk\Dto\PGPData as Dto;
 
-use function base64_encode;
-
-class X509DataType  implements DsigInterface
+class PGPData
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
+        $max = $faker->numberBetween( 1, 2 );
+        $anys = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            $anys[] = Any::loadFromFaker();
+        }
+        if( 1 === $faker->numberBetween( 1, 2 )) {
+            return Dto::factory()
+                ->setAny( $anys )
+                ->setPGPKeyID( base64_encode( $faker->sha256 ))
+                ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
+        }
         return Dto::factory()
-                  ->setX509DataTypes( [
-                      [ self::X509ISSUERSERIAL => X509IssuerSerialType::loadFromFaker() ],
-                      [ self::X509SKI          => base64_encode( $faker->sha256 ) ],
-                      [ self::X509SUBJECTNAME  => $faker->company ],
-                      [ self::X509CERTIFICATE  => base64_encode( $faker->sha256 ) ],
-                      [ self::X509CRL          => base64_encode( $faker->sha256 ) ],
-                      [ self::ANYTYPE          => AnyType::loadFromFaker() ],
-                  ] );
+            ->setAny( $anys )
+            ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
     }
 }

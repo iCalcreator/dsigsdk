@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\ReferenceType;
+use Kigkonsult\DsigSdk\Dto\Reference;
 use XMLReader;
 
 use function sprintf;
@@ -42,11 +42,11 @@ class ReferenceTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return ReferenceType
+     * @return Reference
      */
-    public function parse() : ReferenceType
+    public function parse() : Reference
     {
-        $referenceType = ReferenceType::factory()->setXMLattributes( $this->reader );
+        $reference = Reference::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -57,20 +57,20 @@ class ReferenceTypeParser extends DsigParserBase
                 );
                 switch( $this->reader->localName ) {
                     case ( self::ID ) :
-                        $referenceType->setId( $this->reader->value );
+                        $reference->setId( $this->reader->value );
                         break;
                     case ( self::URI ) :
-                        $referenceType->setURI( $this->reader->value );
+                        $reference->setURI( $this->reader->value );
                         break;
                     case ( self::TYPE ) :
-                        $referenceType->setType( $this->reader->value );
+                        $reference->setType( $this->reader->value );
                         break;
                 } // end switch
             } // end while
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $referenceType;
+            return $reference;
         }
         $headElement    = $this->reader->localName;
         $currentElement = null;
@@ -90,21 +90,21 @@ class ReferenceTypeParser extends DsigParserBase
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::DIGESTVALUE === $currentElement )) :
-                    $referenceType->setDigestValue( $this->reader->value );
+                    $reference->setDigestValue( $this->reader->value );
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 case ( self::TRANSFORMS === $this->reader->localName ) :
-                    $referenceType->setTransforms( TransformsTypeParser::factory( $this->reader )->parse());
+                    $reference->setTransforms( TransformsTypeParser::factory( $this->reader )->parse());
                     break;
                 case ( self::DIGESTMETHOD === $this->reader->localName ) :
-                    $referenceType->setDigestMethod( DigestMethodTypeParser::factory( $this->reader )->parse());
+                    $reference->setDigestMethod( DigestMethodTypeParser::factory( $this->reader )->parse());
                     break;
                 case ( self::DIGESTVALUE === $this->reader->localName ) :
                     $currentElement = $this->reader->localName;
                     break;
             } // end switch
         } // end while
-        return $referenceType;
+        return $reference;
     }
 }

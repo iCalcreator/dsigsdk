@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\AnyType;
+use Kigkonsult\DsigSdk\Dto\Any;
 
 /**
  * Class AnyTypeWriter
@@ -39,9 +39,10 @@ class AnyTypeWriter extends DsigWriterBase
     /**
      * Write
      *
-     * @param AnyType $anyType
+     * @param Any $anyType
+     * @return void
      */
-    public function write( AnyType $anyType ) : void
+    public function write( Any $anyType ) : void
     {
         self::setWriterStartElement( $this->writer, $anyType->getElementName(), $anyType->getXMLattributes() );
 

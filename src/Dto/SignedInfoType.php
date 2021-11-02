@@ -29,23 +29,25 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\IdTrait;
+
 /**
  * Class SignedInfoType
  */
 class SignedInfoType extends DsigBase
 {
     /**
-     * @var CanonicalizationMethodType|null
+     * @var CanonicalizationMethod|null
      */
-    protected ?CanonicalizationMethodType $canonicalizationMethod = null;
+    protected ?CanonicalizationMethod $canonicalizationMethod = null;
 
     /**
-     * @var SignatureMethodType|null
+     * @var SignatureMethod|null
      */
-    protected ?SignatureMethodType $signatureMethod = null;
+    protected ?SignatureMethod $signatureMethod = null;
 
     /**
-     * @var ReferenceType[]
+     * @var Reference[]
      *                    maxOccurs="unbounded"
      */
     protected array $reference = [];
@@ -55,48 +57,48 @@ class SignedInfoType extends DsigBase
      * var string id
      *            attribute name="Id" type="ID" use="optional"
      */
-    use Traits\IdTrait;
+    use IdTrait;
 
     /**
-     * @return null|CanonicalizationMethodType
+     * @return null|CanonicalizationMethod
      */
-    public function getCanonicalizationMethod() : ?CanonicalizationMethodType
+    public function getCanonicalizationMethod() : ?CanonicalizationMethod
     {
         return $this->canonicalizationMethod;
     }
 
     /**
-     * @param CanonicalizationMethodType $canonicalizationMethod
+     * @param CanonicalizationMethod $canonicalizationMethod
      * @return static
      */
     public function setCanonicalizationMethod(
-        CanonicalizationMethodType $canonicalizationMethod
-    ) : self
+        CanonicalizationMethod $canonicalizationMethod
+    ) : static
     {
         $this->canonicalizationMethod = $canonicalizationMethod;
         return $this;
     }
 
     /**
-     * @return null|SignatureMethodType
+     * @return null|SignatureMethod
      */
-    public function getSignatureMethod() : ?SignatureMethodType
+    public function getSignatureMethod() : ?SignatureMethod
     {
         return $this->signatureMethod;
     }
 
     /**
-     * @param SignatureMethodType $signatureMethod
+     * @param SignatureMethod $signatureMethod
      * @return static
      */
-    public function setSignatureMethod( SignatureMethodType $signatureMethod ) : self
+    public function setSignatureMethod( SignatureMethod $signatureMethod ) : static
     {
         $this->signatureMethod = $signatureMethod;
         return $this;
     }
 
     /**
-     * @return ReferenceType[]
+     * @return Reference[]
      */
     public function getReference() : array
     {
@@ -104,20 +106,20 @@ class SignedInfoType extends DsigBase
     }
 
     /**
-     * @param ReferenceType $reference
+     * @param Reference $reference
      * @return static
      */
-    public function addReference( ReferenceType $reference ) : self
+    public function addReference( Reference $reference ) : static
     {
         $this->reference[] = $reference;
         return $this;
     }
 
     /**
-     * @param ReferenceType[] $reference
+     * @param Reference[] $reference
      * @return static
      */
-    public function setReference( array $reference ) : self
+    public function setReference( array $reference ) : static
     {
         foreach( $reference as $rType ) {
             $this->addReference( $rType );

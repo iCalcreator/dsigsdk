@@ -29,15 +29,17 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\KeyInfoType as Dto;
+use Kigkonsult\DsigSdk\Dto\KeyInfo as Dto;
 use Kigkonsult\DsigSdk\DsigInterface;
 use Kigkonsult\DsigSdk\Dto\Util;
 
-class KeyInfoType implements DsigInterface
+class KeyInfo implements DsigInterface
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
@@ -47,59 +49,36 @@ class KeyInfoType implements DsigInterface
         $keyInfoTypes[] =
             [ self::KEYNAME => $faker->sha256 ];
         $keyInfoTypes[] =
-            [ self::KEYVALUE => KeyValueType::loadFromFaker() ];
+            [ self::KEYVALUE => KeyValue::loadFromFaker() ];
         $keyInfoTypes[] =
-            [ self::KEYVALUE => KeyValueType::loadFromFaker() ];
+            [ self::KEYVALUE => KeyValue::loadFromFaker() ];
         $keyInfoTypes[] =
-            [ self::KEYVALUE => KeyValueType::loadFromFaker() ];
+            [ self::KEYVALUE => KeyValue::loadFromFaker() ];
         $keyInfoTypes[] =
-            [ self::RETRIEVALMETHOD => RetrievalMethodType::loadFromFaker() ];
+            [ self::RETRIEVALMETHOD => RetrievalMethod::loadFromFaker() ];
         $keyInfoTypes[] =
-            [ self::X509DATA => X509DataType::loadFromFaker() ];
+            [ self::X509DATA => X509Data::loadFromFaker() ];
         $keyInfoTypes[] =
-            [ self::PGPDATA => PGPDataType::loadFromFaker() ];
+            [ self::PGPDATA => PGPData::loadFromFaker() ];
         $keyInfoTypes[] =
-            [ self::SPKIDATA => SPKIDataType::loadFromFaker() ];
+            [ self::SPKIDATA => SPKIData::loadFromFaker() ];
         $keyInfoTypes[] =
             [ self::MGMTDATA => $faker->sha256 ];
         $keyInfoTypes[] =
-            [ self::ANYTYPE => AnyType::loadFromFaker() ];
+            [ self::ANYTYPE => Any::loadFromFaker() ];
         $max = $faker->numberBetween( 10,20 );
         for( $x = 0; $x <= $max; $x++ ) {   // number of elements
-            switch( $faker->numberBetween( 1, 8 )) {
-                case 1 :
-                    $keyInfoTypes[] =
-                        [ self::KEYNAME         => $faker->sha256 ];
-                    break;
-                case 2 :
-                    $keyInfoTypes[] =
-                        [ self::KEYVALUE        => KeyValueType::loadFromFaker() ];
-                    break;
-                case 3 :
-                    $keyInfoTypes[] =
-                        [ self::RETRIEVALMETHOD => RetrievalMethodType::loadFromFaker() ];
-                    break;
-                case 4 :
-                    $keyInfoTypes[] =
-                        [ self::X509DATA        => X509DataType::loadFromFaker() ];
-                    break;
-                case 5 :
-                    $keyInfoTypes[] =
-                        [ self::PGPDATA         => PGPDataType::loadFromFaker() ];
-                    break;
-                case 6 :
-                    $keyInfoTypes[] =
-                        [ self::SPKIDATA        => SPKIDataType::loadFromFaker() ];
-                    break;
-                case 7 :
-                    $keyInfoTypes[] =
-                        [ self::MGMTDATA        => $faker->sha256 ];
-                    break;
-                case 8 :
-                    $keyInfoTypes[] =
-                        [ self::ANYTYPE         => AnyType::loadFromFaker() ];
-                    break;
-            } // end switch
+            $keyInfoTypes[] = match ( $faker->numberBetween( 1, 8 ) ) {
+                1 => [ self::KEYNAME         => $faker->sha256 ],
+                2 => [ self::KEYVALUE        => KeyValue::loadFromFaker() ],
+                3 => [ self::RETRIEVALMETHOD => RetrievalMethod::loadFromFaker() ],
+                4 => [ self::X509DATA        => X509Data::loadFromFaker() ],
+                5 => [ self::PGPDATA         => PGPData::loadFromFaker() ],
+                6 => [ self::SPKIDATA        => SPKIData::loadFromFaker() ],
+                7 => [ self::MGMTDATA        => $faker->sha256 ],
+                default
+                  => [ self::ANYTYPE         => Any::loadFromFaker() ],
+            }; // end match
         } // end for
 
         return Dto::factory()

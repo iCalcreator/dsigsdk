@@ -34,7 +34,7 @@ use InvalidArgumentException;
 trait IdTrait
 {
     /**
-     * @var string|null
+     * @var null|string
      *          type="ID"
      */
     protected ?string $id = null;
@@ -53,7 +53,7 @@ trait IdTrait
      * @return static
      * @throws InvalidArgumentException
      */
-    public function setId( string $id ) : self
+    public function setId( string $id ) : static
     {
         $this->id = $id;
         return $this;

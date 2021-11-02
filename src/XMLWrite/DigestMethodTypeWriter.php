@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\DigestMethodType;
+use Kigkonsult\DsigSdk\Dto\DigestMethod;
 
 /**
  * Class DigestMethodTypeWriter
@@ -38,10 +38,10 @@ class DigestMethodTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param DigestMethodType $digestMethodType
+     * @param DigestMethod $digestMethodType
      *
      */
-    public function write( DigestMethodType $digestMethodType ) : void
+    public function write( DigestMethod $digestMethodType ) : void
     {
         self::setWriterStartElement( $this->writer, self::DIGESTMETHOD, $digestMethodType->getXMLattributes() );
 

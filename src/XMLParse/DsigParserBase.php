@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\DsigBase;
 use XMLReader;
 
-use function get_called_class;
-
 /**
  * Class DsigParserBase
  */
@@ -83,7 +81,7 @@ abstract class DsigParserBase extends DsigBase
     public function __construct( ? XMLReader $reader = null  )
     {
         parent::__construct();
-        if( ! empty( $reader )) {
+        if( $reader !== null ) {
             $this->reader = $reader;
         }
     }
@@ -94,9 +92,8 @@ abstract class DsigParserBase extends DsigBase
      * @param null|XMLReader $reader
      * @return static
      */
-    public static function factory( ? XMLReader $reader = null  ) : self
+    public static function factory( ? XMLReader $reader = null  ) : static
     {
-        $class = get_called_class();
-        return new $class( $reader );
+        return new static( $reader );
     }
 }

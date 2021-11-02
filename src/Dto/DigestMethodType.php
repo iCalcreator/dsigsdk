@@ -28,6 +28,9 @@
  */
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\AlgorithmTrait;
+use Kigkonsult\DsigSdk\Dto\Traits\AnyTypesTrait;
+
 /**
  * Class DigestMethodType
  */
@@ -35,15 +38,15 @@ class DigestMethodType extends DsigBase
 {
     /**
      * Property, get- and setter methods
-     * var AnyType[]  any
+     * var Any[]  any
      *                namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"
      */
-    use Traits\AnyTypesTrait;
+    use AnyTypesTrait;
 
     /**
      * Property, get- and setter methods for
      * var string algorithm
      *            attribute name="Algorithm" type="anyURI" use="required"
      */
-    use Traits\AlgorithmTrait;
+    use AlgorithmTrait;
 }

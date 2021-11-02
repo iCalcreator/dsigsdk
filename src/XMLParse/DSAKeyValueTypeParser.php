@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\DSAKeyValueType;
+use Kigkonsult\DsigSdk\Dto\DSAKeyValue;
 use XMLReader;
 
 use function sprintf;
@@ -42,16 +42,16 @@ class DSAKeyValueTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return DSAKeyValueType
+     * @return DSAKeyValue
      */
-    public function parse() :DSAKeyValueType
+    public function parse() :DSAKeyValue
     {
-        $DSAKeyValueType = DSAKeyValueType::factory()->setXMLattributes( $this->reader );
+        $DSAKeyValue = DSAKeyValue::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
         if( $this->reader->isEmptyElement ) {
-            return $DSAKeyValueType;
+            return $DSAKeyValue;
         }
         $headElement    = $this->reader->localName;
         $currentElement = null;
@@ -71,25 +71,25 @@ class DSAKeyValueTypeParser extends DsigParserBase
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::P === $currentElement )) :
-                    $DSAKeyValueType->setP( $this->reader->value );
+                    $DSAKeyValue->setP( $this->reader->value );
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::Q === $currentElement )) :
-                    $DSAKeyValueType->setQ( $this->reader->value );
+                    $DSAKeyValue->setQ( $this->reader->value );
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::G === $currentElement )) :
-                    $DSAKeyValueType->setG( $this->reader->value );
+                    $DSAKeyValue->setG( $this->reader->value );
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::Y === $currentElement )) :
-                    $DSAKeyValueType->setY( $this->reader->value );
+                    $DSAKeyValue->setY( $this->reader->value );
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::J === $currentElement )) :
-                    $DSAKeyValueType->setJ( $this->reader->value );
+                    $DSAKeyValue->setJ( $this->reader->value );
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::SEED === $currentElement )) :
-                    $DSAKeyValueType->setSeed( $this->reader->value );
+                    $DSAKeyValue->setSeed( $this->reader->value );
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::PGENCOUNTER === $currentElement )) :
-                    $DSAKeyValueType->setPgenCounter( $this->reader->value );
+                    $DSAKeyValue->setPgenCounter( $this->reader->value );
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
@@ -116,6 +116,6 @@ class DSAKeyValueTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        return $DSAKeyValueType;
+        return $DSAKeyValue;
     }
 }

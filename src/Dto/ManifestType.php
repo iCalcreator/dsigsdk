@@ -29,6 +29,8 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\IdTrait;
+
 /**
  * Class ManifestType
  *
@@ -38,7 +40,7 @@ namespace Kigkonsult\DsigSdk\Dto;
 class ManifestType extends DsigBase
 {
     /**
-     * @var ReferenceType[]
+     * @var Reference[]
      *                  maxOccurs="unbounded"
      */
     protected array $reference = [];
@@ -48,10 +50,10 @@ class ManifestType extends DsigBase
      * var string id
      *            attribute name="Id" type="ID" use="optional"
      */
-    use Traits\IdTrait;
+    use IdTrait;
 
     /**
-     * @return ReferenceType[]
+     * @return Reference[]
      */
     public function getReference() : array
     {
@@ -59,10 +61,10 @@ class ManifestType extends DsigBase
     }
 
     /**
-     * @param ReferenceType $referenceType
+     * @param Reference $referenceType
      * @return static
      */
-    public function addReference( ReferenceType $referenceType ) : self
+    public function addReference( Reference $referenceType ) : static
     {
         $this->reference[] = $referenceType;
         return $this;
@@ -72,7 +74,7 @@ class ManifestType extends DsigBase
      * @param Reference[] $referenceType
      * @return static
      */
-    public function setReference( array $referenceType ) : self
+    public function setReference( array $referenceType ) : static
     {
         foreach( $referenceType as $rType ) {
             $this->addReference( $rType );

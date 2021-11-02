@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\ManifestType;
+use Kigkonsult\DsigSdk\Dto\Manifest;
 
 /**
  * Class ManifestTypeWriter
@@ -39,9 +39,9 @@ class ManifestTypeWriter extends DsigWriterBase
     /**
      * Write
      *
-     * @param ManifestType $manifestType
+     * @param Manifest $manifestType
      */
-    public function write( ManifestType $manifestType ) : void
+    public function write( Manifest $manifestType ) : void
     {
         $XMLattributes = $manifestType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::MANIFEST, $XMLattributes );

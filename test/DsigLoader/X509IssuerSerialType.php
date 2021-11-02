@@ -41,8 +41,9 @@ class X509IssuerSerialType
     {
         $faker = Faker\Factory::create();
 
+        $nbDigits = strlen((string) mt_getrandmax()) - 1;
         return Dto::factory()
                   ->setX509IssuerName( $faker->company )
-                  ->setX509SerialNumber((string) PHP_INT_MAX );
+                  ->setX509SerialNumber( $faker->randomNumber( $nbDigits,true ));
     }
 }

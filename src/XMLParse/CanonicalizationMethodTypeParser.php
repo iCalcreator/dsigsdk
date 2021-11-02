@@ -29,13 +29,13 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\CanonicalizationMethodType;
+use Kigkonsult\DsigSdk\Dto\CanonicalizationMethod;
 use XMLReader;
 
 use function sprintf;
 
 /**
- * Class CanonicalizationMethodTypeParser
+ * Class CanonicalizationMethodParser
  */
 class CanonicalizationMethodTypeParser extends DsigParserBase
 {
@@ -43,11 +43,11 @@ class CanonicalizationMethodTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return CanonicalizationMethodType
+     * @return CanonicalizationMethod
      */
-    public function parse() : CanonicalizationMethodType
+    public function parse() : CanonicalizationMethod
     {
-        $canonicalizationMethodType  = CanonicalizationMethodType::factory()->setXMLattributes( $this->reader );
+        $canonicalizationMethod = CanonicalizationMethod::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -57,13 +57,13 @@ class CanonicalizationMethodTypeParser extends DsigParserBase
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
                 if( self::ALGORITM === $this->reader->localName ) {
-                    $canonicalizationMethodType->setAlgorithm( $this->reader->value );
+                    $canonicalizationMethod->setAlgorithm( $this->reader->value );
                 }
             }
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $canonicalizationMethodType;
+            return $canonicalizationMethod;
         }
         $headElement = $this->reader->localName;
         $anyTypes    = [];
@@ -86,7 +86,7 @@ class CanonicalizationMethodTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $canonicalizationMethodType->setAny( $anyTypes );
-        return $canonicalizationMethodType;
+        $canonicalizationMethod->setAny( $anyTypes );
+        return $canonicalizationMethod;
     }
 }

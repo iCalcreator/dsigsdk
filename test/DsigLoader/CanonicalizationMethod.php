@@ -29,33 +29,28 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
+use Kigkonsult\DsigSdk\Dto\CanonicalizationMethod as Dto;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\PGPDataType as Dto;
 
-use function base64_encode;
-
-class PGPDataType
+class CanonicalizationMethod implements DsigLoaderInterface
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
+        $max  = $faker->numberBetween( 1, 2 );
         $anys = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $anys[] = AnyType::loadFromFaker();
+        for( $x = 0; $x < $max; $x++ ) {
+            $anys[] = Any::loadFromFaker();
         }
-        if( 1 === $faker->numberBetween( 1, 2 )) {
-            return Dto::factory()
-                ->setAny( $anys )
-                ->setPGPKeyID( base64_encode( $faker->sha256 ))
-                ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
-        }
+
         return Dto::factory()
-            ->setAny( $anys )
-            ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
+                  ->setAny( $anys )
+                  ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] );
     }
 }

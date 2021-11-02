@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\SignatureType;
+use Kigkonsult\DsigSdk\Dto\Signature;
 use XMLReader;
 
 use function sprintf;
@@ -42,12 +42,12 @@ class SignatureTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return SignatureType
+     * @return Signature
      * @todo dix xmlns
      */
-    public function parse() : SignatureType
+    public function parse() : Signature
     {
-        $signatureType = SignatureType::factory()->setXMLattributes( $this->reader );
+        $signature = Signature::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -57,16 +57,16 @@ class SignatureTypeParser extends DsigParserBase
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
                 if( self::ID === $this->reader->localName ) {
-                    $signatureType->setId( $this->reader->value );
+                    $signature->setId( $this->reader->value );
                 }
                 else {
-                    $signatureType->setXMLattribute( $this->reader->name, $this->reader->value );
+                    $signature->setXMLattribute( $this->reader->name, $this->reader->value );
                 }
             } // end while
             $this->reader->moveToElement();
         } // end if
         if( $this->reader->isEmptyElement ) {
-            return $signatureType;
+            return $signature;
         }
         $headElement = $this->reader->localName;
         $objects     = [];
@@ -85,20 +85,20 @@ class SignatureTypeParser extends DsigParserBase
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 case ( self::SIGNEDINFO === $this->reader->localName ) :
-                    $signatureType->setSignedInfo( SignedInfoTypeParser::factory( $this->reader )->parse());
+                    $signature->setSignedInfo( SignedInfoTypeParser::factory( $this->reader )->parse());
                     break;
                 case ( self::SIGNATUREVALUE === $this->reader->localName ) :
-                    $signatureType->setSignatureValue( SignatureValueTypeParser::factory( $this->reader )->parse());
+                    $signature->setSignatureValue( SignatureValueTypeParser::factory( $this->reader )->parse());
                     break;
                 case ( self::KEYINFO === $this->reader->localName ) :
-                    $signatureType->setKeyInfo( KeyInfoTypeParser::factory( $this->reader )->parse());
+                    $signature->setKeyInfo( KeyInfoTypeParser::factory( $this->reader )->parse());
                     break;
                 case ( self::OBJECT === $this->reader->localName ) :
                     $objects[] = ObjectTypeParser::factory( $this->reader )->parse();
                     break;
             } // end switch
         } // end while
-        $signatureType->setObject( $objects );
-        return $signatureType;
+        $signature->setObject( $objects );
+        return $signature;
     }
 }

@@ -29,42 +29,36 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
+use Kigkonsult\DsigSdk\Dto\Signature as Dto;
 use Faker;
-use Kigkonsult\DsigSdk\DsigInterface;
-use Kigkonsult\DsigSdk\Dto\ObjectType as Dto;
-use Kigkonsult\DsigSdk\Dto\Util;
 
 /**
- * Class ObjectType
+ * Class Signature
+ *
+ * schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
+ * namespace="http://www.w3.org/2000/09/xmldsig#"
  */
-class ObjectType implements DsigInterface
+class Signature1
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
-        $max         = $faker->numberBetween( 4, 6 );
-        $objectTypes = [];
-        for( $x = 0; $x < $max; $x++ ) {
-            switch( $faker->numberBetween( 1, 3 )) {
-                case 1 :
-                    $objectTypes[] = [ self::MANIFEST => ManifestType::loadFromFaker() ];
-                    break;
-                case 2 :
-                    $objectTypes[] = [ self::SIGNATUREPROPERTIES => SignaturePropertiesType::loadFromFaker() ];
-                    break;
-                case 3 :
-                    $objectTypes[] = [ self::ANYTYPE => AnyType::loadFromFaker() ];
-                    break;
-            } // end switch
-        } // end foreach
+        $max = $faker->numberBetween( 1, 2 );
+        $objects = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            $objects[] = Objekt::loadFromFaker();
+        }
         return Dto::factory()
-                  ->setObjectTypes( $objectTypes )
-                  ->setId( Util::getSalt())
-                  ->setMimeType( $faker->mimeType )
-                  ->setEncoding( 'UTF-8' );
+            ->setId( $faker->md5 )
+            ->setSignedInfo( SignedInfo::loadFromFaker())
+            ->setSignatureValue( SignatureValue::loadFromFaker())
+            ->setKeyInfo( KeyInfo::loadFromFaker())
+            ->setObject( $objects );
     }
 }

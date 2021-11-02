@@ -29,24 +29,28 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\IdTrait;
+use Kigkonsult\DsigSdk\Dto\Traits\TypeTrait;
+use Kigkonsult\DsigSdk\Dto\Traits\URITrait;
+
 /**
  * Class ReferenceType
  */
 class ReferenceType extends DsigBase
 {
     /**
-     * @var TransformsType|null
+     * @var Transforms|null
      *                     minOccurs="0"
      */
-    protected ?TransformsType $transforms = null;
+    protected ?Transforms $transforms = null;
 
     /**
-     * @var DigestMethodType|null
+     * @var DigestMethod|null
      */
-    protected ?DigestMethodType $digestMethod = null;
+    protected ?DigestMethod $digestMethod = null;
 
     /**
-     * @var string|null
+     * @var null|string
      *            base="base64Binary"
      */
     protected ?string $digestValue = null;
@@ -56,53 +60,53 @@ class ReferenceType extends DsigBase
      * var string id
      *            attribute name="Id" type="ID" use="optional"
      */
-    use Traits\IdTrait;
+    use IdTrait;
 
     /**
      * Property, get- and setter methods for
      * var string type
      *            attribute name="URI" type="anyURI" use="optional"
      */
-    use Traits\URITrait;
+    use URITrait;
 
     /**
      * Property, get- and setter methods for
      * var string type
      *            attribute name="Type" type="anyURI" use="optional"
      */
-    use Traits\TypeTrait;
+    use TypeTrait;
 
     /**
-     * @return null|TransformsType
+     * @return null|Transforms
      */
-    public function getTransforms() : ?TransformsType
+    public function getTransforms() : ?Transforms
     {
         return $this->transforms;
     }
 
     /**
-     * @param TransformsType $transforms
+     * @param Transforms $transforms
      * @return static
      */
-    public function setTransforms( TransformsType $transforms ) : self
+    public function setTransforms( Transforms $transforms ) : static
     {
         $this->transforms = $transforms;
         return $this;
     }
 
     /**
-     * @return null|DigestMethodType
+     * @return null|DigestMethod
      */
-    public function getDigestMethod() : ?DigestMethodType
+    public function getDigestMethod() : ?DigestMethod
     {
         return $this->digestMethod;
     }
 
     /**
-     * @param DigestMethodType $digestMethod
+     * @param DigestMethod $digestMethod
      * @return static
      */
-    public function setDigestMethod( DigestMethodType $digestMethod ) : self
+    public function setDigestMethod( DigestMethod $digestMethod ) : static
     {
         $this->digestMethod = $digestMethod;
         return $this;
@@ -120,7 +124,7 @@ class ReferenceType extends DsigBase
      * @param string $digestValue
      * @return static
      */
-    public function setDigestValue( string $digestValue ) : self
+    public function setDigestValue( string $digestValue ) : static
     {
         $this->digestValue = $digestValue;
         return $this;

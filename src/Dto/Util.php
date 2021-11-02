@@ -57,7 +57,9 @@ class Util
         $cnt = 0;
         do {
             $bytes = openssl_random_pseudo_bytes( $byteCnt, $cStrong );
-            ++$cnt;
+            if( false !== $bytes ) {
+                ++$cnt;
+            }
         } while(( $MAX > $cnt ) && ( false === $cStrong ));
         return $bytes;
     }

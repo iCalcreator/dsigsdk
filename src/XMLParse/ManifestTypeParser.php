@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\ManifestType;
+use Kigkonsult\DsigSdk\Dto\Manifest;
 use XMLReader;
 
 use function sprintf;
@@ -42,11 +42,11 @@ class ManifestTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return ManifestType
+     * @return Manifest
      */
-    public function parse() : ManifestType
+    public function parse() : Manifest
     {
-        $manifestType  = ManifestType::factory()->setXMLattributes( $this->reader );
+        $manifest  = Manifest::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -56,16 +56,16 @@ class ManifestTypeParser extends DsigParserBase
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
                 if( self::ID === $this->reader->localName ) {
-                    $manifestType->setId( $this->reader->value );
+                    $manifest->setId( $this->reader->value );
                 }
                 else {
-                    $manifestType->setXMLattribute( $this->reader->name, $this->reader->value );
+                    $manifest->setXMLattribute( $this->reader->name, $this->reader->value );
                 }
             } // end while
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $manifestType;
+            return $manifest;
         }
         $headElement = $this->reader->localName;
         $references  = [];
@@ -88,7 +88,7 @@ class ManifestTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $manifestType->setReference( $references );
-        return $manifestType;
+        $manifest->setReference( $references );
+        return $manifest;
     }
 }

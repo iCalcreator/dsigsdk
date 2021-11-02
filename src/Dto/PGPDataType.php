@@ -29,30 +29,32 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\AnyTypesTrait;
+
 /**
  * Class PGPDataType
  */
 class PGPDataType extends DsigBase
 {
     /**
-     * @var string|null -  type="base64Binary"
+     * @var null|string -  type="base64Binary"
      *             choice opt 1
      */
     protected ?string $PGPKeyID = null;
 
     /**
-     * @var string|null -  type="base64Binary" minOccurs="0"
+     * @var null|string -  type="base64Binary" minOccurs="0"
      *             choice op 1 and 2
      */
     protected ?string $PGPKeyPacket = null;
 
     /**
      * Property, get- and setter methods
-     * var AnyType[]  any
+     * var Any[]  any
      *              namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"
      *              choice op 1 and 2
      */
-    use Traits\AnyTypesTrait;
+    use AnyTypesTrait;
 
     /**
      * @return null|string
@@ -66,7 +68,7 @@ class PGPDataType extends DsigBase
      * @param string $PGPKeyID
      * @return static
      */
-    public function setPGPKeyID( string $PGPKeyID ) : self
+    public function setPGPKeyID( string $PGPKeyID ) : static
     {
         $this->PGPKeyID = $PGPKeyID;
         return $this;
@@ -84,7 +86,7 @@ class PGPDataType extends DsigBase
      * @param string $PGPKeyPacket
      * @return static
      */
-    public function setPGPKeyPacket( string $PGPKeyPacket ) : self
+    public function setPGPKeyPacket( string $PGPKeyPacket ) : static
     {
         $this->PGPKeyPacket = $PGPKeyPacket;
         return $this;

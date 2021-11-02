@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\SignatureType;
+use Kigkonsult\DsigSdk\Dto\Signature;
 
 /**
  * Class SignatureTypeWriter
@@ -39,9 +39,9 @@ class SignatureTypeWriter extends DsigWriterBase
     /**
      * Write
      *
-     * @param SignatureType $signatureType
+     * @param Signature $signatureType
      */
-    public function write( SignatureType $signatureType ) : void
+    public function write( Signature $signatureType ) : void
     {
         $XMLattributes = $signatureType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::SIGNATURE, $XMLattributes );

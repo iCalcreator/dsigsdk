@@ -29,28 +29,28 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Kigkonsult\DsigSdk\Dto\KeyValueType as Dto;
-use Faker;
+use Exception;
+use Kigkonsult\DsigSdk\Dto\Signature as Dto;
+// use Faker;
 
-class KeyValueType
+/**
+ * Class Signature
+ *
+ * schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
+ * namespace="http://www.w3.org/2000/09/xmldsig#"
+ */
+class Signature2
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
-        $faker = Faker\Factory::create();
+        // $faker = Faker\Factory::create();
 
-        switch( $faker->numberBetween( 1, 3 )) {
-            case 1 :
-                return Dto::factory()
-                          ->setDSAKeyValue( DSAKeyValueType::loadFromFaker());
-            case 2 :
-                return Dto::factory()
-                          ->setRSAKeyValue( RSAKeyValueType::loadFromFaker());
-            default :
-                return Dto::factory()
-                          ->setAny( AnyType::loadFromFaker());
-        }
+        return Dto::factory()
+                  ->setSignedInfo( SignedInfo::loadFromFaker())
+                  ->setSignatureValue( SignatureValue::loadFromFaker());
     }
 }

@@ -29,22 +29,28 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
+use Kigkonsult\DsigSdk\Dto\DigestMethod as Dto;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\RSAKeyValueType as Dto;
 
-use function base64_encode;
-
-class RSAKeyValueType
+class DigestMethod implements DsigLoaderInterface
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
+        $max = $faker->numberBetween( 1, 2 );
+        $anys = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            $anys[] = Any::loadFromFaker();
+        }
+
         return Dto::factory()
-                  ->setModulus( base64_encode( $faker->sha256 ))
-                  ->setExponent( base64_encode( $faker->sha256 ));
+                  ->setAny( $anys )
+                  ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] );
     }
 }

@@ -30,6 +30,7 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Dto\Traits\AlgorithmTrait;
 use Webmozart\Assert\Assert;
 
 use function is_array;
@@ -42,10 +43,10 @@ use function sprintf;
 class TransformType extends DsigBase
 {
     /**
-     * @var array each element is (keyed) AnyType or XPath (string)
+     * @var array each element is (keyed) Any or XPath (string)
      *
      *   [ self::XPATH   => <string> ]
-     *   [ self::ANYTYPE => AnyType ]
+     *   [ self::ANYTYPE => Any ]
      *
      */
     protected array $transformTypes = [];
@@ -55,7 +56,7 @@ class TransformType extends DsigBase
      * var string algorithm
      *            attribute name="Algorithm" type="anyURI" use="required"
      */
-    use Traits\AlgorithmTrait;
+    use AlgorithmTrait;
 
     /**
      * @return array
@@ -71,14 +72,17 @@ class TransformType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function addTransformType( string $type, $transformType ) : self
+    public function addTransformType( string $type, mixed $transformType ) : static
     {
         switch( $type ) {
             case self::XPATH :
                 Assert::string( $transformType );
                 break;
+            case  self::ANY :
+                $type = self::ANYTYPE;
+                // fall through
             case self::ANYTYPE :
-                Assert::isInstanceOf( $transformType, AnyType::class );
+                Assert::isInstanceOf( $transformType, Any::class );
                 break;
             default :
                 throw new InvalidArgumentException(
@@ -99,7 +103,7 @@ class TransformType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function setTransformTypes( array $transformTypes ) : self
+    public function setTransformTypes( array $transformTypes ) : static
     {
         foreach( $transformTypes as $ix => $element ) {
             if( ! is_array( $element )) {

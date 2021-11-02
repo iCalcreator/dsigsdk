@@ -38,6 +38,7 @@ interface DsigInterface
     /**
      * xmldsig element constants
      */
+    public const ANY                    = 'Any';
     public const ANYTYPE                = 'AnyType';
     public const CANONICALIZATIONMETHOD = 'CanonicalizationMethod';
     public const DSAKEYVALUE            = 'DSAKeyValue';

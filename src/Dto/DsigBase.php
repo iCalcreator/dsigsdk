@@ -45,9 +45,6 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      */
     protected static string $FMTERR0 = 'Unknown %s type (%s) \'%s\'';
     protected static string $FMTERR1 = 'Unknown %s type #%s \'%s\'';
-    protected static string $FMTERR2 = 'Unknown %s type #%s:%s \'%s\'';
-    protected static string $PLCHDLR = '%s';
-    protected static string $TYPE    = 'Type';
 
     /**
      * @var array
@@ -59,10 +56,9 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      *
      * @return static
      */
-    public static function factory() : self
+    public static function factory() : static
     {
-        $class = get_called_class();
-        return new $class();
+        return new static();
     }
 
     /**
@@ -88,7 +84,7 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
         string $key,
         string $value,
         ? bool $propagateDown = false
-    ) : self
+    ) : static
     {
         Assert::string( $key );
         Assert::string( $value );
@@ -108,7 +104,7 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      * @return static
      * @throws InvalidArgumentException
      */
-    public function unsetXMLattribute( string $key, ?bool $propagateDown ) : self
+    public function unsetXMLattribute( string $key, ?bool $propagateDown ) : static
     {
         Assert::string( $key );
         unset( $this->XMLattributes[$key] );
@@ -125,7 +121,7 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      * @param DsigBase     $dsigBase
      * @param string       $key
      * @param null|string  $value
-     * @param bool|null $unset
+     * @param null|bool    $unset
      * @throws InvalidArgumentException
      */
     protected static function propagateDown(
@@ -192,7 +188,7 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
      * @param XMLReader $reader
      * @return static
      */
-    public function setXMLattributes( XMLReader $reader ) : self
+    public function setXMLattributes( XMLReader $reader ) : static
     {
         $this->XMLattributes[self::BASEURI]      = $reader->baseURI ;
         $this->XMLattributes[self::LOCALNAME]    = $reader->localName ;
@@ -200,14 +196,5 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
         $this->XMLattributes[self::NAMESPACEURI] = $reader->namespaceURI ;
         $this->XMLattributes[self::PREFIX]       = $reader->prefix ;
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    protected static function getNs() : string
-    {
-        static $BS = '\\';
-        return __NAMESPACE__ . $BS;
     }
 }

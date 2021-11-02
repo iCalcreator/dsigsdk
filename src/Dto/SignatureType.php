@@ -29,8 +29,10 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\IdTrait;
+
 /**
- * Class Signature
+ * Class SignatureType
  *
  * schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
  * namespace="http://www.w3.org/2000/09/xmldsig#"
@@ -38,23 +40,23 @@ namespace Kigkonsult\DsigSdk\Dto;
 class SignatureType extends DsigBase
 {
     /**
-     * @var SignedInfoType|null
+     * @var SignedInfo|null
      */
-    protected ?SignedInfoType $signedInfo = null;
+    protected ?SignedInfo $signedInfo = null;
 
     /**
-     * @var SignatureValueType|null
+     * @var SignatureValue|null
      */
-    protected ?SignatureValueType $signatureValue = null;
+    protected ?SignatureValue $signatureValue = null;
 
     /**
-     * @var KeyInfoType|null
+     * @var KeyInfo|null
      *                  minOccurs="0"
      */
-    protected ?KeyInfoType $keyInfo = null;
+    protected ?KeyInfo $keyInfo = null;
 
     /**
-     * @var ObjectType[]
+     * @var Objekt[]
      *           minOccurs="0" maxOccurs="unbounded"
      */
     protected array $object = [];
@@ -64,64 +66,64 @@ class SignatureType extends DsigBase
      * var string id
      *            attribute name="Id" type="ID" use="optional"
      */
-    use Traits\IdTrait;
+    use IdTrait;
 
     /**
-     * @return null|SignedInfoType
+     * @return null|SignedInfo
      */
-    public function getSignedInfo() : ?SignedInfoType
+    public function getSignedInfo() : ?SignedInfo
     {
         return $this->signedInfo;
     }
 
     /**
-     * @param SignedInfoType $signedInfo
+     * @param SignedInfo $signedInfo
      * @return static
      */
-    public function setSignedInfo( SignedInfoType $signedInfo ) : self
+    public function setSignedInfo( SignedInfo $signedInfo ) : static
     {
         $this->signedInfo = $signedInfo;
         return $this;
     }
 
     /**
-     * @return null|SignatureValueType
+     * @return null|SignatureValue
      */
-    public function getSignatureValue() : ?SignatureValueType
+    public function getSignatureValue() : ?SignatureValue
     {
         return $this->signatureValue;
     }
 
     /**
-     * @param SignatureValueType $signatureValue
+     * @param SignatureValue $signatureValue
      * @return static
      */
-    public function setSignatureValue( SignatureValueType $signatureValue ) : self
+    public function setSignatureValue( SignatureValue $signatureValue ) : static
     {
         $this->signatureValue = $signatureValue;
         return $this;
     }
 
     /**
-     * @return null|KeyInfoType
+     * @return null|KeyInfo
      */
-    public function getKeyInfo() : ?KeyInfoType
+    public function getKeyInfo() : ?KeyInfo
     {
         return $this->keyInfo;
     }
 
     /**
-     * @param KeyInfoType $keyInfo
+     * @param KeyInfo $keyInfo
      * @return static
      */
-    public function setKeyInfo( KeyInfoType $keyInfo ) : self
+    public function setKeyInfo( KeyInfo $keyInfo ) : static
     {
         $this->keyInfo = $keyInfo;
         return $this;
     }
 
     /**
-     * @return ObjectType[]
+     * @return Objekt[]
      */
     public function getObject() : array
     {
@@ -129,20 +131,20 @@ class SignatureType extends DsigBase
     }
 
     /**
-     * @param ObjectType $object
+     * @param Objekt $object
      * @return static
      */
-    public function addObject( ObjectType $object ) : self
+    public function addObject( Objekt $object ) : static
     {
         $this->object[] = $object;
         return $this;
     }
 
     /**
-     * @param ObjectType[] $object
+     * @param Objekt[] $object
      * @return static
      */
-    public function setObject( array $object ) : self
+    public function setObject( array $object ) : static
     {
         foreach( $object as $objectType ) {
             $this->addObject( $objectType );

@@ -36,16 +36,16 @@ use function explode;
 use function file_get_contents;
 use function libxml_clear_errors;
 use function libxml_use_internal_errors;
-use function simplexml_load_file;
+use function simplexml_load_string;
 use function sprintf;
 use function str_repeat;
 use function trim;
 use function var_export;
 
 /**
- * Trait LibXmlUtilTrait
+ * Trait XmlUtilTrait
  */
-trait LibXmlUtilTrait
+trait XmlUtilTrait
 {
 
     /**
@@ -57,7 +57,7 @@ trait LibXmlUtilTrait
      *             LIBXML_NSCLEAN        Remove redundant namespace declarations
      *             LIBXML_HTML_NODEFDTD  Sets HTML_PARSE_NODEFDTD flag, which prevents a default doctype being added when one is not found. ??
      */
-    public static $XMLReaderOptions = LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NSCLEAN | LIBXML_HTML_NODEFDTD;
+    public static int $XMLReaderOptions = LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NSCLEAN | LIBXML_HTML_NODEFDTD;
     // LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NSCLEAN;
 
     /**
@@ -72,7 +72,9 @@ trait LibXmlUtilTrait
         static $CLASS  = 'SimpleXMLElement';
         static $FMTerr = 'Error validating %s, errors: %s';
         $useInternalXmlErrors = libxml_use_internal_errors( true ); // enable user error handling
-        if( false === simplexml_load_file( $fileName, $CLASS, self::$XMLReaderOptions )) {
+//      if( false === simplexml_load_file( $fileName, $CLASS, self::$XMLReaderOptions )) {
+        if(( false === ( $xmlString = file_get_contents( $fileName ))) ||
+            ( false === simplexml_load_string( $xmlString, $CLASS, self::$XMLReaderOptions ))) {
             throw new InvalidArgumentException(
                 sprintf(
                     $FMTerr,
@@ -97,8 +99,8 @@ trait LibXmlUtilTrait
      */
     private static function renderXmlError(
         array $errors,
-        $fileName = null,
-        $content = null
+        ? string $fileName = null,
+        ? string $content = null
     ) : array
     {
         static $CRITICAL = 'critical'; // MUST correspond to Psr\Log\LogLevel
@@ -120,9 +122,9 @@ trait LibXmlUtilTrait
             if( empty( $fileName )) {
                 return [ $CRITICAL => $FMT0 ];
             }
-            $content = @file_get_contents( $fileName );
+            $content = empty( $fileName ) ? $SP0 : (string) @file_get_contents( $fileName );
         }
-        $xml     = ( false !== $content ) ? explode( PHP_EOL, $content ) : false;
+        $xml     = empty( $content ) ? false : explode( PHP_EOL, $content );
         $libXarr = [];
         $baseFileName = empty( $fileName ) ? $SP0 : basename( $fileName );
         foreach( $errors as $ex => $error ) {

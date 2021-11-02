@@ -56,7 +56,7 @@ class X509DataType extends DsigBase
      *      self::X509CRL
      *        type="base64Binary"/>
      *      self::ANYTYPE
-     *         AnyType
+     *         Any
      * maxOccurs="unbounded"
      */
     protected array $X509DataTypes = [];
@@ -75,7 +75,7 @@ class X509DataType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function addX509DataType( string $type, $X509DataType ) : self
+    public function addX509DataType( string $type, mixed $X509DataType ) : static
     {
         switch( $type ) {
             case self::X509ISSUERSERIAL :
@@ -93,8 +93,11 @@ class X509DataType extends DsigBase
             case self::X509CRL :
                 Assert::string( $X509DataType );
                 break;
+            case self::ANY :
+                $type = self::ANYTYPE;
+                // fall through
             case self::ANYTYPE :
-                Assert::isInstanceOf( $X509DataType, AnyType::class );
+                Assert::isInstanceOf( $X509DataType, Any::class );
                 break;
             default :
                 throw new InvalidArgumentException(
@@ -115,7 +118,7 @@ class X509DataType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function setX509DataTypes( array $X509DataTypes ) : self
+    public function setX509DataTypes( array $X509DataTypes ) : static
     {
         foreach( $X509DataTypes as $ix => $element ) {
             if( ! is_array( $element )) {

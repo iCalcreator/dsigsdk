@@ -29,24 +29,29 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Kigkonsult\DsigSdk\Dto\Transforms as Dto;
+use Exception;
 use Faker;
+use Kigkonsult\DsigSdk\DsigInterface;
+use Kigkonsult\DsigSdk\Dto\X509Data as Dto;
 
-class TransformsType
+class X509Data  implements DsigInterface
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
-        $transforms = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $transforms[] = TransformType::loadFromFaker();
-        }
         return Dto::factory()
-                  ->setTransform( $transforms );
+                  ->setX509DataTypes( [
+                      [ self::X509ISSUERSERIAL => X509IssuerSerialType::loadFromFaker() ],
+                      [ self::X509SKI          => base64_encode( $faker->sha256 ) ],
+                      [ self::X509SUBJECTNAME  => $faker->company ],
+                      [ self::X509CERTIFICATE  => base64_encode( $faker->sha256 ) ],
+                      [ self::X509CRL          => base64_encode( $faker->sha256 ) ],
+                      [ self::ANYTYPE          => Any::loadFromFaker() ],
+                  ] );
     }
 }

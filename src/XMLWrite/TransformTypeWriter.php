@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\TransformType;
+use Kigkonsult\DsigSdk\Dto\Transform;
 
 /**
  * Class TransformTypeWriter
@@ -38,10 +38,10 @@ class TransformTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param TransformType $transformType
+     * @param Transform $transformType
      *
      */
-    public function write( TransformType $transformType ) : void
+    public function write( Transform $transformType ) : void
     {
         $XMLattributes = $transformType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::TRANSFORM, $XMLattributes );
@@ -57,6 +57,7 @@ class TransformTypeWriter extends DsigWriterBase
                             $XMLattributes,
                             $value );
                         break;
+                    case self::ANY : // fall through
                     case self::ANYTYPE :
                         AnyTypeWriter::factory( $this->writer )->write( $value );
                         break;

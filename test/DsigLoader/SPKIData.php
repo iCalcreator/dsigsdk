@@ -27,12 +27,30 @@
  *            along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 declare( strict_types = 1 );
-namespace Kigkonsult\DsigSdk\Dto;
+namespace Kigkonsult\DsigSdk\DsigLoader;
 
-/**
- * Class Reference
- */
-class Reference extends ReferenceType
+use Exception;
+use Faker;
+use Kigkonsult\DsigSdk\Dto\SPKIData as Dto;
+use Kigkonsult\DsigSdk\DsigInterface;
+
+class SPKIData implements DsigInterface
 {
+    /**
+     * @return Dto
+     * @throws Exception
+     */
+    public static function loadFromFaker() : Dto
+    {
+        $faker = Faker\Factory::create();
 
+        $max = $faker->numberBetween( 1, 2 );
+        $SPKIDataTypes = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            $SPKIDataTypes[] = [ self::SPKISEXP => base64_encode( $faker->sha256 ) ];
+            $SPKIDataTypes[] = [ self::ANYTYPE  => Any::loadFromFaker() ];
+        }
+        return Dto::factory()
+                  ->setSPKIDataType( $SPKIDataTypes );
+    }
 }

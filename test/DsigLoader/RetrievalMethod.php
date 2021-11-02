@@ -29,28 +29,23 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
+use Kigkonsult\DsigSdk\Dto\RetrievalMethod as Dto;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\SPKIDataType as Dto;
-use Kigkonsult\DsigSdk\DsigInterface;
 
-use function base64_encode;
-
-class SPKIDataType implements DsigInterface
+class RetrievalMethod
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
-        $SPKIDataTypes = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $SPKIDataTypes[] = [ self::SPKISEXP => base64_encode( $faker->sha256 ) ];
-            $SPKIDataTypes[] = [ self::ANYTYPE  => AnyType::loadFromFaker() ];
-        }
         return Dto::factory()
-                  ->setSPKIDataType( $SPKIDataTypes );
+                  ->setTransforms( Transforms::loadFromFaker())
+                  ->setURI( $faker->url )
+                  ->setType( $faker->url );
     }
 }

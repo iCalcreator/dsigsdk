@@ -29,24 +29,24 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\DigestMethodType;
+use Kigkonsult\DsigSdk\Dto\DigestMethod;
 use XMLReader;
 
 use function sprintf;
 
 /**
- * Class DigestMethodTypeParser
+ * Class DigestMethodParser
  */
 class DigestMethodTypeParser extends DsigParserBase
 {
     /**
      * Parse
      *
-     * @return DigestMethodType
+     * @return DigestMethod
      */
-    public function parse() : DigestMethodType
+    public function parse() : DigestMethod
     {
-        $digestMethodType = DigestMethodType::factory()->setXMLattributes( $this->reader );
+        $digestMethod = DigestMethod::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -56,13 +56,13 @@ class DigestMethodTypeParser extends DsigParserBase
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
                 if( self::ALGORITM === $this->reader->localName ) {
-                    $digestMethodType->setAlgorithm( $this->reader->value );
+                    $digestMethod->setAlgorithm( $this->reader->value );
                 }
             } // end while
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $digestMethodType;
+            return $digestMethod;
         }
         $headElement = $this->reader->localName;
         $anyTypes    = [];
@@ -85,7 +85,7 @@ class DigestMethodTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $digestMethodType->setAny( $anyTypes );
-        return $digestMethodType;
+        $digestMethod->setAny( $anyTypes );
+        return $digestMethod;
     }
 }

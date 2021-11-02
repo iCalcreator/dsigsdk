@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\PGPDataType;
+use Kigkonsult\DsigSdk\Dto\PGPData;
 
 /**
  * Class PGPDataTypeWriter
@@ -38,10 +38,10 @@ class PGPDataTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param PGPDataType $PGPDataType
+     * @param PGPData $PGPDataType
      *
      */
-    public function write( PGPDataType $PGPDataType ) : void
+    public function write( PGPData $PGPDataType ) : void
     {
         $XMLattributes = $PGPDataType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::PGPDATA, $XMLattributes );

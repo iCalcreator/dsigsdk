@@ -29,21 +29,26 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Kigkonsult\DsigSdk\Dto\RetrievalMethodType as Dto;
+use Exception;
 use Faker;
+use Kigkonsult\DsigSdk\Dto\Transforms as Dto;
 
-class RetrievalMethodType
+class Transforms
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
+        $max = $faker->numberBetween( 1, 2 );
+        $transforms = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            $transforms[] = Transform::loadFromFaker();
+        }
         return Dto::factory()
-                  ->setTransforms( TransformsType::loadFromFaker())
-                  ->setURI( $faker->url )
-                  ->setType( $faker->url );
+                  ->setTransform( $transforms );
     }
 }

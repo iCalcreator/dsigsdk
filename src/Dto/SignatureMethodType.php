@@ -30,6 +30,7 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Dto\Traits\AlgorithmTrait;
 use Webmozart\Assert\Assert;
 
 use function is_array;
@@ -43,7 +44,7 @@ class SignatureMethodType extends DsigBase
     /**
      * @var array
      *
-     * array pairs of 0-1 HMACOutputLengthType (int) and/or 0-~ AnyType
+     * array pairs of 0-1 HMACOutputLengthType (int) and/or 0-~ Any
      * each pair *[ key => type ]
      * key : self::HMACOUTPUTLENGTH / self::ANYTYPE
      */
@@ -54,7 +55,7 @@ class SignatureMethodType extends DsigBase
      * var string algorithm
      *            attribute name="Algorithm" type="anyURI" use="required"
      */
-    use Traits\AlgorithmTrait;
+    use AlgorithmTrait;
 
 
     /**
@@ -71,7 +72,7 @@ class SignatureMethodType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function addSignatureMethodType( string $type, $signatureMethodType ) : self
+    public function addSignatureMethodType( string $type, mixed $signatureMethodType ) : static
     {
         switch( $type ) {
             case self::HMACOUTPUTLENGTH :
@@ -87,8 +88,11 @@ class SignatureMethodType extends DsigBase
                     )
                 );
                 break;
+            case  self::ANY :
+                $type = self::ANYTYPE;
+                // fall through
             case  self::ANYTYPE :
-                Assert::isInstanceOf( $signatureMethodType, AnyType::class );
+                Assert::isInstanceOf( $signatureMethodType, Any::class );
                 break;
             default :
                 throw new InvalidArgumentException(
@@ -108,7 +112,7 @@ class SignatureMethodType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function setSignatureMethodTypes( array $signatureMethodTypes ) : self
+    public function setSignatureMethodTypes( array $signatureMethodTypes ) : static
     {
         foreach( $signatureMethodTypes as $ix1 => $elementSet ) {
             if( ! is_array( $elementSet )) {

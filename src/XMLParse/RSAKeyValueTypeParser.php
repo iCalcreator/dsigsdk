@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\RSAKeyValueType;
+use Kigkonsult\DsigSdk\Dto\RSAKeyValue;
 use XMLReader;
 
 use function sprintf;
@@ -42,16 +42,16 @@ class RSAKeyValueTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return RSAKeyValueType
+     * @return RSAKeyValue
      */
-    public function parse() :RSAKeyValueType
+    public function parse() :RSAKeyValue
     {
-        $RSAKeyValueType  = RSAKeyValueType::factory()->setXMLattributes( $this->reader );
+        $RSAKeyValue = RSAKeyValue::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
         if( $this->reader->isEmptyElement ) {
-            return $RSAKeyValueType;
+            return $RSAKeyValue;
         }
         $headElement    = $this->reader->localName;
         $currentElement = null;
@@ -71,10 +71,10 @@ class RSAKeyValueTypeParser extends DsigParserBase
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::MODULUS === $currentElement )) :
-                    $RSAKeyValueType->setModulus( $this->reader->value );
+                    $RSAKeyValue->setModulus( $this->reader->value );
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::EXPONENT === $currentElement )) :
-                    $RSAKeyValueType->setExponent( $this->reader->value );
+                    $RSAKeyValue->setExponent( $this->reader->value );
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
@@ -86,6 +86,6 @@ class RSAKeyValueTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        return $RSAKeyValueType;
+        return $RSAKeyValue;
     }
 }

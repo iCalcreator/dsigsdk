@@ -29,7 +29,9 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\X509DataType;
+use Kigkonsult\DsigSdk\Dto\X509Data;
+
+use function in_array;
 
 /**
  * Class X509DataTypeWriter
@@ -38,10 +40,10 @@ class X509DataTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param X509DataType $X509DataType
+     * @param X509Data $X509DataType
      *
      */
-    public function write( X509DataType $X509DataType ) : void
+    public function write( X509Data $X509DataType ) : void
     {
         static $textElements = [
             self::X509SKI,
@@ -49,7 +51,8 @@ class X509DataTypeWriter extends DsigWriterBase
             self::X509CERTIFICATE,
             self::X509CRL
         ];
-        $XMLattributes = $X509DataType->getXMLattributes();
+        static $ANYTYPEs = [ self::ANY, self::ANYTYPE ];
+        $XMLattributes   = $X509DataType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::X509DATA, $XMLattributes );
 
         foreach( $X509DataType->getX509DataTypes() as $type ) {
@@ -61,7 +64,7 @@ class X509DataTypeWriter extends DsigWriterBase
                     case in_array( $key, $textElements, true ) :
                         self::writeTextElement( $this->writer, $key, $XMLattributes, $value );
                         break;
-                    case ( self::ANYTYPE === $key ) :
+                    case in_array( $key, $ANYTYPEs, true ) :
                         AnyTypeWriter::factory( $this->writer )->write( $value );
                         break;
                 } // end switch

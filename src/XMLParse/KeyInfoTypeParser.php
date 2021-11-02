@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\KeyInfoType;
+use Kigkonsult\DsigSdk\Dto\KeyInfo;
 use XMLReader;
 
 use function sprintf;
@@ -42,11 +42,11 @@ class KeyInfoTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return KeyInfoType
+     * @return KeyInfo
      */
-    public function parse() : KeyInfoType
+    public function parse() : KeyInfo
     {
-        $keyInfoType  = KeyInfoType::factory()->setXMLattributes( $this->reader );
+        $keyInfo = KeyInfo::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -56,13 +56,13 @@ class KeyInfoTypeParser extends DsigParserBase
                     sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
                 );
                 if( self::ID === $this->reader->localName ) {
-                     $keyInfoType->setId( $this->reader->value );
+                     $keyInfo->setId( $this->reader->value );
                 }
             } // end while
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $keyInfoType;
+            return $keyInfo;
         }
         $headElement    = $this->reader->localName;
         $currentElement = null;
@@ -130,7 +130,7 @@ class KeyInfoTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $keyInfoType->setKeyInfoType( $keyInfoTypes );
-        return $keyInfoType;
+        $keyInfo->setKeyInfoType( $keyInfoTypes );
+        return $keyInfo;
     }
 }

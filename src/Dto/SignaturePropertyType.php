@@ -29,6 +29,9 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\AnyTypesTrait;
+use Kigkonsult\DsigSdk\Dto\Traits\IdTrait;
+
 /**
  * Class SignaturePropertyType
  */
@@ -36,13 +39,13 @@ class SignaturePropertyType extends DsigBase
 {
     /**
      * Property, get- and setter methods
-     * var AnyType[]  any
+     * var Any[]  any
      *               maxOccurs="unbounded"
      */
-    use Traits\AnyTypesTrait;
+    use AnyTypesTrait;
 
     /**
-     * @var string|null
+     * @var null|string
      *            attribute name="Target" type="anyURI" use="required"
      */
     protected ?string $target = null;
@@ -52,7 +55,7 @@ class SignaturePropertyType extends DsigBase
      * var string id
      *            attribute name="Id" type="ID" use="optional"
      */
-    use Traits\IdTrait;
+    use IdTrait;
 
 
     /**
@@ -67,7 +70,7 @@ class SignaturePropertyType extends DsigBase
      * @param string $target
      * @return static
      */
-    public function setTarget( string $target ) : self
+    public function setTarget( string $target ) : static
     {
         $this->target = $target;
         return $this;

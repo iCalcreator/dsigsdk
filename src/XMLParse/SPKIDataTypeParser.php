@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\SPKIDataType;
+use Kigkonsult\DsigSdk\Dto\SPKIData;
 use XMLReader;
 
 use function sprintf;
@@ -42,16 +42,16 @@ class SPKIDataTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return SPKIDataType
+     * @return SPKIData
      */
-    public function parse() : SPKIDataType
+    public function parse() : SPKIData
     {
-        $SPKIDataType  = SPKIDataType::factory()->setXMLattributes( $this->reader );
+        $SPKIData = SPKIData::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
         if( $this->reader->isEmptyElement ) {
-            return $SPKIDataType;
+            return $SPKIData;
         }
         $headElement    = $this->reader->localName;
         $SPKIDataTypes  = [];
@@ -81,7 +81,7 @@ class SPKIDataTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $SPKIDataType->setSPKIDataType( $SPKIDataTypes );
-        return $SPKIDataType;
+        $SPKIData->setSPKIDataType( $SPKIDataTypes );
+        return $SPKIData;
     }
 }

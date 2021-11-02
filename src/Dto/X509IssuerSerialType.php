@@ -38,7 +38,7 @@ use Webmozart\Assert\Assert;
 class X509IssuerSerialType extends DsigBase
 {
     /**
-     * @var string|null
+     * @var null|string
      */
     protected ?string $X509IssuerName = null;
 
@@ -59,7 +59,7 @@ class X509IssuerSerialType extends DsigBase
      * @param string $X509IssuerName
      * @return static
      */
-    public function setX509IssuerName( string $X509IssuerName ) : self
+    public function setX509IssuerName( string $X509IssuerName ) : static
 {
         $this->X509IssuerName = $X509IssuerName;
         return $this;
@@ -78,7 +78,7 @@ class X509IssuerSerialType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function setX509SerialNumber( $X509SerialNumber ) : self
+    public function setX509SerialNumber( int | string $X509SerialNumber ) : static
     {
         Assert::integerish( $X509SerialNumber );
         $this->X509SerialNumber = (int) $X509SerialNumber;

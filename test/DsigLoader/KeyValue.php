@@ -29,26 +29,27 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
+use Kigkonsult\DsigSdk\Dto\KeyValue as Dto;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\ManifestType as Dto;
-use Kigkonsult\DsigSdk\Dto\Util;
 
-class ManifestType
+class KeyValue
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
-        $max           = $faker->numberBetween( 1, 2 );
-        $referenceType = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $referenceType[] = ReferenceType::loadFromFaker();
-        }
-        return Dto::factory()
-            ->setId( Util::getSalt())
-            ->setReference( $referenceType );
+        return match ( $faker->numberBetween( 1, 3 ) ) {
+            1 => Dto::factory()
+                ->setDSAKeyValue( DSAKeyValue::loadFromFaker() ),
+            2 => Dto::factory()
+                ->setRSAKeyValue( RSAKeyValue::loadFromFaker() ),
+            default => Dto::factory()
+                ->setAny( Any::loadFromFaker() ),
+        };
     }
 }

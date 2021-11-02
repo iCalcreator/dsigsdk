@@ -30,6 +30,7 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
+use Kigkonsult\DsigSdk\Dto\Traits\IdTrait;
 use Webmozart\Assert\Assert;
 
 use function is_array;
@@ -45,14 +46,14 @@ class KeyInfoType extends DsigBase
      * @var array
      *
      * Sets of [ KeyName(string)  => valueType ]
-     *    self::KEYNAME         => KeyValueType
-     *    self::KEYVALUE        => KeyValueType
-     *    self::RETRIEVALMETHOD => RetrievalMethodType
-     *    self::X509DATA        => X509DataType
-     *    self::PGPDATA         => PGPDataType
-     *    self::SPKIDATA        => SPKIDataType
+     *    self::KEYNAME         => KeyValue
+     *    self::KEYVALUE        => KeyValue
+     *    self::RETRIEVALMETHOD => RetrievalMethod
+     *    self::X509DATA        => X509Data
+     *    self::PGPDATA         => PGPData
+     *    self::SPKIDATA        => SPKIData
      *    self::MGMTDATA        => string
-     *    self::ANYTYPE         => AnyType
+     *    self::ANYTYPE         => Any
      *
      * choice maxOccurs="unbounded"
      */
@@ -63,7 +64,7 @@ class KeyInfoType extends DsigBase
      * var string id
      *            attribute name="Id" type="ID" use="optional"
      */
-    use Traits\IdTrait;
+    use IdTrait;
 
     /**
      * @return array
@@ -79,7 +80,7 @@ class KeyInfoType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function addKeyInfoType( string $type, $keyInfoType ) : self
+    public function addKeyInfoType( string $type, mixed $keyInfoType ) : static
     {
         switch( $type ) {
             case self::KEYNAME :
@@ -98,6 +99,9 @@ class KeyInfoType extends DsigBase
             case self::MGMTDATA :
                 Assert::string( $keyInfoType );
                 break;
+            case  self::ANY :
+                $type = self::ANYTYPE;
+                // fall through
             case self::ANYTYPE :
                 break;
             default :
@@ -114,7 +118,7 @@ class KeyInfoType extends DsigBase
      * @return static
      * @throws InvalidArgumentException
      */
-    public function setKeyInfoType( array $keyInfoType ) : self
+    public function setKeyInfoType( array $keyInfoType ) : static
     {
         foreach( $keyInfoType as $ix => $element ) {
             if( ! is_array( $element )) {

@@ -29,17 +29,17 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto\Traits;
 
-use Kigkonsult\DsigSdk\Dto\AnyType;
+use Kigkonsult\DsigSdk\Dto\Any;
 
 trait AnyTypesTrait
 {
     /**
-     * @var AnyType[]
+     * @var Any[]
      */
     protected array $any = [];
 
     /**
-     * @return AnyType[]
+     * @return Any[]
      */
     public function getAny() : array
     {
@@ -47,20 +47,20 @@ trait AnyTypesTrait
     }
 
     /**
-     * @param AnyType $any
+     * @param Any $any
      * @return static
      */
-    public function addAny( AnyType $any ) : self
+    public function addAny( Any $any ) : static
     {
         $this->any[] = $any;
         return $this;
     }
 
     /**
-     * @param AnyType[] $any
+     * @param Any[] $any
      * @return static
      */
-    public function setAny( array $any ) : self
+    public function setAny( array $any ) : static
     {
         foreach( $any as $anyType ) {
             $this->addAny( $anyType );

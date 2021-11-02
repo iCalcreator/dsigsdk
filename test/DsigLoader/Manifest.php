@@ -29,27 +29,28 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
+use Exception;
 use Faker;
-use Kigkonsult\DsigSdk\Dto\ReferenceType as Dto;
+use Kigkonsult\DsigSdk\Dto\Manifest as Dto;
 use Kigkonsult\DsigSdk\Dto\Util;
 
-use function base64_encode;
-
-class ReferenceType
+class Manifest
 {
     /**
      * @return Dto
+     * @throws Exception
      */
     public static function loadFromFaker() : Dto
     {
         $faker = Faker\Factory::create();
 
+        $max           = $faker->numberBetween( 1, 2 );
+        $referenceType = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            $referenceType[] = Reference::loadFromFaker();
+        }
         return Dto::factory()
-            ->setTransforms( TransformsType::loadFromFaker())
-            ->setDigestMethod( DigestMethodType::loadFromFaker())
-            ->setDigestValue( base64_encode( $faker->sha256 ))
             ->setId( Util::getSalt())
-            ->setURI( $faker->url )
-            ->setType( $faker->url );
+            ->setReference( $referenceType );
     }
 }

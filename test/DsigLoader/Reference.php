@@ -30,10 +30,11 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
 use Exception;
-use Kigkonsult\DsigSdk\Dto\DigestMethodType as Dto;
 use Faker;
+use Kigkonsult\DsigSdk\Dto\Reference as Dto;
+use Kigkonsult\DsigSdk\Dto\Util;
 
-class DigestMethodType implements DsigLoaderInterface
+class Reference
 {
     /**
      * @return Dto
@@ -43,14 +44,12 @@ class DigestMethodType implements DsigLoaderInterface
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
-        $anys = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $anys[] = AnyType::loadFromFaker();
-        }
-
         return Dto::factory()
-                  ->setAny( $anys )
-                  ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] );
+            ->setTransforms( Transforms::loadFromFaker())
+            ->setDigestMethod( DigestMethod::loadFromFaker())
+            ->setDigestValue( base64_encode( $faker->sha256 ))
+            ->setId( Util::getSalt())
+            ->setURI( $faker->url )
+            ->setType( $faker->url );
     }
 }

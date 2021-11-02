@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\ObjectType;
+use Kigkonsult\DsigSdk\Dto\Objekt;
 use XMLReader;
 
 use function sprintf;
@@ -42,11 +42,11 @@ class ObjectTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return ObjectType
+     * @return Objekt
      */
-    public function parse() : ObjectType
+    public function parse() : Objekt
     {
-        $objectType = ObjectType::factory()->setXMLattributes( $this->reader );
+        $objekt = Objekt::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
@@ -57,20 +57,20 @@ class ObjectTypeParser extends DsigParserBase
                 );
                 switch( $this->reader->localName ) {
                     case self::ID :
-                        $objectType->setId( $this->reader->value );
+                        $objekt->setId( $this->reader->value );
                         break;
                     case self::MIMETYPE :
-                        $objectType->setMimeType( $this->reader->value );
+                        $objekt->setMimeType( $this->reader->value );
                         break;
                     case self::ENCODING :
-                        $objectType->setEncoding( $this->reader->value );
+                        $objekt->setEncoding( $this->reader->value );
                         break;
                 } // end switch
             } // end while
             $this->reader->moveToElement();
         }
         if( $this->reader->isEmptyElement ) {
-            return $objectType;
+            return $objekt;
         }
         $headElement = $this->reader->localName;
         $objectTypes = [];
@@ -103,7 +103,7 @@ class ObjectTypeParser extends DsigParserBase
                     break;
             }  // end switch
         } // end while
-        $objectType->setObjectTypes( $objectTypes );
-        return $objectType;
+        $objekt->setObjectTypes( $objectTypes );
+        return $objekt;
     }
 }

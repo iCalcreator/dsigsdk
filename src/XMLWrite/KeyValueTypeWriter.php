@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\KeyValueType;
+use Kigkonsult\DsigSdk\Dto\KeyValue;
 
 /**
  * Class KeyValueTypeWriter
@@ -38,10 +38,10 @@ class KeyValueTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param KeyValueType $keyValueType
+     * @param KeyValue $keyValueType
      *
      */
-    public function write( KeyValueType $keyValueType ) : void
+    public function write( KeyValue $keyValueType ) : void
     {
         $XMLattributes = $keyValueType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::KEYVALUE, $XMLattributes );

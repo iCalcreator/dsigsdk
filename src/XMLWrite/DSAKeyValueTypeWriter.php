@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\DSAKeyValueType;
+use Kigkonsult\DsigSdk\Dto\DSAKeyValue;
 
 /**
  * Class DSAKeyValueTypeWriter
@@ -38,10 +38,10 @@ class DSAKeyValueTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param DSAKeyValueType $DSAKeyValueType
+     * @param DSAKeyValue $DSAKeyValueType
      *
      */
-    public function write( DSAKeyValueType $DSAKeyValueType ) : void
+    public function write( DSAKeyValue $DSAKeyValueType ) : void
     {
         $XMLattributes = $DSAKeyValueType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::DSAKEYVALUE, $XMLattributes );

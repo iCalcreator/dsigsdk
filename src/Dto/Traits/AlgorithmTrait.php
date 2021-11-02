@@ -35,7 +35,7 @@ use Kigkonsult\DsigSdk\Dto\Util;
 trait AlgorithmTrait
 {
     /**
-     * @var string|null
+     * @var null|string
      *          type="anyURI"
      */
     protected ? string $algorithm = null;
@@ -65,9 +65,8 @@ trait AlgorithmTrait
     /**
      * @param string $algorithm
      * @return static
-     * @throws InvalidArgumentException
      */
-    public function setAlgorithm( string $algorithm ) : self
+    public function setAlgorithm( string $algorithm ) : static
     {
         $this->algorithm = $algorithm;
         return $this;

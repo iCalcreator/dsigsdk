@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\SignedInfoType;
+use Kigkonsult\DsigSdk\Dto\SignedInfo;
 
 /**
  * Class SignedInfoTypeWriter
@@ -38,10 +38,10 @@ class SignedInfoTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param SignedInfoType $signedInfoType
+     * @param SignedInfo $signedInfoType
      *
      */
-    public function write( SignedInfoType $signedInfoType ) : void
+    public function write( SignedInfo $signedInfoType ) : void
     {
         self::setWriterStartElement( $this->writer, self::SIGNEDINFO, $signedInfoType->getXMLattributes() );
 

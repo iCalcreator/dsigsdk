@@ -31,17 +31,20 @@ namespace Kigkonsult\DsigSdk\Dto;
 
 use InvalidArgumentException;
 
+use Kigkonsult\DsigSdk\Dto\Traits\IdTrait;
 use function gettype;
+use function in_array;
+use function is_object;
 
 /**
- * Class ObjectType
+ * Class Objekt
  */
 class ObjectType extends DsigBase
 {
     /**
      * @var array
      *
-     * Manifest[]|SignaturePropertiesType[]|AnyType[] mixed
+     * Manifest[]|SignatureProperties[]|Any[] mixed
      * in keyed elementSets : [ key => valueType ]
      * key : self::MANIFEST / self::SIGNATUREPROPERTIES / self::ANYTYPE
      * minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="lax"
@@ -55,22 +58,22 @@ class ObjectType extends DsigBase
      * var string id
      *            attribute name="Id" type="ID" use="optional"
      */
-    use Traits\IdTrait;
+    use IdTrait;
 
     /**
-     * @var string|null
+     * @var null|string
      *            attribute name="MimeType" type="string" use="optional"
      */
     protected ?string $mimeType = null;
 
     /**
-     * @var string|null
+     * @var null|string
      *            attribute name="Encoding" type="anyURI" use="optional"
      */
     protected ?string $encoding = null;
 
     /**
-     * @return array Manifest[]|SignaturePropertiesType[]|AnyType[] mixed
+     * @return array Manifest[]|SignatureProperties[]|Any[] mixed
      */
     public function getObjectTypes() : array
     {
@@ -79,32 +82,43 @@ class ObjectType extends DsigBase
 
     /**
      * @param string $type
-     * @param mixed $objectType  Manifest / SignaturePropertiesType / AnyType
+     * @param mixed $objectType  Manifest / SignatureProperties / Any
      * @return static
      * @throws InvalidArgumentException
      */
-    public function addObjectType( string $type, $objectType ) : self
+    public function addObjectType( string $type, mixed $objectType ) : static
     {
+        static $ANYTYPEs = [ self::ANY, self::ANYTYPE ];
         if((( self::MANIFEST === $type ) &&
-                ( $objectType instanceof ManifestType )) ||
+                ( $objectType instanceof Manifest )) ||
             (( self::SIGNATUREPROPERTIES === $type ) &&
-                ( $objectType instanceof SignaturePropertiesType )) ||
-            (( self::ANYTYPE === $type ) &&
-                ( $objectType instanceof AnyType ))) {
+                ( $objectType instanceof SignatureProperties ))) {
             $this->objectTypes[] = [ $type => $objectType ];
             return $this;
         }
+        if( in_array( $type, $ANYTYPEs, true ) &&
+            ( $objectType instanceof Any )) {
+            $this->objectTypes[] = [ self::ANYTYPE => $objectType ];
+            return $this;
+        }
         throw new InvalidArgumentException(
-            sprintf( self::$FMTERR0, self::OBJECT, $type, gettype( $objectType ))
+            sprintf(
+                self::$FMTERR0,
+                self::OBJECT,
+                $type,
+                is_object( $objectType )
+                    ? $objectType::class
+                    : gettype( $objectType )
+            )
         );
     }
 
     /**
-     * @param array $objectTypes * [ type => Manifest|SignatureProperties|AnyType ]
+     * @param array $objectTypes * [ type => Manifest|SignatureProperties|Any ]
      * @return static
      * @throws InvalidArgumentException
      */
-    public function setObjectTypes( array $objectTypes ) : self
+    public function setObjectTypes( array $objectTypes ) : static
     {
         foreach( $objectTypes as $ix => $element ) {
             if( ! is_array( $element )) {
@@ -129,7 +143,7 @@ class ObjectType extends DsigBase
      * @param string $mimeType
      * @return static
      */
-    public function setMimeType( string $mimeType ) : self
+    public function setMimeType( string $mimeType ) : static
     {
         $this->mimeType = $mimeType;
         return $this;
@@ -147,7 +161,7 @@ class ObjectType extends DsigBase
      * @param string $encoding
      * @return static
      */
-    public function setEncoding( string $encoding ) : self
+    public function setEncoding( string $encoding ) : static
     {
         $this->encoding = $encoding;
         return $this;

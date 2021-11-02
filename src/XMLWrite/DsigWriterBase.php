@@ -32,7 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLWrite;
 use Kigkonsult\DsigSdk\DsigBase;
 use XMLWriter;
 
-use function get_called_class;
 use function sprintf;
 
 /**
@@ -40,11 +39,6 @@ use function sprintf;
  */
 abstract class DsigWriterBase extends DsigBase
 {
-    /**
-     * @var string
-     */
-    protected static string $SP0 = '';
-
     /**
      * const XML Schema keys
      */
@@ -74,10 +68,9 @@ abstract class DsigWriterBase extends DsigBase
      * @param null|XMLWriter $writer
      * @return static
      */
-    public static function factory( ? XMLWriter $writer = null ) : self
+    public static function factory( ? XMLWriter $writer = null ) : static
     {
-        $class = get_called_class();
-        return new $class( $writer );
+        return new static( $writer );
     }
 
     /**
@@ -103,7 +96,7 @@ abstract class DsigWriterBase extends DsigBase
         $writer->startElement( $elementName );
         foreach( $XMLattributes as $key => $value ) {
             if( in_array( $key, self::XMLSchemaKeys, true ) ||
-                ( 0 === strpos( $key, self::XMLNS ))) {
+                ( str_starts_with((string) $key, self::XMLNS ) )) {
                 self::writeAttribute( $writer, $key, $value );
             }
         }
@@ -121,7 +114,7 @@ abstract class DsigWriterBase extends DsigBase
         XMLWriter $writer,
         string $elementName,
         array $XMLattributes,
-        $value
+        mixed $value
     ) : void
     {
         self::setWriterStartElement( $writer, $elementName, $XMLattributes );
@@ -134,7 +127,7 @@ abstract class DsigWriterBase extends DsigBase
      *
      * @param XMLWriter   $writer
      * @param string      $elementName
-     * @param string|null $value
+     * @param null|string $value
      */
     protected static function writeAttribute(
         XMLWriter $writer,

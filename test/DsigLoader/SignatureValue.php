@@ -29,16 +29,11 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\DsigLoader;
 
-use Kigkonsult\DsigSdk\Dto\SignatureType as Dto;
 use Faker;
+use Kigkonsult\DsigSdk\Dto\SignatureValue as Dto;
+use Kigkonsult\DsigSdk\Dto\Util;
 
-/**
- * Class Signature
- *
- * schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
- * namespace="http://www.w3.org/2000/09/xmldsig#"
- */
-class SignatureType1
+class SignatureValue
 {
     /**
      * @return Dto
@@ -47,16 +42,8 @@ class SignatureType1
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
-        $objects = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $objects[] = ObjectType::loadFromFaker();
-        }
         return Dto::factory()
-            ->setId( $faker->md5 )
-            ->setSignedInfo( SignedInfoType::loadFromFaker())
-            ->setSignatureValue( SignatureValueType::loadFromFaker())
-            ->setKeyInfo( KeyInfoType::loadFromFaker())
-            ->setObject( $objects );
+            ->setId( Util::getSalt())
+            ->setSignatureValueType( base64_encode( $faker->sha256 ));
     }
 }

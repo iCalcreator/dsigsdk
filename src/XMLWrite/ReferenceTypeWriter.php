@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\ReferenceType;
+use Kigkonsult\DsigSdk\Dto\Reference;
 
 /**
  * Class ReferenceTypeWriter
@@ -38,10 +38,10 @@ class ReferenceTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param ReferenceType $referenceType
+     * @param Reference $referenceType
      *
      */
-    public function write( ReferenceType $referenceType ) : void
+    public function write( Reference $referenceType ) : void
     {
         $XMLattributes = $referenceType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::REFERENS, $XMLattributes );

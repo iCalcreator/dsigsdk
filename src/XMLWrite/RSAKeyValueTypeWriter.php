@@ -29,7 +29,7 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
-use Kigkonsult\DsigSdk\Dto\RSAKeyValueType;
+use Kigkonsult\DsigSdk\Dto\RSAKeyValue;
 
 /**
  * Class RSAKeyValueTypeWriter
@@ -38,10 +38,10 @@ class RSAKeyValueTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param RSAKeyValueType $RSAKeyValueType
+     * @param RSAKeyValue $RSAKeyValueType
      *
      */
-    public function write( RSAKeyValueType $RSAKeyValueType ) : void
+    public function write( RSAKeyValue $RSAKeyValueType ) : void
     {
         $XMLattributes = $RSAKeyValueType->getXMLattributes();
         self::setWriterStartElement( $this->writer, self::RSAKEYVALUE, $XMLattributes );

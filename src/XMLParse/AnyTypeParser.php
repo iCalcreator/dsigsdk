@@ -29,13 +29,13 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLParse;
 
-use Kigkonsult\DsigSdk\Dto\AnyType;
+use Kigkonsult\DsigSdk\Dto\Any;
 use XMLReader;
 
 use function sprintf;
 
 /**
- * Class AnyTypeParser
+ * Class AnyParser
  */
 class AnyTypeParser extends DsigParserBase
 {
@@ -43,15 +43,15 @@ class AnyTypeParser extends DsigParserBase
     /**
      * Parse
      *
-     * @return AnyType
+     * @return Any
      */
-    public function parse() : AnyType
+    public function parse() : Any
     {
-        $anyType    = AnyType::factory()->setXMLattributes( $this->reader );
+        $any = Any::factory()->setXMLattributes( $this->reader );
         $this->logger->debug(
             sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
         );
-        $anyType->setElementName( $this->reader->localName );
+        $any->setElementName( $this->reader->localName );
         $attributes = [];
         if( $this->reader->hasAttributes ) {
             while( $this->reader->moveToNextAttribute()) {
@@ -62,9 +62,9 @@ class AnyTypeParser extends DsigParserBase
             }
             $this->reader->moveToElement();
         }
-        $anyType->setAttributes( $attributes );
+        $any->setAttributes( $attributes );
         if( $this->reader->isEmptyElement ) {
-            return $anyType;
+            return $any;
         }
         $headElement  = $this->reader->localName;
         $contentIsSet = false;
@@ -82,7 +82,7 @@ class AnyTypeParser extends DsigParserBase
                     }
                     break;
                 case (( XMLReader::TEXT === $this->reader->nodeType ) && $this->reader->hasValue ) :
-                    $anyType->setContent( $this->reader->value );
+                    $any->setContent( $this->reader->value );
                     $contentIsSet = true;
                     break;
                 case ( $contentIsSet ) :
@@ -95,8 +95,8 @@ class AnyTypeParser extends DsigParserBase
             } // end switch
         } // end while
         if( ! $contentIsSet ) {
-            $anyType->setAny( $anys );
+            $any->setAny( $anys );
         }
-        return $anyType;
+        return $any;
     }
 }
