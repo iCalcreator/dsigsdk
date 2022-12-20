@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -40,7 +40,7 @@ class Any implements DsigLoaderInterface
      * @return Dto
      * @throws Exception
      */
-    public static function loadFromFaker( int $iterateCnt = 3 ) : Dto
+    public static function loadFromFaker( ? int $iterateCnt = 3 ) : Dto
     {
         static $search = '/[^A-Za-z0-9]/';
         $faker = Faker\Factory::create();
@@ -53,14 +53,13 @@ class Any implements DsigLoaderInterface
         if( str_ends_with( $uri, '/' ) ) {
             $uri .= 'abc§';
         }
-        $dto = Dto::factory()
-                  ->setXMLattribute( Dto::XMLNS, $uri )
-                  ->setElementName( implode( '', $elementNamePart ));
+        $dto = Dto::factoryElementName( implode( '', $elementNamePart ))
+                  ->setXMLattribute( Dto::XMLNS, $uri );
         $attributes = [];
-        if( 1 === $faker->numberBetween( 1, 3 )) {
+        if( 1 === random_int( 1, 3 )) {
             $attributes[self::ALGORITM] = self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )];
         }
-        if( 1 === $faker->numberBetween( 1, 3 )) {
+        if( 1 === random_int( 1, 3 )) {
             $attributes[self::ID] = $faker->swiftBicNumber;
         }
         if( ! empty( $attributes )) {
@@ -68,18 +67,28 @@ class Any implements DsigLoaderInterface
         }
 
         --$iterateCnt;
-        if( empty( $iterateCnt ) || ( 1 === $faker->numberBetween( 1, 3 ))) {
+        if( empty( $iterateCnt ) || ( 1 === random_int( 1, 3 ))) {
             $dto->setContent( $faker->md5 );
         }
         else {
-            $max  = $faker->numberBetween( 1, 3 );
-            $anys = [];
-            for( $x = 0; $x <= $max; $x++ ) {
-                $anys[] = self::loadFromFaker( $iterateCnt );
-            }
-            $dto->setAny( $anys );
+            $dto->setAny( self::getSomeAnys());
         }
 
         return $dto;
+    }
+
+    /**
+     * @param int $max
+     * @param null|int $iterateCnt
+     * @return Dto[]
+     */
+    public static function getSomeAnys( ? int $iterateCnt = null ) : array
+    {
+        $max  = random_int( 1, 2 );
+        $anys = [];
+        for( $x = 0; $x <= $max; $x++ ) {
+            $anys[] = self::loadFromFaker( $iterateCnt );
+        }
+        return $anys;
     }
 }

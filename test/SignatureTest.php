@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -31,105 +31,16 @@ namespace Kigkonsult\DsigSdk;
 
 use DOMNode;
 use Exception;
-use InvalidArgumentException;
-use Katzgrau\KLogger\Logger as KLogger;
 use Kigkonsult\DsigSdk\Dto\Signature;
-use Kigkonsult\DsigSdk\Dto\Util;
 use Kigkonsult\DsigSdk\XMLParse\DsigParser;
 use Kigkonsult\DsigSdk\XMLWrite\DsigWriter;
-use Kigkonsult\DsigSdk\DsigLoader\Signature as SignatureType1;
-use Kigkonsult\DsigSdk\DsigLoader\Signature2;
-use Kigkonsult\LoggerDepot\LoggerDepot;
-use PHPUnit\Framework\TestCase;
-use Psr\Log\LogLevel;
-use Psr\Log\NullLogger;
+use Kigkonsult\DsigSdk\DsigLoader\Signature2 as SignatureLoader;
 
 /**
  * Class SignatureTest
  */
-class SignatureTest extends TestCase
+class SignatureTest extends BaseTest
 {
-
-    /**
-     * const int
-     */
-    public const XMLReaderOptions = LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NSCLEAN | LIBXML_HTML_NODEFDTD;
-
-    public static array $SieXMLAttributes = [
-        'xmlns:xsi'          => "http://www.w3.org/2001/XMLSchema-instance",
-        'xmlns:xsd'          => "http://www.w3.org/2001/XMLSchema",
-        'xsi:schemaLocation' => "http://www.sie.se/sie5 http://www.sie.se/sie5.xsd",
-        'xmlns'              => "http://www.sie.se/sie5"
-    ];
-
-    public static array $DsigXMLAttributes = [
-        'xmlns' => "http://www.w3.org/2000/09/xmldsig#"
-    ];
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    public static function getCm( string $name ) : string
-    {
-        return substr( $name, ( strrpos($name,  '\\' ) + 1 ));
-    }
-
-    /**
-     * @return string
-     */
-    public static function getBasePath() : string
-    {
-        $dir0 = $dir = __DIR__;
-        $level = 6;
-        while( ! is_dir( $dir . DIRECTORY_SEPARATOR . 'test' )) {
-            $dir = realpath( __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR );
-            if( false === $dir ) {
-                $dir = $dir0;
-                break;
-            }
-            --$level;
-            if( empty( $level )) {
-                $dir = $dir0;
-                break;
-            }
-        }
-        return $dir . DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * @return void
-     */
-    public static function setUpBeforeClass() : void
-    {
-        if( defined( 'LOG' ) && ( false !== LOG )) {
-            $basePath = self::getBasePath() . LOG . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
-            $fileName = self::getCm( static::class ) . '.log';
-            file_put_contents( $basePath . $fileName, '' ); // empty if exists
-            $logger   = new KLogger(
-                $basePath,
-                LogLevel::DEBUG,
-                [ 'filename' => $fileName ]
-            );
-        }
-        else {
-            $logger = new NullLogger();
-        }
-        $key = __NAMESPACE__;
-        if( ! LoggerDepot::isLoggerSet( $key )) {
-            LoggerDepot::registerLogger( $key, $logger );
-        }
-    }
-
-    /**
-     * @return void
-     */
-    public static function tearDownAfterClass() : void
-    {
-        foreach( LoggerDepot::getLoggerKeys() as $key ) {
-            LoggerDepot::unregisterLogger( $key );
-        }
-    }
 
     /**
      * Create minimal sie-instance loaded with Faker-data, write xml1 and parse again, write xml2 and compare
@@ -142,17 +53,11 @@ class SignatureTest extends TestCase
 
         echo PHP_EOL . ' START  (min) ' . __FUNCTION__ . PHP_EOL;
         $startTime  = microtime( true );               // ---- load
-        $signature1 = Signature2::loadFromFaker();
+        $signature1 = SignatureLoader::loadFromFaker();
         echo sprintf( '%s load time    : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
-        $signature1->setXMLattribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
-        $signature1->setXMLattribute( 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema' );
-        $signature1->setXMLattribute( 'xmlns', 'http://www.w3.org/2000/09/xmldsig#' );
-        $signature1->setXMLattribute( 'xsi:schemaLocation', 'http://www.w3.org/2000/09/xmldsig# http://www.w3.org/2000/09/xmldsig#' );
-        // echo 'XML attr first ' . var_export( $signature1->getXMLattributes(), true ) . PHP_EOL; // test ###
-
         $startTime = microtime( true );               // ---- write to XML
-        $xml1      = DsigWriter::factory()->write( $signature1 );
+        $xml1      = DsigWriter::factoryWrite( $signature1 );
         echo sprintf( '%s write time 1 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
@@ -162,12 +67,12 @@ class SignatureTest extends TestCase
         }
 
         $startTime  = microtime( true );               // ---- parse XML
-        $signature2 = DsigParser::factory()->parse( $xml1 );
+        $signature2 = DsigParser::factory()->parseXmlFromString( $xml1 );
         echo sprintf( '%s parse time   : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
         //echo 'XML attr then ' . var_export( $signature1->getXMLattributes(), true ) . PHP_EOL; // test ###
 
         $startTime = microtime( true );               // ---- write XML again
-        $xml2      = DsigWriter::factory()->write( $signature2 );
+        $xml2      = DsigWriter::factoryWrite( $signature2 );
         echo sprintf( '%s write time 2 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
@@ -175,8 +80,8 @@ class SignatureTest extends TestCase
             touch( $fileName2 );
             file_put_contents( $fileName2, $xml2 );
         }
-        echo 'xml1 : ' . substr( $xml1, 0, 50 ) . PHP_EOL; // test ###
-        echo 'xml2 : ' . substr( $xml2, 0, 50 ) . PHP_EOL; // test ###
+        echo 'xml1 : ' . substr( $xml1, 0, 200 ) . PHP_EOL; // test ###
+        echo 'xml2 : ' . substr( $xml2, 0, 200 ) . PHP_EOL; // test ###
 
         $this->assertSame(
             $xml1,
@@ -200,70 +105,6 @@ class SignatureTest extends TestCase
     }
 
     /**
-     * Create full signature-instance loaded with Faker-data, write xml1 and parse again, write xml2 and compare
-     *
-     * @test
-     * @throws Exception
-     */
-    public function signatureTest3() : void
-    {
-
-        echo PHP_EOL . ' START (full) ' . __FUNCTION__ . PHP_EOL;
-        // ---- load
-        $startTime  = microtime( true );
-        $signature1 = SignatureType1::loadFromFaker();
-        echo sprintf( '%s load time    : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
-
-        $signature1->setXMLattribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
-        $signature1->setXMLattribute( 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema' );
-        $signature1->setXMLattribute( 'xmlns', 'http://www.w3.org/2000/09/xmldsig#' );
-        $signature1->setXMLattribute( 'xsi:schemaLocation', 'http://www.w3.org/2000/09/xmldsig# http://www.w3.org/2000/09/xmldsig#' );
-
-        // ---- write XML
-        $startTime = microtime( true );
-        $xml1      = DsigWriter::factory()->write( $signature1 );
-        echo sprintf( '%s write time 1 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
-
-        if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
-            $fileName1 = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '1.xml';
-            touch( $fileName1 );
-            file_put_contents( $fileName1, $xml1 );
-        }
-
-        // ---- parse XML
-        $startTime  = microtime( true );
-        $signature2 = DsigParser::factory()->parse( $xml1 );
-        echo sprintf( '%s parse time   : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
-
-        // ---- write XML again
-        $startTime = microtime( true );
-        $xml2      = DsigWriter::factory()->write( $signature2 );
-        echo sprintf( '%s write time 2 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
-
-        if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
-            $fileName2 = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '2.xml';
-            touch( $fileName2 );
-            file_put_contents( $fileName2, $xml2 );
-        }
-
-        // compare
-        $this->assertSame(
-            $xml1,
-            $xml2,
-            'Failed (#1) asserting that two Dsig (signatureTest2) documents are equal.'
-        );
-        /* will not work... TypeError
-//        $this->assertXmlStringEqualsXmlString(
-        self::assertXmlStringEqualsXmlString(
-            $xml1,
-            $xml2,
-            'Failed asserting that two Signature (signatureTest3) documents are equal.'
-
-        );
-        */
-    }
-
-    /**
      * Same as signatureTest2 but with prefix set
      *
      * @test
@@ -275,17 +116,12 @@ class SignatureTest extends TestCase
         echo PHP_EOL . ' START (min+prefix) ' . __FUNCTION__ . PHP_EOL;
         // ---- load
         $startTime  = microtime( true );
-        $signature1 = Signature2::loadFromFaker();
+        $signature1 = SignatureLoader::loadFromFaker();
         echo sprintf( '%s load time    : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
-
-        $signature1->setXMLattribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
-        $signature1->setXMLattribute( 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema' );
-        $signature1->setXMLattribute( 'xsi:schemaLocation', 'http://www.w3.org/2000/09/xmldsig# http://www.w3.org/2000/09/xmldsig#' );
-        $signature1->setXMLattribute( 'xmlns', 'http://www.w3.org/2000/09/xmldsig#' );
 
         // ---- write XML
         $startTime = microtime( true );
-        $xml1      = DsigWriter::factory()->write( $signature1 );
+        $xml1      = DsigWriter::factoryWrite( $signature1 );
         echo sprintf( '%s write time 1 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
@@ -295,7 +131,7 @@ class SignatureTest extends TestCase
         }
         // ---- parse XML
         $startTime  = microtime( true );
-        $signature2 = DsigParser::factory()->parse( $xml1 );
+        $signature2 = DsigParser::factoryParse( $xml1 );
         echo sprintf( '%s parse time   : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         // $XMLattributes = $signature2->getXMLattributes();
@@ -305,7 +141,7 @@ class SignatureTest extends TestCase
         $signature2->unsetXMLattribute( Signature::XMLNS, true );
         $XMLnsDenom = Signature::XMLNS . ':dsig';
         $signature2->setXMLattribute( Signature::PREFIX, 'dsig', true );
-        $signature2->setXMLattribute( $XMLnsDenom, self::$DsigXMLAttributes[Signature::XMLNS], false );
+        $signature2->setXMLattribute( $XMLnsDenom, Signature::DSIGURI, false );
 
         $XMLattributes = $signature2->getXMLattributes();
         $this->assertFalse( isset( $XMLattributes[Signature::XMLNS] ));
@@ -316,7 +152,7 @@ class SignatureTest extends TestCase
 
         // ---- write XML again
         $startTime = microtime( true );
-        $xml2      = DsigWriter::factory()->write( $signature2 );
+        $xml2      = DsigWriter::factoryWrite( $signature2 );
         echo sprintf( '%s write time 2 : %01.6f', __FUNCTION__, ( microtime( true ) - $startTime )) . PHP_EOL;
 
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
@@ -340,9 +176,9 @@ class SignatureTest extends TestCase
     public function signatureTest6() : void
     {
         echo PHP_EOL . ' START  (domNode) ' . __FUNCTION__ . PHP_EOL;
-        $signature = Signature2::loadFromFaker();
+        $signature = SignatureLoader::loadFromFaker();
 
-        $xml       = DsigWriter::factory()->write( $signature );
+        $xml       = DsigWriter::factoryWrite( $signature );
         if( defined( 'SAVEXML' ) && ( false !== SAVEXML )) {
             $fileName = self::getBasePath() . SAVEXML . DIRECTORY_SEPARATOR . __FUNCTION__ . '1.xml';
             touch( $fileName );
@@ -355,27 +191,31 @@ class SignatureTest extends TestCase
     }
 
     /**
+     * Read XML from file
+     *
      * @test
+     * @throws Exception
      */
-    public function algorithmTest() : void
+    public function signatureTest8() : void
     {
-        echo PHP_EOL . ' START ' . __FUNCTION__ . PHP_EOL;
-        foreach( SignatureType1::ALGORITHMS as $algorithmIdentifier ) {
-            $algorithm = Util::extractAlgorithmFromUriIdentifier( $algorithmIdentifier );
-            $offset    = 0 - strlen( $algorithm ) - 2;
-            $searchStr = substr( $algorithmIdentifier, $offset );
-            $this->assertNotFalse(
-                @strpos( $searchStr, $algorithm ),
-                $algorithm . ' NOT found in ' . $algorithmIdentifier
-            );
-        } // end foreach
-        $ieFound = false;
-        try {
-            $algorithm = Util::extractAlgorithmFromUriIdentifier( 'grodan boll' );
-        }
-        catch( InvalidArgumentException $e ) {
-            $ieFound = true;
-        }
-        $this->assertTrue( $ieFound );
+        echo PHP_EOL . ' START file write/read test in ' . __FUNCTION__ . PHP_EOL;
+        $signature = SignatureLoader::loadFromFaker();
+        $xml1      = DsigWriter::factoryWrite( $signature );
+
+        $tmpFile   = tempnam( sys_get_temp_dir(), __FUNCTION__ );
+        $handle    = fopen( $tmpFile, "wb" );
+        fwrite( $handle,$xml1 );
+        fclose( $handle );
+
+        $signature2 = DsigParser::factory()->parseXmlFromFile( $tmpFile );
+        $xml2      = DsigWriter::factoryWrite( $signature2 );
+
+        $this->assertSame(
+            $xml1,
+            $xml2,
+            'Failed asserting that two Dsig (signatureTest8) documents are equal.'
+        );
+
+        unlink( $tmpFile );
     }
 }

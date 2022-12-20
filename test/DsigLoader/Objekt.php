@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -48,10 +48,10 @@ class Objekt implements DsigInterface
     {
         $faker = Faker\Factory::create();
 
-        $max         = $faker->numberBetween( 4, 6 );
+        $max         = random_int( 4, 6 );
         $objectTypes = [];
         for( $x = 0; $x < $max; $x++ ) {
-            $objectTypes[] = match ( $faker->numberBetween( 1, 3 ) ) {
+            $objectTypes[] = match ( random_int( 1, 3 ) ) {
                 1 => [ self::MANIFEST => Manifest::loadFromFaker() ],
                 2 => [ self::SIGNATUREPROPERTIES => SignatureProperties::loadFromFaker() ],
                 3 => [ self::ANYTYPE => Any::loadFromFaker() ],

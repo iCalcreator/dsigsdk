@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,32 +38,33 @@ class SignatureMethodTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param SignatureMethod $signatureMethodType
+     * @param SignatureMethod $subject
      *
      */
-    public function write( SignatureMethod $signatureMethodType ) : void
+    public function write( SignatureMethod $subject ) : void
     {
-        $XMLattributes = $signatureMethodType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::SIGNATUREMETHOD, $XMLattributes );
+        $XMLattributes = self::obtainXMLattributes( $subject );
+        $this->setWriterStartElement( self::SIGNATUREMETHOD, $XMLattributes );
 
-        self::writeAttribute( $this->writer, self::ALGORITM, $signatureMethodType->getAlgorithm() );
-
-        foreach( $signatureMethodType->getSignatureMethodTypes() as $elementSet ) {
-            foreach( $elementSet as $key => $value ) {
-                switch( $key ) {
-                    case self::HMACOUTPUTLENGTH :
-                        self::writeTextElement( $this->writer,
-                            self::HMACOUTPUTLENGTH,
-                            $XMLattributes,
-                            (string)$value );
-                        break;
-                    case self::ANY : // fall through
-                    case  self::ANYTYPE :
-                        AnyTypeWriter::factory( $this->writer )->write( $value );
-                        break;
-                } // end switch
+        if( $subject->isAlgorithmSet()) {
+            $this->writeAttribute( self::ALGORITM, $subject->getAlgorithm());
+        }
+        if( $subject->isSignatureMethodTypesSet()) {
+            foreach( $subject->getSignatureMethodTypes() as $elementSet ) {
+                foreach( $elementSet as $key => $value ) {
+                    switch( $key ) {
+                        case self::HMACOUTPUTLENGTH :
+                            $this->writeTextElement( self::HMACOUTPUTLENGTH, $XMLattributes, (string) $value );
+                            break;
+                        case self::ANY : // fall through
+                        case  self::ANYTYPE :
+                            AnyTypeWriter::factory( $this->writer )->write( $value );
+                            break;
+                    } // end switch
+                } // end foreach
             } // end foreach
-        } // end foreach
+        } // end if
+
         $this->writer->endElement();
     }
 }

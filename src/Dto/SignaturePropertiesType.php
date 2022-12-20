@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -29,6 +29,8 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Kigkonsult\DsigSdk\Dto\Traits\IdTrait;
+
 /**
  * Class SignaturePropertiesType
  *
@@ -44,11 +46,39 @@ class SignaturePropertiesType extends DsigBase
     protected array $signatureProperty = [];
 
     /**
+     * Property, get- and setter methods for
+     * var string id
+     *            attribute name="Id" type="ID" use="optional"
+     */
+    use IdTrait;
+
+    /**
+     * Factory method with one signatureProperty
+     *
+     * @param SignatureProperty $signatureProperty
+     * @return static
+     */
+    public static function factorySignatureProperty( SignatureProperty $signatureProperty ) : static
+    {
+        return self::factory()->addSignatureProperty( $signatureProperty );
+    }
+
+    /**
      * @return SignatureProperty[]
      */
     public function getSignatureProperty() : array
     {
         return $this->signatureProperty;
+    }
+
+    /**
+     * Return bool true if signatureProperty is not empty
+     *
+     * @return bool
+     */
+    public function isSignaturePropertySet() : bool
+    {
+        return ! empty( $this->signatureProperty );
     }
 
     /**

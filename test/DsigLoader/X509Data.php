@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -44,14 +44,15 @@ class X509Data  implements DsigInterface
     {
         $faker = Faker\Factory::create();
 
-        return Dto::factory()
-                  ->setX509DataTypes( [
-                      [ self::X509ISSUERSERIAL => X509IssuerSerialType::loadFromFaker() ],
-                      [ self::X509SKI          => base64_encode( $faker->sha256 ) ],
-                      [ self::X509SUBJECTNAME  => $faker->company ],
-                      [ self::X509CERTIFICATE  => base64_encode( $faker->sha256 ) ],
-                      [ self::X509CRL          => base64_encode( $faker->sha256 ) ],
-                      [ self::ANYTYPE          => Any::loadFromFaker() ],
-                  ] );
+        return Dto::factoryX509DataType( self::X509ISSUERSERIAL, X509IssuerSerialType::loadFromFaker())
+                  ->setX509DataTypes(
+                      [
+                          [ self::X509SKI          => base64_encode( $faker->sha256 ) ],
+                          [ self::X509SUBJECTNAME  => $faker->company ],
+                          [ self::X509CERTIFICATE  => base64_encode( $faker->sha256 ) ],
+                          [ self::X509CRL          => base64_encode( $faker->sha256 ) ],
+                          [ self::ANYTYPE          => Any::loadFromFaker() ],
+                      ]
+                  );
     }
 }

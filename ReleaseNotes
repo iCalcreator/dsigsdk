@@ -36,6 +36,17 @@
 1.2 PHP 7.4
 
 1.4 PHP 8.0
-    name change test/DsigLoader classes,upd Any/AnyType classes usage
+    name change test/DsigLoader classes, upd Any/AnyType classes usage
     name change LibXmlUtilTrait to XmlUtilTrait
     altered test, using fakerphp/faker
+
+1.4.1
+    DSIGURI moved to XMLAttributesInterface
+1.4.2
+    All classes now have is<Prop>Set-methods for all properties
+1.4.3
+    Some classes equipped with specific factory-methods
+1.4.4
+    bug SignaturePropertiesType::id
+1.4.5
+    bug/upd XMLAttributesInterface and usage XML schema (element) attributes

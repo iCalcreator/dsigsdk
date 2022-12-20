@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,27 +38,23 @@ class X509IssuerSerialTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param X509IssuerSerialType $X509IssuerSerialType
+     * @param X509IssuerSerialType $subject
      *
      */
-    public function write( X509IssuerSerialType $X509IssuerSerialType ) : void
+    public function write( X509IssuerSerialType $subject ) : void
     {
-        $XMLattributes = $X509IssuerSerialType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::X509ISSUERSERIAL, $XMLattributes );
+        $XMLattributes = self::obtainXMLattributes( $subject );
+        $this->setWriterStartElement( self::X509ISSUERSERIAL, $XMLattributes );
 
-        $X509IssuerName = $X509IssuerSerialType->getX509IssuerName();
-        if( ! empty( $X509IssuerName )) {
-            self::writeTextElement( $this->writer,
-                self::X509ISSUERNAME,
-                $XMLattributes,
-                $X509IssuerName );
+        if( $subject->isX509IssuerNameSet()) {
+            $this->writeTextElement( self::X509ISSUERNAME, $XMLattributes, $subject->getX509IssuerName());
         }
-        $X509SerialNumber = $X509IssuerSerialType->getX509SerialNumber();
-        if( $X509SerialNumber !== null ) {
-            self::writeTextElement( $this->writer,
+        if( $subject->isX509SerialNumberSet()) {
+            $this->writeTextElement(
                 self::X509SERIALNUBER,
                 $XMLattributes,
-                (string)$X509SerialNumber );
+                (string) $subject->getX509SerialNumber()
+            );
         }
 
         $this->writer->endElement();

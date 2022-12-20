@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -43,7 +43,9 @@ use function sprintf;
 class TransformType extends DsigBase
 {
     /**
-     * @var array each element is (keyed) Any or XPath (string)
+     * @var array choice minOccurs="0" maxOccurs="unbounded"
+     *
+     * each element is (keyed) Any or XPath (string)
      *
      *   [ self::XPATH   => <string> ]
      *   [ self::ANYTYPE => Any ]
@@ -58,12 +60,34 @@ class TransformType extends DsigBase
      */
     use AlgorithmTrait;
 
+
+    /**
+     * Factory method with required algorithm
+     *
+     * @param string $algorithm
+     * @return static
+     */
+    public static function factoryAlgorithm( string $algorithm ) : static
+    {
+        return self::factory()->setAlgorithm( $algorithm );
+    }
+
     /**
      * @return array
      */
     public function getTransformTypes() : array
     {
         return $this->transformTypes;
+    }
+
+    /**
+     * Return bool true if transformTypes is not empty
+     *
+     * @return bool
+     */
+    public function isTransformTypesSet() : bool
+    {
+        return ! empty( $this->transformTypes );
     }
 
     /**

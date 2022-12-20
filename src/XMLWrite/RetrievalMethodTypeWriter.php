@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,19 +38,21 @@ class RetrievalMethodTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param RetrievalMethod $retrievalMethodType
+     * @param RetrievalMethod $subject
      *
      */
-    public function write( RetrievalMethod $retrievalMethodType ) : void
+    public function write( RetrievalMethod $subject ) : void
     {
-        self::setWriterStartElement( $this->writer, self::RETRIEVALMETHOD, $retrievalMethodType->getXMLattributes() );
+        $this->setWriterStartElement( self::RETRIEVALMETHOD, self::obtainXMLattributes( $subject ));
 
-        self::writeAttribute( $this->writer, self::URI, $retrievalMethodType->getURI() );
-        self::writeAttribute( $this->writer, self::TYPE, $retrievalMethodType->getType() );
-
-        $transforms = $retrievalMethodType->getTransforms();
-        if( $transforms !== null ) {
-            TransformsTypeWriter::factory( $this->writer)->write( $transforms );
+        if( $subject->isURISet()) {
+            $this->writeAttribute( self::URI, $subject->getURI());
+        }
+        if( $subject->isTypeSet()) {
+            $this->writeAttribute( self::TYPE, $subject->getType());
+        }
+        if( $subject->isTransformsSet()) {
+            TransformsTypeWriter::factory( $this->writer)->write( $subject->getTransforms());
         }
 
         $this->writer->endElement();

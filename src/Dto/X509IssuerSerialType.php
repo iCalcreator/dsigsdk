@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -40,12 +40,24 @@ class X509IssuerSerialType extends DsigBase
     /**
      * @var null|string
      */
-    protected ?string $X509IssuerName = null;
+    private ?string $X509IssuerName = null;
 
     /**
      * @var int|null
      */
-    protected ?int $X509SerialNumber = null;
+    private ?int $X509SerialNumber = null;
+
+    /**
+     * Factory method with
+     *
+     * @param string     $X509IssuerName
+     * @param int|string $X509SerialNumber
+     * @return static
+     */
+    public static function factoryX509NameNumber( string $X509IssuerName, int|string $X509SerialNumber ) : static
+    {
+        return self::factory()->setX509IssuerName( $X509IssuerName )->setX509SerialNumber( $X509SerialNumber );
+    }
 
     /**
      * @return null|string
@@ -55,6 +67,15 @@ class X509IssuerSerialType extends DsigBase
         return $this->X509IssuerName;
     }
 
+    /**
+     * Return bool true if X509IssuerName is set
+     *
+     * @return bool
+     */
+    public function isX509IssuerNameSet() : bool
+    {
+        return ( null !== $this->X509IssuerName );
+    }
     /**
      * @param string $X509IssuerName
      * @return static
@@ -71,6 +92,16 @@ class X509IssuerSerialType extends DsigBase
     public function getX509SerialNumber() : ?int
     {
         return $this->X509SerialNumber;
+    }
+
+    /**
+     * Return bool true if X509SerialNumber is set
+     *
+     * @return bool
+     */
+    public function isX509SerialNumberSet() : bool
+    {
+        return ( null !== $this->X509SerialNumber );
     }
 
     /**

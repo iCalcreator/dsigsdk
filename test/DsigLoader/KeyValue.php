@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -43,13 +43,18 @@ class KeyValue
     {
         $faker = Faker\Factory::create();
 
-        return match ( $faker->numberBetween( 1, 3 ) ) {
-            1 => Dto::factory()
-                ->setDSAKeyValue( DSAKeyValue::loadFromFaker() ),
-            2 => Dto::factory()
-                ->setRSAKeyValue( RSAKeyValue::loadFromFaker() ),
-            default => Dto::factory()
-                ->setAny( Any::loadFromFaker() ),
+        static $x = 1;
+        $return = match ( $x ) {
+            1       => Dto::factoryDSAKeyValue( DSAKeyValue::loadFromFaker()),
+            2       => Dto::factoryRSAKeyValue( RSAKeyValue::loadFromFaker()),
+            default => Dto::factory()->setAny( Any::loadFromFaker() ),
         };
+        if( 3 === $x ) {
+            $x = 1;
+        }
+        else {
+            $x++;
+        }
+        return $return;
     }
 }

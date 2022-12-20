@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -43,19 +43,17 @@ class PGPData
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
-        $anys = [];
-        for( $x = 0; $x <= $max; $x++ ) {
-            $anys[] = Any::loadFromFaker();
-        }
-        if( 1 === $faker->numberBetween( 1, 2 )) {
-            return Dto::factory()
+        $anys = Any::getSomeAnys();
+
+        static $choice = true;
+        $return = $choice
+            ? Dto::factoryPGPKeyID( base64_encode( $faker->sha256 ))
                 ->setAny( $anys )
-                ->setPGPKeyID( base64_encode( $faker->sha256 ))
-                ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
-        }
-        return Dto::factory()
-            ->setAny( $anys )
-            ->setPGPKeyPacket( base64_encode( $faker->sha256 ));
+                ->setPGPKeyPacket( base64_encode( $faker->sha256 ))
+            : Dto::factoryPGPKeyPacket( base64_encode( $faker->sha256 ))
+                ->setAny( $anys );
+        $choice = ! $choice;
+
+        return $return;
     }
 }

@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,25 +38,26 @@ class SignedInfoTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param SignedInfo $signedInfoType
+     * @param SignedInfo $subject
      *
      */
-    public function write( SignedInfo $signedInfoType ) : void
+    public function write( SignedInfo $subject ) : void
     {
-        self::setWriterStartElement( $this->writer, self::SIGNEDINFO, $signedInfoType->getXMLattributes() );
+        $this->setWriterStartElement( self::SIGNEDINFO, self::obtainXMLattributes( $subject ));
 
-        self::writeAttribute( $this->writer, self::ID, $signedInfoType->getId() );
-
-        $canonicalizationMethod = $signedInfoType->getCanonicalizationMethod();
-        if( $canonicalizationMethod !== null ) {
-            CanonicalizationMethodTypeWriter::factory( $this->writer)->write( $canonicalizationMethod );
+        if( $subject->isIdSet()) {
+            $this->writeAttribute( self::ID, $subject->getId());
         }
-        $signatureMethod = $signedInfoType->getSignatureMethod();
-        if( $signatureMethod !== null ) {
-            SignatureMethodTypeWriter::factory( $this->writer)->write( $signatureMethod );
+        if( $subject->isCanonicalizationMethodSet()) {
+            CanonicalizationMethodTypeWriter::factory( $this->writer)->write( $subject->getCanonicalizationMethod());
         }
-        foreach( $signedInfoType->getReference() as $reference ) {
-            ReferenceTypeWriter::factory( $this->writer )->write( $reference );
+        if( $subject->isSignatureMethodSet()) {
+            SignatureMethodTypeWriter::factory( $this->writer)->write( $subject->getSignatureMethod());
+        }
+        if( $subject->isReferenceSet()) {
+            foreach( $subject->getReference() as $reference ) {
+                ReferenceTypeWriter::factory( $this->writer )->write( $reference );
+            }
         }
 
         $this->writer->endElement();

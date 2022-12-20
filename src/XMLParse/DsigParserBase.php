@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -32,18 +32,13 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\DsigBase;
 use XMLReader;
 
+use function sprintf;
+
 /**
  * Class DsigParserBase
  */
 abstract class DsigParserBase extends DsigBase
 {
-    /**
-     * @var string
-     */
-    protected static string $FMTnodeFound = '%s Found (%s) %s';
-    protected static string $FMTattrFound = '%s Found attribute %s = %s';
-    protected static string $FMTreadNode  = '%s reading (%s) %s';
-
     /**
      * @var array $nodeTypes
      */
@@ -95,5 +90,49 @@ abstract class DsigParserBase extends DsigBase
     public static function factory( ? XMLReader $reader = null  ) : static
     {
         return new static( $reader );
+    }
+
+    /**
+     * @param string $method
+     */
+    protected function logDebug1( string $method ) : void
+    {
+        static $FMTnodeFound = '%s Start (%s) %s';
+        $this->logger->debug(
+            sprintf( $FMTnodeFound, $method, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
+        );
+    }
+
+    /**
+     * @param string $method
+     */
+    protected function logDebug2( string $method ) : void
+    {
+        static $FMTattrFound = '%s Found attribute %s = %s';
+        $this->logger->debug(
+            sprintf( $FMTattrFound, $method, $this->reader->localName, $this->reader->value )
+        );
+    }
+
+    /**
+     * @param string $method
+     */
+    protected function logDebug3( string $method ) : void
+    {
+        static $FMTreadNode  = '%s reading (%s) %s';
+        if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
+            $this->logger->debug(
+                sprintf( $FMTreadNode, $method, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
+            );
+        }
+    }
+
+    /**
+     * @param string $method
+     */
+    protected function logDebug4( string $method ) : void
+    {
+        static $FMTnodeEnd = '%s End ';
+        $this->logger->debug( $FMTnodeEnd . $method );
     }
 }

@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -57,6 +57,16 @@ class SignaturePropertyType extends DsigBase
      */
     use IdTrait;
 
+    /**
+     * Factory method with required target
+     *
+     * @param string $target
+     * @return static
+     */
+    public static function factoryTarget( string $target ) : static
+    {
+        return self::factory()->setTarget( $target );
+    }
 
     /**
      * @return null|string
@@ -64,6 +74,16 @@ class SignaturePropertyType extends DsigBase
     public function getTarget() : ?string
     {
         return $this->target;
+    }
+
+    /**
+     * Return bool true if target is set
+     *
+     * @return bool
+     */
+    public function isTargetSet() : bool
+    {
+        return ( null !== $this->target );
     }
 
     /**

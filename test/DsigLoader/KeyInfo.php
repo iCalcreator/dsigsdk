@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -45,30 +45,29 @@ class KeyInfo implements DsigInterface
     {
         $faker = Faker\Factory::create();
 
-        $keyInfoTypes = [];
-        $keyInfoTypes[] =
+        $keyInfoTypes   = [];
+        $keyInfoTypes[0] =
             [ self::KEYNAME => $faker->sha256 ];
-        $keyInfoTypes[] =
+        $keyInfoTypes[1] =
             [ self::KEYVALUE => KeyValue::loadFromFaker() ];
-        $keyInfoTypes[] =
+        $keyInfoTypes[2] =
             [ self::KEYVALUE => KeyValue::loadFromFaker() ];
-        $keyInfoTypes[] =
+        $keyInfoTypes[3] =
             [ self::KEYVALUE => KeyValue::loadFromFaker() ];
-        $keyInfoTypes[] =
+        $keyInfoTypes[4] =
             [ self::RETRIEVALMETHOD => RetrievalMethod::loadFromFaker() ];
-        $keyInfoTypes[] =
+        $keyInfoTypes[5] =
             [ self::X509DATA => X509Data::loadFromFaker() ];
-        $keyInfoTypes[] =
+        $keyInfoTypes[6] =
             [ self::PGPDATA => PGPData::loadFromFaker() ];
-        $keyInfoTypes[] =
+        $keyInfoTypes[7] =
             [ self::SPKIDATA => SPKIData::loadFromFaker() ];
-        $keyInfoTypes[] =
+        $keyInfoTypes[8] =
             [ self::MGMTDATA => $faker->sha256 ];
-        $keyInfoTypes[] =
+        $keyInfoTypes[9] =
             [ self::ANYTYPE => Any::loadFromFaker() ];
-        $max = $faker->numberBetween( 10,20 );
-        for( $x = 0; $x <= $max; $x++ ) {   // number of elements
-            $keyInfoTypes[] = match ( $faker->numberBetween( 1, 8 ) ) {
+        for( $x = 10; $x < 20; $x++ ) {   // number of elements
+            $keyInfoTypes[$x] = match ( random_int( 1, 8 ) ) {
                 1 => [ self::KEYNAME         => $faker->sha256 ],
                 2 => [ self::KEYVALUE        => KeyValue::loadFromFaker() ],
                 3 => [ self::RETRIEVALMETHOD => RetrievalMethod::loadFromFaker() ],
@@ -81,7 +80,11 @@ class KeyInfo implements DsigInterface
             }; // end match
         } // end for
 
-        return Dto::factory()
+        $x = $faker->randomElement( range( 0, 19 ));
+        $type        = key( $keyInfoTypes[$x] );
+        $keyInfoType = current( $keyInfoTypes[$x] );
+
+        return Dto::factoryKeyInfo( $type, $keyInfoType )
             ->setId( Util::getSalt())
             ->setKeyInfoType( $keyInfoTypes );
     }

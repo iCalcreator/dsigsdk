@@ -250,8 +250,8 @@
   <attribute name="Id" type="ID" use="optional"/>
 </complexType>
 
-   <element name="SignatureProperty" type="ds:SignaturePropertyType"/>
-   <complexType name="SignaturePropertyType" mixed="true">
+<element name="SignatureProperty" type="ds:SignaturePropertyType"/>
+<complexType name="SignaturePropertyType" mixed="true">
      <choice maxOccurs="unbounded">
        <any namespace="##other" processContents="lax"/>
        <!-- (1,1) elements from (1,unbounded) namespaces -->

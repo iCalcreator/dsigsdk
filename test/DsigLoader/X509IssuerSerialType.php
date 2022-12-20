@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -42,8 +42,6 @@ class X509IssuerSerialType
         $faker = Faker\Factory::create();
 
         $nbDigits = strlen((string) mt_getrandmax()) - 1;
-        return Dto::factory()
-                  ->setX509IssuerName( $faker->company )
-                  ->setX509SerialNumber( $faker->randomNumber( $nbDigits,true ));
+        return Dto::factoryX509NameNumber( $faker->company, $faker->randomNumber( $nbDigits,true ));
     }
 }

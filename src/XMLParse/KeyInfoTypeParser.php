@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\KeyInfo;
 use XMLReader;
 
-use function sprintf;
-
 /**
  * Class KeyInfoTypeParser
  */
@@ -47,32 +45,44 @@ class KeyInfoTypeParser extends DsigParserBase
     public function parse() : KeyInfo
     {
         $keyInfo = KeyInfo::factory()->setXMLattributes( $this->reader );
-        $this->logger->debug(
-            sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-        );
+        $this->logDebug1( __METHOD__ );
         if( $this->reader->hasAttributes ) {
-            while( $this->reader->moveToNextAttribute()) {
-                $this->logger->debug(
-                    sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
-                );
-                if( self::ID === $this->reader->localName ) {
-                     $keyInfo->setId( $this->reader->value );
-                }
-            } // end while
-            $this->reader->moveToElement();
+            $this->processNodeAttributes( $keyInfo );
         }
-        if( $this->reader->isEmptyElement ) {
-            return $keyInfo;
+        if( ! $this->reader->isEmptyElement ) {
+            $this->processSubNodes( $keyInfo );
         }
+        $this->logDebug4( __METHOD__ );
+        return $keyInfo;
+    }
+
+    /**
+     * @param KeyInfo $keyInfo
+     */
+    private function processNodeAttributes( KeyInfo $keyInfo ) : void
+    {
+        while( $this->reader->moveToNextAttribute()) {
+            $this->logDebug2( __METHOD__ );
+            if( KeyInfo::isXmlAttrKey( $this->reader->localName )) {
+                $keyInfo->setXMLattribute( $this->reader->localName, $this->reader->value );
+            }
+            elseif( self::ID === $this->reader->localName ) {
+                $keyInfo->setId( $this->reader->value );
+            }
+        } // end while
+        $this->reader->moveToElement();
+    }
+
+    /**
+     * @param KeyInfo $keyInfo
+     */
+    protected function processSubNodes( KeyInfo $keyInfo ) : void
+    {
         $headElement    = $this->reader->localName;
         $currentElement = null;
         $keyInfoTypes   = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-                );
-            }
+            $this->logDebug3( __METHOD__ );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -130,7 +140,8 @@ class KeyInfoTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $keyInfo->setKeyInfoType( $keyInfoTypes );
-        return $keyInfo;
+        if( ! empty( $keyInfoTypes )) {
+            $keyInfo->setKeyInfoType( $keyInfoTypes );
+        }
     }
 }

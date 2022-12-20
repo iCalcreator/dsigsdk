@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -77,6 +77,15 @@ class SignatureType extends DsigBase
     }
 
     /**
+     * Return bool true if signedInfo is set
+     *
+     * @return bool
+     */
+    public function isSignedInfoSet() : bool
+    {
+        return ( null !== $this->signedInfo );
+    }
+    /**
      * @param SignedInfo $signedInfo
      * @return static
      */
@@ -92,6 +101,16 @@ class SignatureType extends DsigBase
     public function getSignatureValue() : ?SignatureValue
     {
         return $this->signatureValue;
+    }
+
+    /**
+     * Return bool true if signatureValue is set
+     *
+     * @return bool
+     */
+    public function isSignatureValueSet() : bool
+    {
+        return ( null !== $this->signatureValue );
     }
 
     /**
@@ -113,6 +132,16 @@ class SignatureType extends DsigBase
     }
 
     /**
+     * Return bool true if keyInfo is set
+     *
+     * @return bool
+     */
+    public function isKeyInfoSet() : bool
+    {
+        return ( null !== $this->keyInfo );
+    }
+
+    /**
      * @param KeyInfo $keyInfo
      * @return static
      */
@@ -128,6 +157,16 @@ class SignatureType extends DsigBase
     public function getObject() : array
     {
         return $this->object;
+    }
+
+    /**
+     * Return bool true if object is not empty
+     *
+     * @return bool
+     */
+    public function isObjectSet() : bool
+    {
+        return ! empty( $this->object );
     }
 
     /**

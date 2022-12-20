@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -81,6 +81,16 @@ class ObjectType extends DsigBase
     }
 
     /**
+     * Return bool true if objectTypes is not empty
+     *
+     * @return bool
+     */
+    public function isObjectTypesSet() : bool
+    {
+        return ! empty( $this->objectTypes );
+    }
+
+    /**
      * @param string $type
      * @param mixed $objectType  Manifest / SignatureProperties / Any
      * @return static
@@ -96,8 +106,7 @@ class ObjectType extends DsigBase
             $this->objectTypes[] = [ $type => $objectType ];
             return $this;
         }
-        if( in_array( $type, $ANYTYPEs, true ) &&
-            ( $objectType instanceof Any )) {
+        if( ( $objectType instanceof AnyType ) && in_array( $type, $ANYTYPEs, true )) {
             $this->objectTypes[] = [ self::ANYTYPE => $objectType ];
             return $this;
         }
@@ -140,6 +149,16 @@ class ObjectType extends DsigBase
     }
 
     /**
+     * Return bool true if mimeType is set
+     *
+     * @return bool
+     */
+    public function isMimeTypeSet() : bool
+    {
+        return ( null !== $this->mimeType );
+    }
+
+    /**
      * @param string $mimeType
      * @return static
      */
@@ -157,6 +176,15 @@ class ObjectType extends DsigBase
         return $this->encoding;
     }
 
+    /**
+     * Return bool true if encoding is set
+     *
+     * @return bool
+     */
+    public function isEncodingSet() : bool
+    {
+        return ( null !== $this->encoding );
+    }
     /**
      * @param string $encoding
      * @return static

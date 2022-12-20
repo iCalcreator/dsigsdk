@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -40,11 +40,43 @@ class TransformsType extends DsigBase
     protected array $transform = [];
 
     /**
+     * Factory method with one transform
+     *
+     * @param Transform $transform
+     * @return static
+     */
+    public static function factoryTransform( Transform $transform ) : static
+    {
+        return self::factory()->addTransform( $transform );
+    }
+
+    /**
+     * Factory method with one transform, algorithm only
+     *
+     * @param string $algorithm
+     * @return static
+     */
+    public static function factoryTransformAlgorithm( string $algorithm ) : static
+    {
+        return self::factory()->addTransformAlgorithm( $algorithm );
+    }
+
+    /**
      * @return Transform[]
      */
     public function getTransform() : array
     {
         return $this->transform;
+    }
+
+    /**
+     * Return bool true if transform is not empty
+     *
+     * @return bool
+     */
+    public function isTransformSet() : bool
+    {
+        return ! empty( $this->transform );
     }
 
     /**
@@ -54,6 +86,16 @@ class TransformsType extends DsigBase
     public function addTransform( Transform $transform ) : static
     {
         $this->transform[] = $transform;
+        return $this;
+    }
+
+    /**
+     * @param string $algorithm
+     * @return static
+     */
+    public function addTransformAlgorithm( string $algorithm ) : static
+    {
+        $this->transform[] = Transform::factoryAlgorithm( $algorithm );
         return $this;
     }
 

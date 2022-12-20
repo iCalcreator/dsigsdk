@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,17 +38,21 @@ class DigestMethodTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param DigestMethod $digestMethodType
+     * @param DigestMethod $subject
      *
      */
-    public function write( DigestMethod $digestMethodType ) : void
+    public function write( DigestMethod $subject ) : void
     {
-        self::setWriterStartElement( $this->writer, self::DIGESTMETHOD, $digestMethodType->getXMLattributes() );
+        $this->setWriterStartElement( self::DIGESTMETHOD, self::obtainXMLattributes( $subject ));
 
-        self::writeAttribute( $this->writer, self::ALGORITM, $digestMethodType->getAlgorithm() );
+        if( $subject->isAlgorithmSet()) {
+            $this->writeAttribute( self::ALGORITM, $subject->getAlgorithm() );
+        }
 
-        foreach( $digestMethodType->getAny() as $any) {
-            AnyTypeWriter::factory( $this->writer )->write( $any );
+        if( $subject->isAnySet()) {
+            foreach( $subject->getAny() as $any ) {
+                AnyTypeWriter::factory( $this->writer )->write( $any );
+            }
         }
 
         $this->writer->endElement();

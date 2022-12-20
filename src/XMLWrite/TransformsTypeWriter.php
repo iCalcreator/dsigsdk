@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,17 +38,19 @@ class TransformsTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param Transforms $transformsType
+     * @param Transforms $subject
      *
      */
-    public function write( Transforms $transformsType ) : void
+    public function write( Transforms $subject ) : void
     {
-        $XMLattributes = $transformsType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::TRANSFORMS, $XMLattributes );
+        $this->setWriterStartElement( self::TRANSFORMS, self::obtainXMLattributes( $subject ));
 
-        foreach( $transformsType->getTransform() as $Transform ) {
-            TransformTypeWriter::factory( $this->writer )->write( $Transform );
+        if( $subject->isTransformSet()) {
+            foreach( $subject->getTransform() as $Transform ) {
+                TransformTypeWriter::factory( $this->writer )->write( $Transform );
+            }
         }
+        
         $this->writer->endElement();
     }
 }

@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -64,7 +64,7 @@ class DsigParser extends DsigParserBase
      */
     public function parseXmlFromFile( string $fileName, ?bool $asDomNode = false ) : DOMNode | Signature
     {
-        self::assertIsValidXML( $fileName );
+        self::assertFileName( $fileName );
         $content = self::getContentFromFile( $fileName );
         $this->logger->debug( 'Got content from ' . $fileName );
         return $this->parse( $content, $asDomNode );
@@ -84,27 +84,15 @@ class DsigParser extends DsigParserBase
     }
 
     /**
-     * Return the content from an XML file
-     * clean up the content, checking internal documentation
-     *   with decoded html characters (i.e. hide the '&'+';'-char)
-     * @param string $fileName
-     * @return string
+     * @param string $xml
+     * @return Signature
+     * @throws Exception
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
-    private static function getContentFromFile( string $fileName ) : string
+    public static function factoryParse( string $xml ) : Signature
     {
-        static $FMTerr = 'Error reading %s';
-        if( false === ( $content = @file_get_contents( $fileName ) ) ) {
-            throw new InvalidArgumentException( sprintf( $FMTerr, $fileName ) );
-        }
-        /*
-        static $_XMLpattern = '/&(?!;{6})/';
-        static $_XMLreplace = '&amp;';
-        return preg_replace( $opCfg->getCfg( $_XMLpattern ),
-                             $opCfg->getCfg( $_XMLreplace ),
-                             $content);
-        */
-        return $content;
+        return self::factory()->parse( $xml, false );
     }
 
     /**
@@ -119,22 +107,19 @@ class DsigParser extends DsigParserBase
      */
     public function parse( string $xml, ?bool $asDomNode = false ) : DOMNode | Signature
     {
-        static $FMTerr1 = 'Error #%d parsing xml';
-        static $FMTerr2 = 'Unknown xml root element \'%s\'';
-        static $FMTerr3 = 'No xml root element found';
+        static $FMTerr1  = 'Error #%d parsing xml';
+        static $FMTerr2  = 'Unknown xml root element \'%s\'';
+        static $FMTerr3  = 'No xml root element found';
+        static $FMTstart = ' Start';
+        self::assertIsValidXML( $xml );
+        $this->logger->debug( __METHOD__ . $FMTstart );
         $useInternalXmlErrors = libxml_use_internal_errors( true ); // enable user error handling
         if( false === ( $this->reader = XMLReader::XML( $xml, null, self::$XMLReaderOptions ) ) ) {
             throw new InvalidArgumentException( sprintf( $FMTerr1, 1 ) );
         }
         $result = null;
         while( @$this->reader->read() ) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType],
-                        $this->reader->localName
-                    )
-                );
-            }
+            $this->logDebug3( __METHOD__ );
             switch( true ) {
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
@@ -161,7 +146,51 @@ class DsigParser extends DsigParserBase
         if( empty( $result ) ) {
             throw new RuntimeException( $FMTerr3 );
         }
+        $this->logDebug4( __METHOD__ );
         return $result;
+    }
+
+    /**
+     * Assert fileName is a readable file
+     *
+     * @param string $fileName
+     * @throws InvalidArgumentException
+     */
+    private static function assertFileName( string $fileName ) : void
+    {
+        static $FMT1 = '%s is no file';
+        static $FMT2 = 'Can\'t read %s';
+        if( ! @is_file( $fileName )) {
+            throw new InvalidArgumentException( sprintf( $FMT1, $fileName ));
+        }
+        if( ! @is_readable( $fileName )) {
+            throw new InvalidArgumentException( sprintf( $FMT2, $fileName ));
+        }
+        clearstatcache( true, $fileName );
+    }
+
+    /**
+     * Return the content from an XML file
+     * clean up the content, checking internal documentation
+     *   with decoded html characters (i.e. hide the '&'+';'-char)
+     * @param string $fileName
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    private static function getContentFromFile( string $fileName ) : string
+    {
+        static $FMTerr = 'Error reading %s';
+        if( false === ( $content = @file_get_contents( $fileName ) ) ) {
+            throw new InvalidArgumentException( sprintf( $FMTerr, $fileName ) );
+        }
+        /*
+        static $_XMLpattern = '/&(?!;{6})/';
+        static $_XMLreplace = '&amp;';
+        return preg_replace( $opCfg->getCfg( $_XMLpattern ),
+                             $opCfg->getCfg( $_XMLreplace ),
+                             $content);
+        */
+        return $content;
     }
 
     /**

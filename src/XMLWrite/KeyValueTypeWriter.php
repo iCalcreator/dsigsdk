@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,25 +38,21 @@ class KeyValueTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param KeyValue $keyValueType
+     * @param KeyValue $subject
      *
      */
-    public function write( KeyValue $keyValueType ) : void
+    public function write( KeyValue $subject ) : void
     {
-        $XMLattributes = $keyValueType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::KEYVALUE, $XMLattributes );
+        $this->setWriterStartElement( self::KEYVALUE, self::obtainXMLattributes( $subject ));
 
-        $DSAKeyValue = $keyValueType->getDSAKeyValue();
-        $RSAKeyValue = $keyValueType->getRSAKeyValue();
-        $any         = $keyValueType->getAny();
-        if( $DSAKeyValue !== null ) {
-            DSAKeyValueTypeWriter::factory( $this->writer)->write( $DSAKeyValue );
+        if( $subject->isDSAKeyValueSet()) {
+            DSAKeyValueTypeWriter::factory( $this->writer)->write( $subject->getDSAKeyValue());
         }
-        elseif( $RSAKeyValue !== null ) {
-            RSAKeyValueTypeWriter::factory( $this->writer)->write( $RSAKeyValue );
+        elseif( $subject->isRSAKeyValueSet()) {
+            RSAKeyValueTypeWriter::factory( $this->writer)->write( $subject->getRSAKeyValue());
         }
-        elseif( $any !== null ) {
-            AnyTypeWriter::factory( $this->writer)->write( $any );
+        elseif( $subject->isAnySet()) {
+            AnyTypeWriter::factory( $this->writer)->write( $subject->getAny());
         }
 
         $this->writer->endElement();

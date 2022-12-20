@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -44,13 +44,13 @@ class SPKIData implements DsigInterface
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
+        $max = random_int( 1, 2 );
         $SPKIDataTypes = [];
         for( $x = 0; $x <= $max; $x++ ) {
             $SPKIDataTypes[] = [ self::SPKISEXP => base64_encode( $faker->sha256 ) ];
             $SPKIDataTypes[] = [ self::ANYTYPE  => Any::loadFromFaker() ];
         }
-        return Dto::factory()
+        return Dto::factorySPKIDataType( self::SPKISEXP, base64_encode( $faker->sha256 ))
                   ->setSPKIDataType( $SPKIDataTypes );
     }
 }

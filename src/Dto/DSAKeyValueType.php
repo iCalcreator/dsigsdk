@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -65,11 +65,15 @@ class DSAKeyValueType extends DsigBase
 
     /**
      * @var null|string  type="ds:CryptoBinary" -  base="base64Binary"
+     *
+     * seed and pgenCounter OR none
      */
     protected ?string $seed = null;
 
     /**
      * @var null|string  type="ds:CryptoBinary" -  base="base64Binary"
+     *
+     * seed and pgenCounter OR none
      */
     protected ?string $pgenCounter = null;
 
@@ -79,6 +83,16 @@ class DSAKeyValueType extends DsigBase
     public function getP() : ?string
     {
         return $this->p;
+    }
+
+    /**
+     * Return bool true if p is set
+     *
+     * @return bool
+     */
+    public function isPSet() : bool
+    {
+        return ( null !== $this->p );
     }
 
     /**
@@ -100,6 +114,16 @@ class DSAKeyValueType extends DsigBase
     }
 
     /**
+     * Return bool true if q is set
+     *
+     * @return bool
+     */
+    public function isQSet() : bool
+    {
+        return ( null !== $this->q );
+    }
+
+    /**
      * @param string $q
      * @return static
      */
@@ -115,6 +139,16 @@ class DSAKeyValueType extends DsigBase
     public function getG() : ?string
     {
         return $this->g;
+    }
+
+    /**
+     * Return bool true if g is set
+     *
+     * @return bool
+     */
+    public function isGSet() : bool
+    {
+        return ( null !== $this->g );
     }
 
     /**
@@ -136,6 +170,16 @@ class DSAKeyValueType extends DsigBase
     }
 
     /**
+     * Return bool true if y is set
+     *
+     * @return bool
+     */
+    public function isYSet() : bool
+    {
+        return ( null !== $this->y );
+    }
+
+    /**
      * @param string $y
      * @return static
      */
@@ -151,6 +195,16 @@ class DSAKeyValueType extends DsigBase
     public function getJ() : ?string
     {
         return $this->j;
+    }
+
+    /**
+     * Return bool true if j is set
+     *
+     * @return bool
+     */
+    public function isJSet() : bool
+    {
+        return ( null !== $this->j );
     }
 
     /**
@@ -172,6 +226,16 @@ class DSAKeyValueType extends DsigBase
     }
 
     /**
+     * Return bool true if seed is set
+     *
+     * @return bool
+     */
+    public function isSeedSet() : bool
+    {
+        return ( null !== $this->seed );
+    }
+
+    /**
      * @param string $seed
      * @return static
      */
@@ -187,6 +251,16 @@ class DSAKeyValueType extends DsigBase
     public function getPgenCounter() : ?string
     {
         return $this->pgenCounter;
+    }
+
+    /**
+     * Return bool true if pgenCounter is set
+     *
+     * @return bool
+     */
+    public function isPgenCounterSet() : bool
+    {
+        return ( null !== $this->pgenCounter );
     }
 
     /**

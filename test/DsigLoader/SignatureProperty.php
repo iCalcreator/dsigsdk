@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -44,14 +44,8 @@ class SignatureProperty
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 2 );
-        $anys = [];
-        for( $x = 0; $x < $max; $x++ ) {
-            $anys[] = Any::loadFromFaker();
-        }
-        return Dto::factory()
-                  ->setAny( $anys )
-                  ->setTarget( $faker->url )
+        return Dto::factoryTarget( $faker->url )
+                  ->setAny( Any::getSomeAnys())
                   ->setId( Util::getSalt());
     }
 }

@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\RSAKeyValue;
 use XMLReader;
 
-use function sprintf;
-
 /**
  * Class RSAKeyValueTypeParser
  */
@@ -44,23 +42,44 @@ class RSAKeyValueTypeParser extends DsigParserBase
      *
      * @return RSAKeyValue
      */
-    public function parse() :RSAKeyValue
+    public function parse() : RSAKeyValue
     {
         $RSAKeyValue = RSAKeyValue::factory()->setXMLattributes( $this->reader );
-        $this->logger->debug(
-            sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-        );
-        if( $this->reader->isEmptyElement ) {
-            return $RSAKeyValue;
+        $this->logDebug1( __METHOD__ );
+        if( $this->reader->hasAttributes ) {
+            $this->processNodeAttributes( $RSAKeyValue );
         }
+        if( ! $this->reader->isEmptyElement ) {
+            $this->processSubNodes( $RSAKeyValue );
+        }
+        $this->logDebug4( __METHOD__ );
+        return $RSAKeyValue;
+    }
+
+    /**
+     * @param RSAKeyValue $RSAKeyValue
+     */
+    private function processNodeAttributes( RSAKeyValue $RSAKeyValue ) : void
+    {
+        while( $this->reader->moveToNextAttribute()) {
+            $this->logDebug2( __METHOD__ );
+            if( RSAKeyValue::isXmlAttrKey( $this->reader->localName )) {
+                $RSAKeyValue->setXMLattribute( $this->reader->localName, $this->reader->value );
+            }
+        } // end while
+        $this->reader->moveToElement();
+    }
+
+    /**
+     * @param RSAKeyValue $RSAKeyValue
+     */
+    private function processSubNodes( RSAKeyValue $RSAKeyValue ) : void
+    {
         $headElement    = $this->reader->localName;
         $currentElement = null;
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-                );
-            }
+            $this->logDebug3( __METHOD__ );
+            $isText = ( XMLReader::TEXT === $this->reader->nodeType );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -68,12 +87,12 @@ class RSAKeyValueTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
+                case ( $isText && ! $this->reader->hasValue ) :
                     break;
-                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::MODULUS === $currentElement )) :
+                case ( $isText && ( self::MODULUS === $currentElement )) :
                     $RSAKeyValue->setModulus( $this->reader->value );
                     break;
-                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::EXPONENT === $currentElement )) :
+                case ($isText && ( self::EXPONENT === $currentElement )) :
                     $RSAKeyValue->setExponent( $this->reader->value );
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
@@ -86,6 +105,5 @@ class RSAKeyValueTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        return $RSAKeyValue;
     }
 }

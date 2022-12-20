@@ -6,7 +6,7 @@
  This file is a part of DsigSdk.
 
  author    Kjell-Inge Gustafsson, kigkonsult
- copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  link      https://kigkonsult.se
  license   Subject matter of licence is the software DsigSdk.
            The above copyright, link, package and version notices,
@@ -33,11 +33,13 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         bootstrap="autoload.php"
+         bootstrap="./test/autoload.php"
         >
     <testsuites>
         <testsuite name="Dsig Dto Tests">
             <file>./test/SignatureTest.php</file>
+            <file>./test/Signature3Test.php</file>
+            <file>./test/ExcTest.php</file>
         </testsuite>
     </testsuites>
     <coverage
@@ -46,112 +48,7 @@
             ignoreDeprecatedCodeUnits="false"
             disableCodeCoverageIgnore="true">
         <include>
-            <file>./src/DsigBase.php</file>
-            <file>./src/DsigInterface.php</file>
-            <file>./src/DsigIdentifiersInterface.php</file>
-            <file>./src/XMLAttributesInterface.php</file>
-            <file>./src/Dto/Any.php</file>
-            <file>./src/Dto/AnyType.php</file>
-            <file>./src/Dto/CanonicalizationMethod.php</file>
-            <file>./src/Dto/CanonicalizationMethodType.php</file>
-            <file>./src/Dto/DigestMethod.php</file>
-            <file>./src/Dto/DigestMethodType.php</file>
-            <file>./src/Dto/DSAKeyValue.php</file>
-            <file>./src/Dto/DSAKeyValueType.php</file>
-            <file>./src/Dto/DsigBase.php</file>
-            <file>./src/Dto/KeyInfo.php</file>
-            <file>./src/Dto/KeyInfoType.php</file>
-            <file>./src/Dto/KeyValue.php</file>
-            <file>./src/Dto/KeyValueType.php</file>
-            <file>./src/Dto/Manifest.php</file>
-            <file>./src/Dto/ManifestType.php</file>
-            <file>./src/Dto/Objekt.php</file>
-            <file>./src/Dto/ObjectType.php</file>
-            <file>./src/Dto/PGPData.php</file>
-            <file>./src/Dto/PGPDataType.php</file>
-            <file>./src/Dto/Reference.php</file>
-            <file>./src/Dto/ReferenceType.php</file>
-            <file>./src/Dto/RetrievalMethod.php</file>
-            <file>./src/Dto/RetrievalMethodType.php</file>
-            <file>./src/Dto/RSAKeyValue.php</file>
-            <file>./src/Dto/RSAKeyValueType.php</file>
-            <file>./src/Dto/Signature.php</file>
-            <file>./src/Dto/SignatureMethod.php</file>
-            <file>./src/Dto/SignatureMethodType.php</file>
-            <file>./src/Dto/SignatureProperties.php</file>
-            <file>./src/Dto/SignaturePropertiesType.php</file>
-            <file>./src/Dto/SignatureProperty.php</file>
-            <file>./src/Dto/SignaturePropertyType.php</file>
-            <file>./src/Dto/SignatureType.php</file>
-            <file>./src/Dto/SignatureValue.php</file>
-            <file>./src/Dto/SignatureValueType.php</file>
-            <file>./src/Dto/SignedInfo.php</file>
-            <file>./src/Dto/SignedInfoType.php</file>
-            <file>./src/Dto/SPKIData.php</file>
-            <file>./src/Dto/SPKIDataType.php</file>
-            <file>./src/Dto/Transform.php</file>
-            <file>./src/Dto/Transforms.php</file>
-            <file>./src/Dto/TransformsType.php</file>
-            <file>./src/Dto/TransformType.php</file>
-            <file>./src/Dto/Util.php</file>
-            <file>./src/Dto/X509Data.php</file>
-            <file>./src/Dto/X509DataType.php</file>
-            <file>./src/Dto/X509IssuerSerialType.php</file>
-            <file>./src/Dto/Traits/AlgorithmTrait.php</file>
-            <file>./src/Dto/Traits/AnyTypesTrait.php</file>
-            <file>./src/Dto/Traits/IdTrait.php</file>
-            <file>./src/Dto/Traits/TypeTrait.php</file>
-            <file>./src/Dto/Traits/URITrait.php</file>
-            <file>./src/XMLParse/AnyTypeParser.php</file>
-            <file>./src/XMLParse/CanonicalizationMethodTypeParser.php</file>
-            <file>./src/XMLParse/DigestMethodTypeParser.php</file>
-            <file>./src/XMLParse/DSAKeyValueTypeParser.php</file>
-            <file>./src/XMLParse/DsigParser.php</file>
-            <file>./src/XMLParse/DsigParserBase.php</file>
-            <file>./src/XMLParse/KeyInfoTypeParser.php</file>
-            <file>./src/XMLParse/KeyValueTypeParser.php</file>
-            <file>./src/XMLParse/ManifestTypeParser.php</file>
-            <file>./src/XMLParse/ObjectTypeParser.php</file>
-            <file>./src/XMLParse/PGPDataTypeParser.php</file>
-            <file>./src/XMLParse/ReferenceTypeParser.php</file>
-            <file>./src/XMLParse/RetrievalMethodTypeParser.php</file>
-            <file>./src/XMLParse/RSAKeyValueTypeParser.php</file>
-            <file>./src/XMLParse/SignatureMethodTypeParser.php</file>
-            <file>./src/XMLParse/SignaturePropertiesTypeParser.php</file>
-            <file>./src/XMLParse/SignaturePropertyTypeParser.php</file>
-            <file>./src/XMLParse/SignatureTypeParser.php</file>
-            <file>./src/XMLParse/SignatureValueTypeParser.php</file>
-            <file>./src/XMLParse/SignedInfoTypeParser.php</file>
-            <file>./src/XMLParse/SPKIDataTypeParser.php</file>
-            <file>./src/XMLParse/TransformsTypeParser.php</file>
-            <file>./src/XMLParse/TransformTypeParser.php</file>
-            <file>./src/XMLParse/X509DataTypeParser.php</file>
-            <file>./src/XMLParse/X509IssuerSerialTypeParser.php</file>
-            <file>./src/XMLWrite/AnyTypeWriter.php</file>
-            <file>./src/XMLWrite/CanonicalizationMethodTypeWriter.php</file>
-            <file>./src/XMLWrite/DigestMethodTypeWriter.php</file>
-            <file>./src/XMLWrite/DSAKeyValueTypeWriter.php</file>
-            <file>./src/XMLWrite/DsigWriter.php</file>
-            <file>./src/XMLWrite/DsigWriterBase.php</file>
-            <file>./src/XMLWrite/KeyInfoTypeWriter.php</file>
-            <file>./src/XMLWrite/KeyValueTypeWriter.php</file>
-            <file>./src/XMLWrite/ManifestTypeWriter.php</file>
-            <file>./src/XMLWrite/ObjectTypeWriter.php</file>
-            <file>./src/XMLWrite/PGPDataTypeWriter.php</file>
-            <file>./src/XMLWrite/ReferenceTypeWriter.php</file>
-            <file>./src/XMLWrite/RetrievalMethodTypeWriter.php</file>
-            <file>./src/XMLWrite/RSAKeyValueTypeWriter.php</file>
-            <file>./src/XMLWrite/SignatureMethodTypeWriter.php</file>
-            <file>./src/XMLWrite/SignaturePropertiesTypeWriter.php</file>
-            <file>./src/XMLWrite/SignaturePropertyTypeWriter.php</file>
-            <file>./src/XMLWrite/SignatureTypeWriter.php</file>
-            <file>./src/XMLWrite/SignatureValueTypeWriter.php</file>
-            <file>./src/XMLWrite/SignedInfoTypeWriter.php</file>
-            <file>./src/XMLWrite/SPKIDataTypeWriter.php</file>
-            <file>./src/XMLWrite/TransformsTypeWriter.php</file>
-            <file>./src/XMLWrite/TransformTypeWriter.php</file>
-            <file>./src/XMLWrite/X509DataTypeWriter.php</file>
-            <file>./src/XMLWrite/X509IssuerSerialTypeWriter.php</file>
+            <directory>./src</directory>
         </include>
         <!-- Require the PHP Xdebug (2.7.0 or later) and tokenizer extensions-->
         <!-- Remove or comment after your own choice-->

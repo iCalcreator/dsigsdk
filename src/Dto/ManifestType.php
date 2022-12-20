@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -53,6 +53,17 @@ class ManifestType extends DsigBase
     use IdTrait;
 
     /**
+     * Factory method with one Reference
+     *
+     * @param Reference $Reference
+     * @return static
+     */
+    public static function factoryReference( Reference $Reference ) : static
+    {
+        return self::factory()->addReference( $Reference );
+    }
+
+    /**
      * @return Reference[]
      */
     public function getReference() : array
@@ -70,6 +81,15 @@ class ManifestType extends DsigBase
         return $this;
     }
 
+    /**
+     * Return bool true if referenceType is not empty
+     *
+     * @return bool
+     */
+    public function isReferenceTypeSet() : bool
+    {
+        return ! empty( $this->reference );
+    }
     /**
      * @param Reference[] $referenceType
      * @return static

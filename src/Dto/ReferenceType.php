@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -77,6 +77,20 @@ class ReferenceType extends DsigBase
     use TypeTrait;
 
     /**
+     * Factory method with digestMethod and digestValue
+     *
+     * @param DigestMethod $digestMethod
+     * @param string $digestValue
+     * @return static
+     */
+    public static function factoryDigest( DigestMethod $digestMethod, string $digestValue ) : static
+    {
+        return self::factory()
+            ->setDigestMethod( $digestMethod )
+            ->setDigestValue( $digestValue );
+    }
+
+    /**
      * @return null|Transforms
      */
     public function getTransforms() : ?Transforms
@@ -84,6 +98,15 @@ class ReferenceType extends DsigBase
         return $this->transforms;
     }
 
+    /**
+     * Return bool true if transforms is set
+     *
+     * @return bool
+     */
+    public function isTransformsSet() : bool
+    {
+        return ( null !== $this->transforms );
+    }
     /**
      * @param Transforms $transforms
      * @return static
@@ -103,6 +126,15 @@ class ReferenceType extends DsigBase
     }
 
     /**
+     * Return bool true if digestMethod is set
+     *
+     * @return bool
+     */
+    public function isDigestMethodSet() : bool
+    {
+        return ( null !== $this->digestMethod );
+    }
+    /**
      * @param DigestMethod $digestMethod
      * @return static
      */
@@ -120,6 +152,15 @@ class ReferenceType extends DsigBase
         return $this->digestValue;
     }
 
+    /**
+     * Return bool true if digestValue is set
+     *
+     * @return bool
+     */
+    public function isDigestValueSet() : bool
+    {
+        return ( null !== $this->digestValue );
+    }
     /**
      * @param string $digestValue
      * @return static

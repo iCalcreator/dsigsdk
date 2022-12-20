@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\SignatureProperty;
 use XMLReader;
 
-use function sprintf;
-
 /**
  * Class SignaturePropertyTypeParser
  */
@@ -44,42 +42,53 @@ class SignaturePropertyTypeParser extends DsigParserBase
      *
      * @return SignatureProperty
      */
-    public function parse() :SignatureProperty
+    public function parse() : SignatureProperty
     {
         $signatureProperty = SignatureProperty::factory()->setXMLattributes( $this->reader );
-        $this->logger->debug(
-            sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-        );
+        $this->logDebug1( __METHOD__ );
         if( $this->reader->hasAttributes ) {
-            while( $this->reader->moveToNextAttribute()) {
-                $this->logger->debug(
-                    sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
-                );
-                switch( $this->reader->localName ) {
-                    case ( self::TARGET ) :
-                        $signatureProperty->setTarget( $this->reader->value );
-                        break;
-                    case ( self::ID ) :
-                        $signatureProperty->setId( $this->reader->value );
-                        break;
-                    default :
+            $this->processNodeAttributes( $signatureProperty );
+        }
+        if( ! $this->reader->isEmptyElement ) {
+            $this->processSubNodes( $signatureProperty );
+        }
+        $this->logDebug4( __METHOD__ );
+        return $signatureProperty;
+    }
+
+    /**
+     * @param SignatureProperty $signatureProperty
+     */
+    private function processNodeAttributes( SignatureProperty $signatureProperty ) : void
+    {
+        while( $this->reader->moveToNextAttribute()) {
+            $this->logDebug2( __METHOD__ );
+            switch( $this->reader->localName ) {
+                case ( self::TARGET ) :
+                    $signatureProperty->setTarget( $this->reader->value );
+                    break;
+                case ( self::ID ) :
+                    $signatureProperty->setId( $this->reader->value );
+                    break;
+                default :
+                    if( SignatureProperty::isXmlAttrKey( $this->reader->localName )) {
                         $signatureProperty->setXMLattribute( $this->reader->name, $this->reader->value );
-                        break;
-                } // end switch
-            } // end while
-            $this->reader->moveToElement();
-        }
-        if( $this->reader->isEmptyElement ) {
-            return $signatureProperty;
-        }
+                    }
+                    break;
+            } // end switch
+        } // end while
+        $this->reader->moveToElement();
+    }
+
+    /**
+     * @param SignatureProperty $signatureProperty
+     */
+    private function processSubNodes( SignatureProperty $signatureProperty ) : void
+    {
         $headElement = $this->reader->localName;
         $anyTypes    = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-                );
-            }
+            $this->logDebug3( __METHOD__ );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -93,7 +102,8 @@ class SignaturePropertyTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $signatureProperty->setAny( $anyTypes );
-        return $signatureProperty;
+        if( ! empty( $anyTypes )) {
+            $signatureProperty->setAny( $anyTypes );
+        }
     }
 }

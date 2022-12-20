@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -66,6 +66,17 @@ class AnyType extends DsigBase
      */
     use AnyTypesTrait;
 
+    /**
+     * Factory method with required elementName
+     *
+     * @param string $elementName
+     * @return static
+     */
+    public static function factoryElementName( string $elementName ) : static
+    {
+        return self::factory()->setElementName( $elementName );
+    }
+
 
     /**
      * @return string
@@ -73,6 +84,16 @@ class AnyType extends DsigBase
     public function getElementName() : string
     {
         return $this->elementName;
+    }
+
+    /**
+     * Return bool true if elementName is set
+     *
+     * @return bool
+     */
+    public function isElementNameSet() : bool
+    {
+        return ( null !== $this->elementName );
     }
 
     /**
@@ -91,6 +112,16 @@ class AnyType extends DsigBase
     public function getAttributes() : array
     {
         return $this->attributes;
+    }
+
+    /**
+     * Return bool true if attributes is set
+     *
+     * @return bool
+     */
+    public function isAttributesSet() : bool
+    {
+        return ( null !== $this->attributes );
     }
 
     /**
@@ -122,6 +153,16 @@ class AnyType extends DsigBase
     public function getContent() : ?string
     {
         return $this->content;
+    }
+
+    /**
+     * Return bool true if content is set
+     *
+     * @return bool
+     */
+    public function isContentSet() : bool
+    {
+        return ( null !== $this->content );
     }
 
     /**

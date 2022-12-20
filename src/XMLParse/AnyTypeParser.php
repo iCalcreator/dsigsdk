@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\Any;
 use XMLReader;
 
-use function sprintf;
-
 /**
  * Class AnyParser
  */
@@ -48,33 +46,49 @@ class AnyTypeParser extends DsigParserBase
     public function parse() : Any
     {
         $any = Any::factory()->setXMLattributes( $this->reader );
-        $this->logger->debug(
-            sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-        );
+        $this->logDebug1( __METHOD__ );
         $any->setElementName( $this->reader->localName );
-        $attributes = [];
         if( $this->reader->hasAttributes ) {
-            while( $this->reader->moveToNextAttribute()) {
-                $this->logger->debug(
-                    sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
-                );
+            $this->processNodeAttributes( $any );
+        }
+        if( ! $this->reader->isEmptyElement ) {
+            $this->processSubNodes( $any );
+        }
+        $this->logDebug4( __METHOD__ );
+        return $any;
+    }
+
+    /**
+     * @param Any $any
+     */
+    private function processNodeAttributes( Any $any ) : void
+    {
+        $attributes = [];
+        while( $this->reader->moveToNextAttribute()) {
+            $this->logDebug2( __METHOD__ );
+            if( $any::isXmlAttrKey( $this->reader->localName ) ) {
+                $any->setXMLattribute( $this->reader->localName, $this->reader->value );
+            }
+            else {
                 $attributes[$this->reader->localName] = $this->reader->value;
             }
-            $this->reader->moveToElement();
+        } // end while
+        if( ! empty( $attributes ) ) {
+            $any->setAttributes( $attributes );
         }
-        $any->setAttributes( $attributes );
-        if( $this->reader->isEmptyElement ) {
-            return $any;
-        }
+        $this->reader->moveToElement();
+    }
+
+    /**
+     * @param Any $any
+     */
+    protected function processSubNodes( Any $any ) : void
+    {
         $headElement  = $this->reader->localName;
         $contentIsSet = false;
         $anys         = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-                );
-            }
+            $this->logDebug3( __METHOD__ );
             switch (true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -94,9 +108,8 @@ class AnyTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        if( ! $contentIsSet ) {
+        if( ! $contentIsSet && ! empty( $anys )) {
             $any->setAny( $anys );
         }
-        return $any;
     }
 }

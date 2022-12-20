@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -27,21 +27,15 @@
  *            along with DsigSdk. If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * Kigkonsult\DsigSdk test autoloader
+ * Kigkonsult\DsigSdk autoloader
  */
 spl_autoload_register(
     function( $class ) {
-        static $PREFIX   = 'Kigkonsult\\DsigSdk\\';
         static $BS       = '\\';
-        static $PATHSRC  = null;
+        static $PHP     = '.php';
+        static $PREFIX   = 'Kigkonsult\\DsigSdk\\';
         static $SRC      = 'src';
-        static $PATHTEST = null;
-        static $TEST     = 'test';
-        static $FMT      = '%s%s.php';
-        if( empty( $PATHSRC )) {
-            $PATHSRC  = __DIR__ . DIRECTORY_SEPARATOR . $SRC . DIRECTORY_SEPARATOR;
-            $PATHTEST = __DIR__ . DIRECTORY_SEPARATOR . $TEST . DIRECTORY_SEPARATOR;
-        }
+        static $SRCDIR  = null;
         if ( 0 != strncmp( $PREFIX, $class, 19 )) {
             return;
         }
@@ -49,15 +43,12 @@ spl_autoload_register(
         if ( false !== strpos( $class, $BS )) {
             $class = str_replace( $BS, DIRECTORY_SEPARATOR, $class );
         }
-        $file = sprintf( $FMT, $PATHSRC, $class );
+        if( null === $SRCDIR ) {
+            $SRCDIR  = __DIR__ . DIRECTORY_SEPARATOR . $SRC . DIRECTORY_SEPARATOR;
+        }
+        $file = $SRCDIR . $class . $PHP;
         if ( file_exists( $file )) {
             include $file;
-        }
-        else {
-            $file = sprintf( $FMT, $PATHTEST, $class );
-            if( file_exists( $file ) ) {
-                include $file;
-            }
         }
     }
 );

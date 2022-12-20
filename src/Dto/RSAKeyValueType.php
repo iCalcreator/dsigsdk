@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -45,6 +45,20 @@ class RSAKeyValueType  extends DsigBase
     protected ?string $exponent = null;
 
     /**
+     * Factory method with digestMethod and digestValue
+     *
+     * @param string $modulus
+     * @param string $exponent
+     * @return static
+     */
+    public static function factoryModulusExponent( string $modulus, string $exponent ) : static
+    {
+        return self::factory()
+            ->setModulus( $modulus )
+            ->setExponent( $exponent );
+    }
+
+    /**
      * @return null|string
      */
     public function getModulus() : ?string
@@ -52,6 +66,15 @@ class RSAKeyValueType  extends DsigBase
         return $this->modulus;
     }
 
+    /**
+     * Return bool true if modulus is set
+     *
+     * @return bool
+     */
+    public function isModulusSet() : bool
+    {
+        return ( null !== $this->modulus );
+    }
     /**
      * @param string $modulus
      * @return static
@@ -68,6 +91,16 @@ class RSAKeyValueType  extends DsigBase
     public function getExponent() : ?string
     {
         return $this->exponent;
+    }
+
+    /**
+     * Return bool true if exponent is set
+     *
+     * @return bool
+     */
+    public function isExponentSet() : bool
+    {
+        return ( null !== $this->exponent );
     }
 
     /**

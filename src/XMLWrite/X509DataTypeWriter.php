@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -40,10 +40,10 @@ class X509DataTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param X509Data $X509DataType
+     * @param X509Data $subject
      *
      */
-    public function write( X509Data $X509DataType ) : void
+    public function write( X509Data $subject ) : void
     {
         static $textElements = [
             self::X509SKI,
@@ -52,24 +52,27 @@ class X509DataTypeWriter extends DsigWriterBase
             self::X509CRL
         ];
         static $ANYTYPEs = [ self::ANY, self::ANYTYPE ];
-        $XMLattributes   = $X509DataType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::X509DATA, $XMLattributes );
+        $XMLattributes   = self::obtainXMLattributes( $subject );
+        $this->setWriterStartElement( self::X509DATA, $XMLattributes );
 
-        foreach( $X509DataType->getX509DataTypes() as $type ) {
-            foreach( $type as $key => $value ) {
-                switch( true ) {
-                    case ( self::X509ISSUERSERIAL === $key ) :
-                        X509IssuerSerialTypeWriter::factory( $this->writer )->write( $value );
-                        break;
-                    case in_array( $key, $textElements, true ) :
-                        self::writeTextElement( $this->writer, $key, $XMLattributes, $value );
-                        break;
-                    case in_array( $key, $ANYTYPEs, true ) :
-                        AnyTypeWriter::factory( $this->writer )->write( $value );
-                        break;
-                } // end switch
+        if( $subject->isX509DataTypesSet()) {
+            foreach( $subject->getX509DataTypes() as $type ) {
+                foreach( $type as $key => $value ) {
+                    switch( true ) {
+                        case ( self::X509ISSUERSERIAL === $key ) :
+                            X509IssuerSerialTypeWriter::factory( $this->writer )->write( $value );
+                            break;
+                        case in_array( $key, $textElements, true ) :
+                            $this->writeTextElement( $key, $XMLattributes, $value );
+                            break;
+                        case in_array( $key, $ANYTYPEs, true ) :
+                            AnyTypeWriter::factory( $this->writer )->write( $value );
+                            break;
+                    } // end switch
+                } // end foreach
             } // end foreach
-        } // end foreach
+        } // end if
+
         $this->writer->endElement();
     }
 }

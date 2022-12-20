@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,18 +38,18 @@ class SignatureValueTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param SignatureValue $signatureValueType
+     * @param SignatureValue $subject
      *
      */
-    public function write( SignatureValue $signatureValueType ) : void
+    public function write( SignatureValue $subject ) : void
     {
-        self::setWriterStartElement( $this->writer, self::SIGNATUREVALUE, $signatureValueType->getXMLattributes() );
+        $this->setWriterStartElement( self::SIGNATUREVALUE, self::obtainXMLattributes( $subject ));
 
-        self::writeAttribute( $this->writer, self::ID, $signatureValueType->getId() );
-
-        $signatureValueType2 = $signatureValueType->getSignatureValueType();
-        if( ! empty( $signatureValueType2 )) {
-            $this->writer->text( $signatureValueType2 );
+        if( $subject->isIdSet()) {
+            $this->writeAttribute( self::ID, $subject->getId());
+        }
+        if( $subject->isSignatureValueTypeSet()) {
+            $this->writer->text( $subject->getSignatureValueType());
         }
 
         $this->writer->endElement();

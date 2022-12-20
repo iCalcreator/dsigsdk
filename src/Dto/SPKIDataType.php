@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -44,11 +44,24 @@ class SPKIDataType extends DsigBase
     /**
      * @var array
      *
-     * each element is a keyed pair of SPKISexp/Any
+     * each element is a keyed pair of SPKISexp / Any (opt)
      *         [ self::SPKISEXP => "base64Binary" ]
      *         [ self::ANYTYPE  => Any ]
      */
-    protected array $SPKIDataType = [];
+    private array $SPKIDataType = [];
+
+    /**
+     * Factory method with type and SPKIDataType
+     *
+     * @param string $type
+     * @param mixed $SPKIDataType
+     * @return static
+     * @throws InvalidArgumentException
+     */
+    public static function factorySPKIDataType( string $type, mixed $SPKIDataType ) : static
+    {
+        return self::factory()->addSPKIDataType( $type, $SPKIDataType );
+    }
 
     /**
      * @return array
@@ -56,6 +69,16 @@ class SPKIDataType extends DsigBase
     public function getSPKIDataType() : array
     {
         return $this->SPKIDataType;
+    }
+
+    /**
+     * Return bool true if SPKIDataType is not empty
+     *
+     * @return bool
+     */
+    public function isSPKIDataTypeSet() : bool
+    {
+        return ! empty( $this->SPKIDataType );
     }
 
     /**

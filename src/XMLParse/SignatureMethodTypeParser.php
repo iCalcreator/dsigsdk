@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\SignatureMethod;
 use XMLReader;
 
-use function sprintf;
-
 /**
  * Class SignatureMethodTypeParser
  */
@@ -47,32 +45,45 @@ class SignatureMethodTypeParser extends DsigParserBase
     public function parse() : SignatureMethod
     {
         $signatureMethod  = SignatureMethod::factory()->setXMLattributes( $this->reader );
-        $this->logger->debug(
-            sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-        );
+        $this->logDebug1( __METHOD__ );
         if( $this->reader->hasAttributes ) {
-            while( $this->reader->moveToNextAttribute()) {
-                $this->logger->debug(
-                    sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
-                );
-                if( self::ALGORITM === $this->reader->localName ) {
-                    $signatureMethod->setAlgorithm( $this->reader->value );
-                }
-            } // end while
-            $this->reader->moveToElement();
+            $this->processNodeAttributes( $signatureMethod );
         }
-        if( $this->reader->isEmptyElement ) {
-            return $signatureMethod;
+        if( ! $this->reader->isEmptyElement ) {
+            $this->processSubNodes( $signatureMethod );
         }
+        $this->logDebug4( __METHOD__ );
+        return $signatureMethod;
+    }
+
+    /**
+     * @param SignatureMethod $signatureMethod
+     */
+    private function processNodeAttributes( SignatureMethod $signatureMethod ) : void
+    {
+        while( $this->reader->moveToNextAttribute()) {
+            $this->logDebug2( __METHOD__ );
+            if( SignatureMethod::isXmlAttrKey( $this->reader->localName )) {
+                $signatureMethod->setXMLattribute( $this->reader->localName, $this->reader->value );
+            }
+            elseif( self::ALGORITM === $this->reader->localName ) {
+                $signatureMethod->setAlgorithm( $this->reader->value );
+            }
+        } // end while
+        $this->reader->moveToElement();
+    }
+
+    /**
+     * @param SignatureMethod $signatureMethod
+     */
+    private function processSubNodes( SignatureMethod $signatureMethod ) : void
+    {
         $headElement          = $this->reader->localName;
         $currentElement       = null;
         $signatureMethodTypes = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-                );
-            }
+            $this->logDebug3( __METHOD__ );
+            $isText = ( XMLReader::TEXT === $this->reader->nodeType );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -80,9 +91,9 @@ class SignatureMethodTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case (( XMLReader::TEXT === $this->reader->nodeType ) && ! $this->reader->hasValue ) :
+                case ( $isText && ! $this->reader->hasValue ) :
                     break;
-                case (( XMLReader::TEXT === $this->reader->nodeType ) && ( self::HMACOUTPUTLENGTH === $currentElement )) :
+                case ( $isText && ( self::HMACOUTPUTLENGTH === $currentElement )) :
                     $signatureMethodTypes[] = [ self::HMACOUTPUTLENGTH => $this->reader->value ];
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
@@ -98,7 +109,8 @@ class SignatureMethodTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $signatureMethod->setSignatureMethodTypes( $signatureMethodTypes );
-        return $signatureMethod;
+        if( ! empty( $signatureMethodTypes )) {
+            $signatureMethod->setSignatureMethodTypes( $signatureMethodTypes );
+        }
     }
 }

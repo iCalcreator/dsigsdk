@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\Transforms;
 use XMLReader;
 
-use function sprintf;
-
 /**
  * Class TransformsTypeParser
  */
@@ -47,34 +45,54 @@ class TransformsTypeParser extends DsigParserBase
     public function parse() : Transforms
     {
         $transforms = Transforms::factory()->setXMLattributes( $this->reader );
-        $this->logger->debug(
-            sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-        );
-        if( $this->reader->isEmptyElement ) {
-            return $transforms;
+        $this->logDebug1( __METHOD__ );
+        if( $this->reader->hasAttributes ) {
+            $this->processNodeAttributes( $transforms );
         }
+        if( ! $this->reader->isEmptyElement ) {
+            $this->processSubNodes( $transforms );
+        }
+        $this->logDebug4( __METHOD__ );
+        return $transforms;
+    }
+
+    /**
+     * @param Transforms $transforms
+     */
+    private function processNodeAttributes( Transforms $transforms ) : void
+    {
+        while( $this->reader->moveToNextAttribute()) {
+            $this->logDebug2( __METHOD__ );
+            if( Transforms::isXmlAttrKey( $this->reader->localName )) {
+                $transforms->setXMLattribute( $this->reader->localName, $this->reader->value );
+            }
+        } // end while
+        $this->reader->moveToElement();
+    }
+
+    /**
+     * @param Transforms $transforms
+     */
+    private function processSubNodes( Transforms $transforms ) : void
+    {
         $headElement   = $this->reader->localName;
         $subTransforms = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-                );
-            }
+            $this->logDebug3( __METHOD__ );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
                     break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                case ( self::TRANSFORM === $this->reader->localName ) :
+                case (( XMLReader::ELEMENT === $this->reader->nodeType ) &&
+                    ( self::TRANSFORM === $this->reader->localName )) :
                     $subTransforms[] = TransformTypeParser::factory( $this->reader )->parse();
                     break;
             } // end switch
         } // end while
-        $transforms->setTransform( $subTransforms );
-        return $transforms;
+        if( ! empty( $subTransforms )) {
+            $transforms->setTransform( $subTransforms );
+        }
     }
 }

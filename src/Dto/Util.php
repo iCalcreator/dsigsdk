@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -33,7 +33,7 @@ use InvalidArgumentException;
 
 use function bin2hex;
 use function floor;
-use function openssl_random_pseudo_bytes;
+use function random_bytes;
 use function sprintf;
 use function strpos;
 use function strrpos;
@@ -45,26 +45,6 @@ use function substr;
 class Util
 {
     /**
-     * Return cryptographically strong arg byteCnt bytes - uses openssl_random_pseudo_bytes
-     *
-     * @param int $byteCnt
-     * @param null|bool $cStrong
-     * @return string
-     */
-    public static function getRandomPseudoBytes( int $byteCnt, ? bool & $cStrong = false ) : string
-    {
-        static $MAX = 10;
-        $cnt = 0;
-        do {
-            $bytes = openssl_random_pseudo_bytes( $byteCnt, $cStrong );
-            if( false !== $bytes ) {
-                ++$cnt;
-            }
-        } while(( $MAX > $cnt ) && ( false === $cStrong ));
-        return $bytes;
-    }
-
-    /**
      * Return (hex) cryptographically strong salt, default 64 bytes
      *
      * @param null|int $byteCnt
@@ -75,8 +55,7 @@ class Util
         if( $byteCnt === null ) {
             $byteCnt = 64;
         }
-        $byteCnt2 = (int) floor( $byteCnt / 2 );
-        return bin2hex( self::getRandomPseudoBytes( $byteCnt2 ));
+        return bin2hex( random_bytes( (int) floor( $byteCnt / 2 )));
     }
 
     /**

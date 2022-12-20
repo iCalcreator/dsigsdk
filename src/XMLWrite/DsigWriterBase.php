@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -30,6 +30,7 @@ declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\XMLWrite;
 
 use Kigkonsult\DsigSdk\DsigBase;
+use Kigkonsult\DsigSdk\Dto\DsigBase as DtoBase;
 use XMLWriter;
 
 use function sprintf;
@@ -39,11 +40,6 @@ use function sprintf;
  */
 abstract class DsigWriterBase extends DsigBase
 {
-    /**
-     * const XML Schema keys
-     */
-    public const XMLSchemaKeys = [ self::XMLNS, self::XMLNS_XSI, self::XMLNS_XSD, self::XSI_SCHEMALOCATION ];
-
     /**
      * @var XMLWriter|null
      */
@@ -76,15 +72,10 @@ abstract class DsigWriterBase extends DsigBase
     /**
      * Set writer start element, incl opt XML-attributes
      *
-     * @param XMLWriter   $writer
      * @param string      $elementName
      * @param array       $XMLattributes
      */
-    protected static function setWriterStartElement(
-        XMLWriter $writer,
-        string $elementName,
-        array $XMLattributes
-    ) : void
+    protected function setWriterStartElement( string $elementName, array $XMLattributes ) : void
     {
         $FMTNAME = '%s:%s';
         if( empty( $elementName )) {
@@ -93,11 +84,10 @@ abstract class DsigWriterBase extends DsigBase
         if( isset( $XMLattributes[self::PREFIX] ) && ! empty( $XMLattributes[self::PREFIX] )) {
             $elementName = sprintf( $FMTNAME, $XMLattributes[self::PREFIX], $elementName );
         }
-        $writer->startElement( $elementName );
+        $this->writer->startElement( $elementName );
         foreach( $XMLattributes as $key => $value ) {
-            if( in_array( $key, self::XMLSchemaKeys, true ) ||
-                ( str_starts_with((string) $key, self::XMLNS ) )) {
-                self::writeAttribute( $writer, $key, $value );
+            if( DtoBase::isXmlAttrKey( $key )) {
+                $this->writeAttribute( $key, $value );
             }
         }
     }
@@ -105,40 +95,40 @@ abstract class DsigWriterBase extends DsigBase
     /**
      * Set writer start element, incl opt XML-attributes
      *
-     * @param XMLWriter $writer
      * @param string    $elementName
      * @param array     $XMLattributes
      * @param mixed     $value
      */
-    protected static function writeTextElement(
-        XMLWriter $writer,
-        string $elementName,
-        array $XMLattributes,
-        mixed $value
-    ) : void
+    protected function writeTextElement( string $elementName, array $XMLattributes, mixed $value ) : void
     {
-        self::setWriterStartElement( $writer, $elementName, $XMLattributes );
-        $writer->text( $value );
-        $writer->endElement();
+        $this->setWriterStartElement( $elementName, $XMLattributes );
+        $this->writer->text( $value );
+        $this->writer->endElement();
     }
 
     /**
      * Write attribute
      *
-     * @param XMLWriter   $writer
      * @param string      $elementName
      * @param null|string $value
      */
-    protected static function writeAttribute(
-        XMLWriter $writer,
-        string $elementName,
-        ? string $value = null
-    ) : void
+    protected function writeAttribute( string $elementName, ? string $value = null ) : void
     {
         if( null !==  $value ) {
-            $writer->startAttribute($elementName );
-            $writer->text( $value );
-            $writer->endAttribute();
+            $this->writer->startAttribute($elementName );
+            $this->writer->text( $value );
+            $this->writer->endAttribute();
         }
+    }
+
+    /**
+     * Return DtoSubject XMLattributes OR (const) DSIGXMLAttributes
+     *
+     * @param DtoBase $subject
+     * @return array
+     */
+    protected static function obtainXMLattributes( DtoBase $subject ) : array
+    {
+        return $subject->isXMLattributesSet() ? $subject->getXMLattributes() : [];
     }
 }

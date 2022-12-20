@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -44,21 +44,20 @@ class SignatureMethod implements DsigInterface, DsigLoaderInterface
     {
         $faker = Faker\Factory::create();
 
-        $max = $faker->numberBetween( 1, 5 );
+        $max = random_int( 1, 5 );
         $signatureMethodTypes = [];
         for( $x = 0; $x <= $max; $x++ ) {
-            if( 1 === $faker->numberBetween( 1, 2 )) {
+            if( 1 === random_int( 1, 2 )) {
                 $signatureMethodTypes[] =
-                    [ self::HMACOUTPUTLENGTH => ( 8 * $faker->numberBetween( 11, 14 )) ];
+                    [ self::HMACOUTPUTLENGTH => ( 8 * random_int( 11, 14 )) ];
             }
-            $max2 = $faker->numberBetween( 0, 2 );
+            $max2 = random_int( 0, 2 );
             for( $x2 = 0; $x2 < $max2; $x2++ ) {
                 $signatureMethodTypes[] =
                     [ self::ANYTYPE => Any::loadFromFaker() ];
             }
         } // end for
-        return Dto::factory()
-            ->setAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] )
+        return Dto::factoryAlgorithm( self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )] )
             ->setSignatureMethodTypes( $signatureMethodTypes );
     }
 }

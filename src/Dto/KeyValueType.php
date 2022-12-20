@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -50,6 +50,27 @@ class KeyValueType extends DsigBase
      */
     protected ?Any $any = null;
 
+    /**
+     * Factory method with DSAKeyValue
+     *
+     * @param DSAKeyValue $DSAKeyValue
+     * @return static
+     */
+    public static function factoryDSAKeyValue( DSAKeyValue $DSAKeyValue ) : static
+    {
+        return self::factory()->setDSAKeyValue( $DSAKeyValue );
+    }
+
+    /**
+     * Factory method with RSAKeyValue
+     *
+     * @param RSAKeyValue $RSAKeyValue
+     * @return static
+     */
+    public static function factoryRSAKeyValue( RSAKeyValue $RSAKeyValue ) : static
+    {
+        return self::factory()->setRSAKeyValue( $RSAKeyValue );
+    }
 
     /**
      * @return null|DSAKeyValue
@@ -57,6 +78,16 @@ class KeyValueType extends DsigBase
     public function getDSAKeyValue() : ?DSAKeyValue
     {
         return $this->DSAKeyValue;
+    }
+
+    /**
+     * Return bool true if DSAKeyValue is set
+     *
+     * @return bool
+     */
+    public function isDSAKeyValueSet() : bool
+    {
+        return ( null !== $this->DSAKeyValue );
     }
 
     /**
@@ -78,6 +109,15 @@ class KeyValueType extends DsigBase
     }
 
     /**
+     * Return bool true if RSAKeyValue is set
+     *
+     * @return bool
+     */
+    public function isRSAKeyValueSet() : bool
+    {
+        return ( null !== $this->RSAKeyValue );
+    }
+    /**
      * @param RSAKeyValue $RSAKeyValue
      * @return static
      */
@@ -95,6 +135,15 @@ class KeyValueType extends DsigBase
         return $this->any;
     }
 
+    /**
+     * Return bool true if any is set
+     *
+     * @return bool
+     */
+    public function isAnySet() : bool
+    {
+        return ( null !== $this->any );
+    }
     /**
      * @param Any $anyType
      * @return static

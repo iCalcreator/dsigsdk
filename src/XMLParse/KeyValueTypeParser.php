@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\KeyValue;
 use XMLReader;
 
-use function sprintf;
-
 /**
  * Class KeyValueTypeParser
  */
@@ -44,21 +42,43 @@ class KeyValueTypeParser extends DsigParserBase
      *
      * @return KeyValue
      */
-    public function parse() :KeyValue
+    public function parse() : KeyValue
     {
         $keyValue = KeyValue::factory()->setXMLattributes( $this->reader );
-        $this->logger->debug(
-            sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-        );
-        if( $this->reader->isEmptyElement ) {
-            return $keyValue;
+        $this->logDebug1( __METHOD__ );
+        if( $this->reader->hasAttributes ) {
+            $this->processNodeAttributes( $keyValue );
         }
+        if( ! $this->reader->isEmptyElement ) {
+            $this->processSubNodes( $keyValue );
+        }
+        $this->logDebug4( __METHOD__ );
+        return $keyValue;
+    }
+
+    /**
+     * @param KeyValue $keyValue
+     */
+    private function processNodeAttributes( KeyValue $keyValue ) : void
+    {
+        while( $this->reader->moveToNextAttribute()) {
+            $this->logDebug2( __METHOD__ );
+            if( KeyValue::isXmlAttrKey( $this->reader->localName )) {
+                $keyValue->setXMLattribute( $this->reader->localName, $this->reader->value );
+            }
+        } // end while
+        $this->reader->moveToElement();
+    }
+
+    /**
+     * @param KeyValue $keyValue
+     */
+    protected function processSubNodes( KeyValue $keyValue ) : void
+    {
         $headElement = $this->reader->localName;
         while( @$this->reader->read()) {
             if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-                );
+                $this->logDebug4( __METHOD__ );
             }
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
@@ -79,6 +99,5 @@ class KeyValueTypeParser extends DsigParserBase
                     break;
             }  // end switch
         }  // end while
-        return $keyValue;
     }
 }

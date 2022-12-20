@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -39,17 +39,19 @@ class ManifestTypeWriter extends DsigWriterBase
     /**
      * Write
      *
-     * @param Manifest $manifestType
+     * @param Manifest $subject
      */
-    public function write( Manifest $manifestType ) : void
+    public function write( Manifest $subject ) : void
     {
-        $XMLattributes = $manifestType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::MANIFEST, $XMLattributes );
+        $this->setWriterStartElement( self::MANIFEST, self::obtainXMLattributes( $subject ));
 
-        self::writeAttribute( $this->writer, self::ID, $manifestType->getId() );
-
-        foreach( $manifestType->getReference() as $reference) {
-            ReferenceTypeWriter::factory( $this->writer )->write( $reference );
+        if( $subject->isIdSet()) {
+            $this->writeAttribute( self::ID, $subject->getId());
+        }
+        if( $subject->isReferenceTypeSet()) {
+            foreach( $subject->getReference() as $reference ) {
+                ReferenceTypeWriter::factory( $this->writer )->write( $reference );
+            }
         }
 
         $this->writer->endElement();

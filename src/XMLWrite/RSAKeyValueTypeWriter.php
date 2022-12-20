@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,28 +38,19 @@ class RSAKeyValueTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param RSAKeyValue $RSAKeyValueType
+     * @param RSAKeyValue $subject
      *
      */
-    public function write( RSAKeyValue $RSAKeyValueType ) : void
+    public function write( RSAKeyValue $subject ) : void
     {
-        $XMLattributes = $RSAKeyValueType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::RSAKEYVALUE, $XMLattributes );
+        $XMLattributes = self::obtainXMLattributes( $subject );
+        $this->setWriterStartElement( self::RSAKEYVALUE, $XMLattributes );
 
-
-        $modulus = $RSAKeyValueType->getModulus();
-        if( ! empty( $modulus )) {
-            self::writeTextElement( $this->writer,
-                self::MODULUS,
-                $XMLattributes,
-                $modulus );
+        if( $subject->isModulusSet()) {
+            $this->writeTextElement( self::MODULUS, $XMLattributes, $subject->getModulus());
         }
-        $exponent = $RSAKeyValueType->getExponent();
-        if( ! empty( $exponent )) {
-            self::writeTextElement( $this->writer,
-                self::EXPONENT,
-                $XMLattributes,
-                $exponent );
+        if( $subject->isExponentSet()) {
+            $this->writeTextElement( self::EXPONENT, $XMLattributes, $subject->getExponent());
         }
 
         $this->writer->endElement();

@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -32,8 +32,6 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\Manifest;
 use XMLReader;
 
-use function sprintf;
-
 /**
  * Class ManifestTypeParser
  */
@@ -47,34 +45,43 @@ class ManifestTypeParser extends DsigParserBase
     public function parse() : Manifest
     {
         $manifest  = Manifest::factory()->setXMLattributes( $this->reader );
-        $this->logger->debug(
-            sprintf( self::$FMTnodeFound, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-        );
+        $this->logDebug1( __METHOD__ );
         if( $this->reader->hasAttributes ) {
-            while( $this->reader->moveToNextAttribute()) {
-                $this->logger->debug(
-                    sprintf( self::$FMTattrFound, __METHOD__, $this->reader->localName, $this->reader->value )
-                );
-                if( self::ID === $this->reader->localName ) {
-                    $manifest->setId( $this->reader->value );
-                }
-                else {
-                    $manifest->setXMLattribute( $this->reader->name, $this->reader->value );
-                }
-            } // end while
-            $this->reader->moveToElement();
+            $this->processNodeAttributes( $manifest );
         }
-        if( $this->reader->isEmptyElement ) {
-            return $manifest;
+        if( ! $this->reader->isEmptyElement ) {
+            $this->processSubNodes( $manifest );
         }
+        $this->logDebug4( __METHOD__ );
+        return $manifest;
+    }
+
+    /**
+     * @param Manifest $manifest
+     */
+    private function processNodeAttributes( Manifest $manifest ) : void
+    {
+        while( $this->reader->moveToNextAttribute()) {
+            $this->logDebug2( __METHOD__ );
+            if( Manifest::isXmlAttrKey( $this->reader->localName )) {
+                $manifest->setXMLattribute( $this->reader->localName, $this->reader->value );
+            }
+            elseif( self::ID === $this->reader->localName ) {
+                $manifest->setId( $this->reader->value );
+            }
+        } // end while
+        $this->reader->moveToElement();
+    }
+
+    /**
+     * @param Manifest $manifest
+     */
+    protected function processSubNodes( Manifest $manifest ) : void
+    {
         $headElement = $this->reader->localName;
         $references  = [];
         while( @$this->reader->read()) {
-            if( XMLReader::SIGNIFICANT_WHITESPACE !== $this->reader->nodeType ) {
-                $this->logger->debug(
-                    sprintf( self::$FMTreadNode, __METHOD__, self::$nodeTypes[$this->reader->nodeType], $this->reader->localName )
-                );
-            }
+            $this->logDebug3( __METHOD__ );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -88,7 +95,8 @@ class ManifestTypeParser extends DsigParserBase
                     break;
             } // end switch
         } // end while
-        $manifest->setReference( $references );
-        return $manifest;
+        if( ! empty( $references )) {
+            $manifest->setReference( $references );
+        }
     }
 }

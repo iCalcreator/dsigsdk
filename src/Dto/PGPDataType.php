@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -57,11 +57,43 @@ class PGPDataType extends DsigBase
     use AnyTypesTrait;
 
     /**
+     * Factory method with PGPKeyID
+     *
+     * @param string $PGPKeyID
+     * @return static
+     */
+    public static function factoryPGPKeyID( string $PGPKeyID ) : static
+    {
+        return self::factory()->setPGPKeyID( $PGPKeyID );
+    }
+
+    /**
+     * Factory method with PGPKeyPacket
+     *
+     * @param string $PGPKeyPacket
+     * @return static
+     */
+    public static function factoryPGPKeyPacket( string $PGPKeyPacket ) : static
+    {
+        return self::factory()->setPGPKeyPacket( $PGPKeyPacket );
+    }
+
+    /**
      * @return null|string
      */
     public function getPGPKeyID() : ?string
     {
         return $this->PGPKeyID;
+    }
+
+    /**
+     * Return bool true if PGPKeyID is set
+     *
+     * @return bool
+     */
+    public function isPGPKeyIDSet() : bool
+    {
+        return ( null !== $this->PGPKeyID );
     }
 
     /**
@@ -80,6 +112,16 @@ class PGPDataType extends DsigBase
     public function getPGPKeyPacket() : ?string
     {
         return $this->PGPKeyPacket;
+    }
+
+    /**
+     * Return bool true if PGPKeyPacket is set
+     *
+     * @return bool
+     */
+    public function isPGPKeyPacketSet() : bool
+    {
+        return ( null !== $this->PGPKeyPacket );
     }
 
     /**

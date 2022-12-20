@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,30 +38,24 @@ class PGPDataTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param PGPData $PGPDataType
+     * @param PGPData $subject
      *
      */
-    public function write( PGPData $PGPDataType ) : void
+    public function write( PGPData $subject ) : void
     {
-        $XMLattributes = $PGPDataType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::PGPDATA, $XMLattributes );
+        $XMLattributes = self::obtainXMLattributes( $subject );
+        $this->setWriterStartElement( self::PGPDATA, $XMLattributes );
 
-        $PGPKeyID = $PGPDataType->getPGPKeyID();
-        if( ! empty( $PGPKeyID )) {
-            self::writeTextElement( $this->writer,
-                self::PGPKEYID,
-                $XMLattributes,
-                $PGPKeyID );
+        if( $subject->isPGPKeyIDSet()) {
+            $this->writeTextElement( self::PGPKEYID, $XMLattributes, $subject->getPGPKeyID());
         }
-        $PGPKeyPacket = $PGPDataType->getPGPKeyPacket();
-        if( ! empty( $PGPKeyPacket )) {
-            self::writeTextElement( $this->writer,
-                self::PGPKEYPACKET,
-                $XMLattributes,
-                $PGPKeyPacket );
+        if( $subject->isPGPKeyPacketSet()) {
+            $this->writeTextElement( self::PGPKEYPACKET, $XMLattributes, $subject->getPGPKeyPacket());
         }
-        foreach( $PGPDataType->getAny() as $any ) {
-            AnyTypeWriter::factory( $this->writer )->write( $any );
+        if( $subject->isAnySet()) {
+            foreach( $subject->getAny() as $any ) {
+                AnyTypeWriter::factory( $this->writer )->write( $any );
+            }
         }
 
         $this->writer->endElement();

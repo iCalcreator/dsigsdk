@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -67,6 +67,19 @@ class KeyInfoType extends DsigBase
     use IdTrait;
 
     /**
+     * Factory method with type and keyInfoType
+     *
+     * @param string $type
+     * @param mixed $keyInfoType
+     * @return static
+     * @throws InvalidArgumentException
+     */
+    public static function factoryKeyInfo( string $type, mixed $keyInfoType ) : static
+    {
+        return self::factory()->addKeyInfoType( $type, $keyInfoType );
+    }
+
+    /**
      * @return array
      */
     public function getKeyInfoType() : array
@@ -113,6 +126,15 @@ class KeyInfoType extends DsigBase
         return $this;
     }
 
+    /**
+     * Return bool true if keyInfoType is not empty
+     *
+     * @return bool
+     */
+    public function isKeyInfoTypeSet() : bool
+    {
+        return ! empty( $this->keyInfoType );
+    }
     /**
      * @param array $keyInfoType *[ type => value ]
      * @return static

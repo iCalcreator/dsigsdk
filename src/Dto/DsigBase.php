@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -72,7 +72,20 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
     }
 
     /**
-     * Set XML attributes, opt propagate down
+     * Return bool true if XMLattributes is not empty OR key is set
+     *
+     * @param null|string $key
+     * @return bool
+     */
+    public function isXMLattributesSet( ? string $key = null ) : bool
+    {
+        return empty( $key )
+            ? ! empty( $this->XMLattributes )
+            : isset( $this->XMLattributes[$key] );
+    }
+
+    /**
+     * Set single XML attribute, opt propagate down in hierachy
      *
      * @param string    $key
      * @param string    $value
@@ -183,7 +196,7 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
     }
 
     /**
-     * Set XML attributes from XMLreader ( Element node)
+     * Set XML attributes (localName, name, name prefix, baseURI, namespaceURI) from XMLreader (Element node)
      *
      * @param XMLReader $reader
      * @return static
@@ -196,5 +209,17 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
         $this->XMLattributes[self::NAMESPACEURI] = $reader->namespaceURI ;
         $this->XMLattributes[self::PREFIX]       = $reader->prefix ;
         return $this;
+    }
+
+    /**
+     * Return bool true if key is a XML schema key
+     *
+     * @param string $key
+     * @return bool
+     */
+    public static function isXmlAttrKey( string $key ) : bool
+    {
+        return ( in_array( $key, self::XMLSchemaKeys, true ) ||
+            ( str_starts_with( $key, self::XMLNS )));
     }
 }

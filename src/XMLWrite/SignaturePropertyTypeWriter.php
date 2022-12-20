@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,19 +38,23 @@ class SignaturePropertyTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param SignatureProperty $signaturePropertyType
+     * @param SignatureProperty $subject
      *
      */
-    public function write( SignatureProperty $signaturePropertyType ) : void
+    public function write( SignatureProperty $subject ) : void
     {
-        $XMLattributes = $signaturePropertyType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::SIGNATUREPROPERTY, $XMLattributes );
+        $this->setWriterStartElement( self::SIGNATUREPROPERTY, self::obtainXMLattributes( $subject ));
 
-        self::writeAttribute( $this->writer, self::ID, $signaturePropertyType->getId() );
-        self::writeAttribute( $this->writer, self::TARGET, $signaturePropertyType->getTarget() );
-
-        foreach( $signaturePropertyType->getAny() as $any) {
-            AnyTypeWriter::factory( $this->writer )->write( $any );
+        if( $subject->isIdSet()) {
+            $this->writeAttribute( self::ID, $subject->getId());
+        }
+        if( $subject->isTargetSet()) {
+            $this->writeAttribute( self::TARGET, $subject->getTarget());
+        }
+        if( $subject->isAnySet()) {
+            foreach( $subject->getAny() as $any ) {
+                AnyTypeWriter::factory( $this->writer )->write( $any );
+            }
         }
 
         $this->writer->endElement();

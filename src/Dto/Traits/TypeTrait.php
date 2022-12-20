@@ -5,7 +5,7 @@
  *
  * This file is a part of DsigSdk.
  *
- * Copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * Copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * author    Kjell-Inge Gustafsson, kigkonsult
  * Link      https://kigkonsult.se
  * Package   DsigSdk
@@ -45,6 +45,16 @@ trait TypeTrait
     public function getType() : ?string
     {
         return $this->type;
+    }
+
+    /**
+     * Return bool true if type is set
+     *
+     * @return bool
+     */
+    public function isTypeSet() : bool
+    {
+        return ( null !== $this->type );
     }
 
     /**

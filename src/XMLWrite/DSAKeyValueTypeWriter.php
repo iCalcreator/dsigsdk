@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -38,48 +38,34 @@ class DSAKeyValueTypeWriter extends DsigWriterBase
 {
     /**
      * Write
-     * @param DSAKeyValue $DSAKeyValueType
+     * @param DSAKeyValue $subject
      *
      */
-    public function write( DSAKeyValue $DSAKeyValueType ) : void
+    public function write( DSAKeyValue $subject ) : void
     {
-        $XMLattributes = $DSAKeyValueType->getXMLattributes();
-        self::setWriterStartElement( $this->writer, self::DSAKEYVALUE, $XMLattributes );
+        $XMLattributes = self::obtainXMLattributes( $subject );
+        $this->setWriterStartElement( self::DSAKEYVALUE, $XMLattributes );
 
-
-        $p = $DSAKeyValueType->getP();
-        if( ! empty( $p )) {
-            self::writeTextElement( $this->writer, self::P, $XMLattributes, $p );
+        if( $subject->isPSet()) {
+            $this->writeTextElement( self::P, $XMLattributes, $subject->getP());
         }
-        $q = $DSAKeyValueType->getQ();
-        if( ! empty( $q )) {
-            self::writeTextElement( $this->writer, self::Q, $XMLattributes, $q );
+        if( $subject->isQSet()) {
+            $this->writeTextElement( self::Q, $XMLattributes, $subject->getQ());
         }
-        $g = $DSAKeyValueType->getG();
-        if( ! empty( $g )) {
-            self::writeTextElement( $this->writer, self::G, $XMLattributes, $g );
+        if( $subject->isGSet()) {
+            $this->writeTextElement( self::G, $XMLattributes, $subject->getG());
         }
-        $y = $DSAKeyValueType->getY();
-        if( ! empty( $y )) {
-            self::writeTextElement( $this->writer, self::Y, $XMLattributes, $y );
+        if( $subject->isYSet()) {
+            $this->writeTextElement( self::Y, $XMLattributes, $subject->getY());
         }
-        $j = $DSAKeyValueType->getJ();
-        if( ! empty( $j )) {
-            self::writeTextElement( $this->writer, self::J, $XMLattributes, $j );
+        if( $subject->isJSet()) {
+            $this->writeTextElement( self::J, $XMLattributes, $subject->getJ());
         }
-        $seed = $DSAKeyValueType->getSeed();
-        if( ! empty( $seed )) {
-            self::writeTextElement( $this->writer,
-                self::SEED,
-                $XMLattributes,
-                $seed );
+        if( $subject->isSeedSet()) {
+            $this->writeTextElement( self::SEED, $XMLattributes,$subject->getSeed());
         }
-        $pgenCounter = $DSAKeyValueType->getPgenCounter();
-        if( ! empty( $pgenCounter )) {
-            self::writeTextElement( $this->writer,
-                self::PGENCOUNTER,
-                $XMLattributes,
-                $pgenCounter );
+        if( $subject->isPgenCounterSet()) {
+            $this->writeTextElement(  self::PGENCOUNTER, $XMLattributes, $subject->getPgenCounter());
         }
 
         $this->writer->endElement();

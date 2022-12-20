@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -68,6 +68,16 @@ class SignedInfoType extends DsigBase
     }
 
     /**
+     * Return bool true if canonicalizationMethod is set
+     *
+     * @return bool
+     */
+    public function isCanonicalizationMethodSet() : bool
+    {
+        return ( null !== $this->canonicalizationMethod );
+    }
+
+    /**
      * @param CanonicalizationMethod $canonicalizationMethod
      * @return static
      */
@@ -88,6 +98,16 @@ class SignedInfoType extends DsigBase
     }
 
     /**
+     * Return bool true if signatureMethod is set
+     *
+     * @return bool
+     */
+    public function isSignatureMethodSet() : bool
+    {
+        return ( null !== $this->signatureMethod );
+    }
+
+    /**
      * @param SignatureMethod $signatureMethod
      * @return static
      */
@@ -103,6 +123,16 @@ class SignedInfoType extends DsigBase
     public function getReference() : array
     {
         return $this->reference;
+    }
+
+    /**
+     * Return bool true if reference is not empty
+     *
+     * @return bool
+     */
+    public function isReferenceSet() : bool
+    {
+        return ! empty( $this->reference );
     }
 
     /**

@@ -6,7 +6,7 @@
  * This file is a part of DsigSdk.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2019-21 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2019-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software DsigSdk.
  *            The above copyright, link, package and version notices,
@@ -39,23 +39,24 @@ class CanonicalizationMethodTypeWriter extends DsigWriterBase
     /**
      * Write
      *
-     * @param CanonicalizationMethod $canonicalizationMethodType
+     * @param CanonicalizationMethod $subject
      * @return void
      */
-    public function write( CanonicalizationMethod $canonicalizationMethodType ) : void
+    public function write( CanonicalizationMethod $subject ) : void
     {
-        self::setWriterStartElement(
-            $this->writer,
+        $this->setWriterStartElement(
             self::CANONICALIZATIONMETHOD,
-            $canonicalizationMethodType->getXMLattributes()
+            self::obtainXMLattributes( $subject )
         );
 
-        self::writeAttribute( $this->writer,
-            self::ALGORITM,
-            $canonicalizationMethodType->getAlgorithm() );
+        if( $subject->isAlgorithmSet()) {
+            $this->writeAttribute(  self::ALGORITM, $subject->getAlgorithm());
+        }
 
-        foreach( $canonicalizationMethodType->getAny() as $any) {
-            AnyTypeWriter::factory( $this->writer )->write( $any );
+        if( $subject->isAnySet()) {
+            foreach( $subject->getAny() as $any ) {
+                AnyTypeWriter::factory( $this->writer )->write( $any );
+            }
         }
 
         $this->writer->endElement();
