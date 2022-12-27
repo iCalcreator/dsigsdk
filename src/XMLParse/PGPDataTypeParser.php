@@ -32,6 +32,8 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\PGPData;
 use XMLReader;
 
+use function in_array;
+
 /**
  * Class PGPDataTypeParser
  */
@@ -75,9 +77,9 @@ class PGPDataTypeParser extends DsigParserBase
      */
     private function processSubNodes( PGPData $PGPData ) : void
     {
+        static $KEYs    = [ self::PGPKEYID, self::PGPKEYPACKET ];
         $headElement    = $this->reader->localName;
         $currentElement = null;
-        $anyTypes       = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -87,36 +89,24 @@ class PGPDataTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case ( XMLReader::TEXT === $this->reader->nodeType ) :
-                    switch( true ) {
-                        case( empty( $currentElement )) :
-                            break;
-                        case( ! $this->reader->hasValue ) :
-                            break;
-                        case ( self::PGPKEYID === $currentElement ) :
-                            $PGPData->setPGPKeyID( $this->reader->value );
-                            break;
-                        case ( self::PGPKEYPACKET === $currentElement ) :
-                            $PGPData->setPGPKeyPacket( $this->reader->value );
-                            break;
+                case ( $this->isNonEmptyTextNode( $this->reader->nodeType ) && ! empty( $currentElement )) :
+                    if( self::PGPKEYID === $currentElement ) {
+                        $PGPData->setPGPKeyID( $this->reader->value );
+                    }
+                    elseif( self::PGPKEYPACKET === $currentElement ) {
+                        $PGPData->setPGPKeyPacket( $this->reader->value );
                     }
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
-                case ( self::PGPKEYID === $this->reader->localName ) :
-                    $currentElement = $this->reader->localName;
-                    break;
-                case ( self::PGPKEYPACKET === $this->reader->localName ) :
+                case in_array( $this->reader->localName, $KEYs, true ) :
                     $currentElement = $this->reader->localName;
                     break;
                 default :
-                    $anyTypes[] = AnyTypeParser::factory( $this->reader )->parse();
+                    $PGPData->addAny( AnyTypeParser::factory( $this->reader )->parse());
                     $currentElement = null;
                     break;
             } // end switch
         } // end while
-        if( ! empty( $anyTypes )) {
-            $PGPData->setAny( $anyTypes );
-        }
     }
 }

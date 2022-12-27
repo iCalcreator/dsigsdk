@@ -50,3 +50,10 @@
     bug SignaturePropertiesType::id
 1.4.5
     bug/upd XMLAttributesInterface and usage XML schema (element) attributes
+
+1.4.6
+    extended tests
+1.4.7
+    bug DsigLoader\Any
+1.4.8
+    parse rewrites

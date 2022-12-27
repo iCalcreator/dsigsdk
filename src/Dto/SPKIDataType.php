@@ -94,8 +94,7 @@ class SPKIDataType extends DsigBase
                 Assert::string( $SPKIData );
                 break;
             case  self::ANY :
-                $type = self::ANYTYPE;
-                // fall through
+                $type = self::ANYTYPE; // fall through
             case self::ANYTYPE :
                 Assert::isInstanceOf( $SPKIData, Any::class );
                 break;

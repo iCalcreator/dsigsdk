@@ -48,8 +48,12 @@ class Objekt implements DsigInterface
     {
         $faker = Faker\Factory::create();
 
-        $max         = random_int( 4, 6 );
-        $objectTypes = [];
+        $objectTypes = [ // assure at least one of each
+            [ self::MANIFEST => Manifest::loadFromFaker() ],
+            [ self::SIGNATUREPROPERTIES => SignatureProperties::loadFromFaker() ],
+            [ self::ANYTYPE => Any::loadFromFaker() ]
+        ];
+        $max = random_int( 2, 3 );
         for( $x = 0; $x < $max; $x++ ) {
             $objectTypes[] = match ( random_int( 1, 3 ) ) {
                 1 => [ self::MANIFEST => Manifest::loadFromFaker() ],
@@ -58,9 +62,9 @@ class Objekt implements DsigInterface
             }; // end switch
         } // end foreach
         return Dto::factory()
-                  ->setObjectTypes( $objectTypes )
-                  ->setId( Util::getSalt())
-                  ->setMimeType( $faker->mimeType )
-                  ->setEncoding( 'UTF-8' );
+            ->setObjectTypes( $objectTypes )
+            ->setId( Util::getSalt())
+            ->setMimeType( $faker->mimeType )
+            ->setEncoding( 'UTF-8' );
     }
 }

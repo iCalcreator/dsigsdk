@@ -99,22 +99,17 @@ class KeyInfoType extends DsigBase
             case self::KEYNAME :
                 Assert::string( $keyInfoType );
                 break;
-            case self::KEYVALUE :
-                break;
-            case self::RETRIEVALMETHOD :
-                break;
-            case self::X509DATA :
-                break;
-            case self::PGPDATA :
-                break;
+            case self::KEYVALUE :        // fall through
+            case self::RETRIEVALMETHOD : // fall through
+            case self::X509DATA :        // fall through
+            case self::PGPDATA :         // fall through
             case self::SPKIDATA :
                 break;
             case self::MGMTDATA :
                 Assert::string( $keyInfoType );
                 break;
             case  self::ANY :
-                $type = self::ANYTYPE;
-                // fall through
+                $type = self::ANYTYPE; // fall through
             case self::ANYTYPE :
                 break;
             default :

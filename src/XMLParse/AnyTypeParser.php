@@ -63,19 +63,15 @@ class AnyTypeParser extends DsigParserBase
      */
     private function processNodeAttributes( Any $any ) : void
     {
-        $attributes = [];
         while( $this->reader->moveToNextAttribute()) {
             $this->logDebug2( __METHOD__ );
             if( $any::isXmlAttrKey( $this->reader->localName ) ) {
                 $any->setXMLattribute( $this->reader->localName, $this->reader->value );
             }
             else {
-                $attributes[$this->reader->localName] = $this->reader->value;
+                $any->addAttribute( $this->reader->localName, $this->reader->value );
             }
         } // end while
-        if( ! empty( $attributes ) ) {
-            $any->setAttributes( $attributes );
-        }
         $this->reader->moveToElement();
     }
 
@@ -86,7 +82,6 @@ class AnyTypeParser extends DsigParserBase
     {
         $headElement  = $this->reader->localName;
         $contentIsSet = false;
-        $anys         = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch (true ) {
@@ -95,21 +90,14 @@ class AnyTypeParser extends DsigParserBase
                         break 2;
                     }
                     break;
-                case (( XMLReader::TEXT === $this->reader->nodeType ) && $this->reader->hasValue ) :
+                case $this->isNonEmptyTextNode( $this->reader->nodeType ) :
                     $any->setContent( $this->reader->value );
                     $contentIsSet = true;
                     break;
-                case ( $contentIsSet ) :
-                    break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                default :
-                    $anys[] = self::factory( $this->reader )->parse();
+                case ( ! $contentIsSet && ( XMLReader::ELEMENT === $this->reader->nodeType )) :
+                    $any->addAny( self::factory( $this->reader )->parse());
                     break;
             } // end switch
         } // end while
-        if( ! $contentIsSet && ! empty( $anys )) {
-            $any->setAny( $anys );
-        }
     }
 }

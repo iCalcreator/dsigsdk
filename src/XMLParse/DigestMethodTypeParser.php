@@ -79,7 +79,6 @@ class DigestMethodTypeParser extends DsigParserBase
     protected function processSubNodes( DigestMethod $digestMethod ) : void
     {
         $headElement = $this->reader->localName;
-        $anyTypes    = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -88,15 +87,10 @@ class DigestMethodTypeParser extends DsigParserBase
                         break 2;
                     }
                     break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                default :
-                    $anyTypes[] = AnyTypeParser::factory( $this->reader )->parse();
+                case ( XMLReader::ELEMENT === $this->reader->nodeType ) :
+                    $digestMethod->addAny( AnyTypeParser::factory( $this->reader )->parse());
                     break;
             } // end switch
         } // end while
-        if( ! empty( $anyTypes )) {
-            $digestMethod->setAny( $anyTypes );
-        }
     }
 }

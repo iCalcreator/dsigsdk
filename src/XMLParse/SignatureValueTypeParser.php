@@ -83,11 +83,8 @@ class SignatureValueTypeParser extends DsigParserBase
             if( XMLReader::END_ELEMENT === $this->reader->nodeType ) {
                 break;
             }
-            if( XMLReader::TEXT === $this->reader->nodeType ) {
-                if( $this->reader->hasValue ) {
-                    $signatureValue->setSignatureValueType( $this->reader->value );
-                }
-                break;
+            if( $this->isNonEmptyTextNode( $this->reader->nodeType )) {
+                $signatureValue->setSignatureValueType( $this->reader->value );
             }
         } // end while
     }

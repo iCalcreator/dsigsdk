@@ -78,12 +78,10 @@ class SignatureMethodTypeParser extends DsigParserBase
      */
     private function processSubNodes( SignatureMethod $signatureMethod ) : void
     {
-        $headElement          = $this->reader->localName;
-        $currentElement       = null;
-        $signatureMethodTypes = [];
+        $headElement    = $this->reader->localName;
+        $currentElement = null;
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
-            $isText = ( XMLReader::TEXT === $this->reader->nodeType );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -91,10 +89,9 @@ class SignatureMethodTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case ( $isText && ! $this->reader->hasValue ) :
-                    break;
-                case ( $isText && ( self::HMACOUTPUTLENGTH === $currentElement )) :
-                    $signatureMethodTypes[] = [ self::HMACOUTPUTLENGTH => $this->reader->value ];
+                case ( $this->isNonEmptyTextNode( $this->reader->nodeType ) &&
+                    ( self::HMACOUTPUTLENGTH === $currentElement )) :
+                    $signatureMethod->addSignatureMethodType( self::HMACOUTPUTLENGTH, $this->reader->value );
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
@@ -102,15 +99,13 @@ class SignatureMethodTypeParser extends DsigParserBase
                     $currentElement = $this->reader->localName;
                     break;
                 default :
-                    $signatureMethodTypes[] = [
-                        self::ANYTYPE => AnyTypeParser::factory( $this->reader )->parse()
-                    ];
+                    $signatureMethod->addSignatureMethodType(
+                        self::ANYTYPE,
+                        AnyTypeParser::factory( $this->reader )->parse()
+                    );
                     $currentElement  = null;
                     break;
             } // end switch
         } // end while
-        if( ! empty( $signatureMethodTypes )) {
-            $signatureMethod->setSignatureMethodTypes( $signatureMethodTypes );
-        }
     }
 }

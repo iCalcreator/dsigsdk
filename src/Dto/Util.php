@@ -29,10 +29,12 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\DsigSdk\Dto;
 
+use Exception;
 use InvalidArgumentException;
 
 use function bin2hex;
 use function floor;
+use function in_array;
 use function random_bytes;
 use function sprintf;
 use function strpos;
@@ -49,6 +51,7 @@ class Util
      *
      * @param null|int $byteCnt
      * @return string
+     * @throws Exception
      */
     public static function getSalt( ? int $byteCnt = null ) : string
     {
@@ -72,7 +75,7 @@ class Util
         static $HS    = [ '#', '/' ];
         static $WC    = '#WithComments';
         static $FMT   = 'Algorithm not found in \'%s\'';
-        if( in_array( substr( $identifier, -1 ), $HS, true ) )  {
+        if( in_array( substr( $identifier, -1 ), $HS, true ))  {
             $identifier = substr( $identifier, 0, -1 );
         }
         if(( $WC === substr( $identifier, -13 )) &&

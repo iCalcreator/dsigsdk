@@ -35,6 +35,8 @@ use Kigkonsult\DsigSdk\XMLAttributesInterface;
 use Webmozart\Assert\Assert;
 use XMLReader;
 
+use function in_array;
+
 /**
  * Class DsigBase
  */
@@ -196,7 +198,7 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
     }
 
     /**
-     * Set XML attributes (localName, name, name prefix, baseURI, namespaceURI) from XMLreader (Element node)
+     * Set XML attributes (baseURI, localName, name, name prefix, namespaceURI) from XMLreader (Element node)
      *
      * @param XMLReader $reader
      * @return static
@@ -206,8 +208,8 @@ abstract class DsigBase implements DsigInterface, XMLAttributesInterface
         $this->XMLattributes[self::BASEURI]      = $reader->baseURI ;
         $this->XMLattributes[self::LOCALNAME]    = $reader->localName ;
         $this->XMLattributes[self::NAME]         = $reader->name ;
-        $this->XMLattributes[self::NAMESPACEURI] = $reader->namespaceURI ;
         $this->XMLattributes[self::PREFIX]       = $reader->prefix ;
+        $this->XMLattributes[self::NAMESPACEURI] = $reader->namespaceURI ;
         return $this;
     }
 

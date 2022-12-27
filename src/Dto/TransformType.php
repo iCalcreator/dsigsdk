@@ -103,8 +103,8 @@ class TransformType extends DsigBase
                 Assert::string( $transformType );
                 break;
             case  self::ANY :
-                $type = self::ANYTYPE;
                 // fall through
+                $type = self::ANYTYPE; // fall through
             case self::ANYTYPE :
                 Assert::isInstanceOf( $transformType, Any::class );
                 break;

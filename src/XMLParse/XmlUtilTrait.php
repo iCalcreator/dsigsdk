@@ -93,7 +93,7 @@ trait XmlUtilTrait
      */
     private static string $CRITICAL = 'critical';
 
-    /*
+    /**
      * Return rendered (array) XML error
      *
      * @param array $errors   array of libxml error object
@@ -104,32 +104,33 @@ trait XmlUtilTrait
      */
     private static function renderXmlError( $errors, $fileName = null, $content = null ) : array
     {
-        static $INFO     = 'info';     // "-
-        static $FMT0     = ' No XML to parse';
-        static $FMT1     = ' %s #%d, errCode %s : %s';
-        static $FMT2     = ' line: %d col: %d';
-        static $FMT3     = '%s%s%s%s^%s';
-        static $D        = '-';
-        if( empty( $errors )) {
-            return [];
-        }
-        if( empty( $content )) {
-            if( empty( $fileName )) {
+        static $INFO = 'info';     // "-
+        static $FMT0 = ' No XML to parse';
+        static $FMT1 = ' %s #%d, errCode %s : %s';
+        static $FMT2 = ' line: %d col: %d';
+        static $FMT3 = '%1$s%2$s%1$s%3$s^%1$s';
+        static $D    = '-';
+        static $SP0  = '';
+        switch( true ) {
+            case empty( $errors ) :
+                return [];
+            case ( ! empty( $content )) :
+                break;
+            case empty( $fileName ) :
                 return [ self::$CRITICAL => $FMT0 ];
-            }
-            $content = @file_get_contents( $fileName );
-        }
-        $xml     = ( false !== $content ) ? explode( PHP_EOL, $content ) : false;
+            default :
+                $content = @file_get_contents( $fileName );
+                break;
+        } // end switch
+        $xml     = ( null !== $content ) ? explode( PHP_EOL, $content ) : false;
         $libXarr = [];
-        $dispFn  = empty( $fileName ) ? '' : basename( $fileName );
+        $dispFn  = empty( $fileName ) ? $SP0 : basename( $fileName );
         foreach( $errors as $ex => $error ) {
             $str1 = sprintf( $FMT1, $dispFn, ( $ex + 1 ), $error->code, trim( $error->message ) );
             $str2 = sprintf( $FMT2, $error->line, $error->column );
             if( false !== $xml ) {
                 $lineNo = ( 0 < $error->line ) ? ( $error->line - 1 ) : 0;
-                $str2   .= sprintf(
-                    $FMT3, PHP_EOL, $xml[$lineNo], PHP_EOL, str_repeat( $D, $error->column ), PHP_EOL
-                );
+                $str2  .= sprintf(  $FMT3, PHP_EOL, $xml[$lineNo], str_repeat( $D, $error->column ));
             }
             [ $str3, $logLevel ]     = self::evalErrorLevel( $error );
             $libXarr[$ex][$logLevel] = $str3 . $str1;

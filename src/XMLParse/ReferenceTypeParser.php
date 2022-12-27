@@ -92,7 +92,6 @@ class ReferenceTypeParser extends DsigParserBase
         $currentElement = null;
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
-            $isText = ( XMLReader::TEXT === $this->reader->nodeType );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -100,9 +99,8 @@ class ReferenceTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case ( $isText && ! $this->reader->hasValue ) :
-                    break;
-                case ( $isText && ( self::DIGESTVALUE === $currentElement )) :
+                case ( $this->isNonEmptyTextNode( $this->reader->nodeType ) &&
+                    ( self::DIGESTVALUE === $currentElement )) :
                     $reference->setDigestValue( $this->reader->value );
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :

@@ -74,7 +74,7 @@
         <text outputFile="testDocs/logfile.txt"/>
     </logging>
     <php>
-        <!-- if LOG set, will (debug-)log to dir "testDocs", named '__FUNCTION__'.log -->
+        <!-- if LOG set, will (debug-)log to dir "testDocs/logs", named '__FUNCTION__'.log -->
         <const name="LOG" value="testDocs"/>
         <!--
             SigntureTest only

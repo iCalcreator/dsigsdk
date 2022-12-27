@@ -97,21 +97,14 @@ class X509DataType extends DsigBase
             case self::X509ISSUERSERIAL :
                 Assert::isInstanceOf( $X509DataType, X509IssuerSerialType::class  );
                 break;
-            case self::X509SKI :
-                Assert::string( $X509DataType );
-                break;
-            case self::X509SUBJECTNAME :
-                Assert::string( $X509DataType );
-                break;
-            case self::X509CERTIFICATE :
-                Assert::string( $X509DataType );
-                break;
+            case self::X509SKI :         // fall through
+            case self::X509SUBJECTNAME : // fall through
+            case self::X509CERTIFICATE : // fall through
             case self::X509CRL :
                 Assert::string( $X509DataType );
                 break;
             case self::ANY :
-                $type = self::ANYTYPE;
-                // fall through
+                $type = self::ANYTYPE; // fall through
             case self::ANYTYPE :
                 Assert::isInstanceOf( $X509DataType, Any::class );
                 break;

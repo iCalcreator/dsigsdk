@@ -79,7 +79,7 @@ interface DsigInterface
     public const X509CRL                = 'X509CRL';
     public const X509DATA               = 'X509Data';
     public const X509ISSUERNAME         = 'X509IssuerName';
-    public const X509SERIALNUBER        = 'X509SerialNumber';
+    public const X509SERIALNUMBER       = 'X509SerialNumber';
     public const X509ISSUERSERIAL       = 'X509IssuerSerial';
     public const X509SKI                = 'X509SKI';
     public const X509SUBJECTNAME        = 'X509SubjectName';

@@ -77,7 +77,6 @@ class X509DataTypeParser extends DsigParserBase
     {
         $headElement    = $this->reader->localName;
         $currentElement = null;
-        $x509DataTypes  = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -87,39 +86,33 @@ class X509DataTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case ( XMLReader::TEXT === $this->reader->nodeType ) :
-                    if( $this->reader->hasValue  && ! empty( $currentElement )) {
-                        $x509DataTypes[] = [ $currentElement => $this->reader->value ];
-                    }
+                case ( $this->isNonEmptyTextNode( $this->reader->nodeType ) && ! empty( $currentElement )) :
+                    $x509Data->addX509DataType( $currentElement, $this->reader->value );
                     break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                case ( self::X509ISSUERSERIAL === $this->reader->localName ) :
-                    $x509DataTypes[] = [
-                        self::X509ISSUERSERIAL => X509IssuerSerialTypeParser::factory( $this->reader )->parse()
-                    ];
-                    $currentElement = null;
-                    break;
-                case ( self::X509SKI === $this->reader->localName ) :
-                    $currentElement = $this->reader->localName;
-                    break;
-                case ( self::X509SUBJECTNAME === $this->reader->localName ) :
-                    $currentElement = $this->reader->localName;
-                    break;
-                case ( self::X509CERTIFICATE === $this->reader->localName ) :
-                    $currentElement = $this->reader->localName;
-                    break;
-                case ( self::X509CRL === $this->reader->localName ) :
-                    $currentElement = $this->reader->localName;
-                    break;
-                default :
-                    $x509DataTypes[] = [ self::ANYTYPE => AnyTypeParser::factory( $this->reader )->parse() ];
-                    $currentElement = null;
+                case ( XMLReader::ELEMENT === $this->reader->nodeType ) :
+                    switch( $this->reader->localName ) {
+                        case self::X509ISSUERSERIAL :
+                            $x509Data->addX509DataType(
+                                self::X509ISSUERSERIAL,
+                                X509IssuerSerialTypeParser::factory( $this->reader )->parse()
+                            );
+                            break;
+                        case self::X509SKI :         // fall through
+                        case self::X509SUBJECTNAME : // fall through
+                        case self::X509CERTIFICATE : // fall through
+                        case self::X509CRL :
+                            $currentElement = $this->reader->localName;
+                            break;
+                        default :
+                            $x509Data->addX509DataType(
+                                self::ANYTYPE,
+                                AnyTypeParser::factory( $this->reader )->parse()
+                            );
+                            $currentElement = null;
+                            break;
+                    } // end switch
                     break;
             } // end switch
         } // end while
-        if( ! empty( $x509DataTypes )) {
-            $x509Data->setX509DataTypes( $x509DataTypes );
-        }
     }
 }

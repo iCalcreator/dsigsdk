@@ -79,7 +79,6 @@ class SignaturePropertiesTypeParser extends DsigParserBase
     private function processSubNodes( SignatureProperties $signatureProperties ) : void
     {
         $headElement   = $this->reader->localName;
-        $subProperties = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -88,15 +87,13 @@ class SignaturePropertiesTypeParser extends DsigParserBase
                         break 2;
                     }
                     break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                case ( self::SIGNATUREPROPERTY === $this->reader->localName ) :
-                    $subProperties[] = SignaturePropertyTypeParser::factory( $this->reader )->parse();
+                case (( XMLReader::ELEMENT === $this->reader->nodeType ) &&
+                    ( self::SIGNATUREPROPERTY === $this->reader->localName )) :
+                    $signatureProperties->addSignatureProperty(
+                        SignaturePropertyTypeParser::factory( $this->reader )->parse()
+                    );
                     break;
             } // end switch
         } // end while
-        if( ! empty( $subProperties )) {
-            $signatureProperties->setSignatureProperty( $subProperties );
-        }
     }
 }

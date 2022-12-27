@@ -76,7 +76,6 @@ class SPKIDataTypeParser extends DsigParserBase
     private function processSubNodes( SPKIData $SPKIData ) : void
     {
         $headElement    = $this->reader->localName;
-        $SPKIDataTypes  = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -85,22 +84,17 @@ class SPKIDataTypeParser extends DsigParserBase
                         break 2;
                     }
                     break;
-                case ( XMLReader::TEXT === $this->reader->nodeType ) :
-                    if( $this->reader->hasValue ) {
-                        $SPKIDataTypes[] = [ self::SPKISEXP => $this->reader->value ];
-                    }
+                case $this->isNonEmptyTextNode( $this->reader->nodeType ) :
+                    $SPKIData->addSPKIDataType( self::SPKISEXP, $this->reader->value );
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 case ( self::SPKISEXP === $this->reader->localName ) :
                     break;
                 default :
-                    $SPKIDataTypes[] = [ self::ANYTYPE => AnyTypeParser::factory( $this->reader )->parse() ];
+                    $SPKIData->addSPKIDataType( self::ANYTYPE, AnyTypeParser::factory( $this->reader )->parse());
                     break;
             } // end switch
         } // end while
-        if( ! empty( $SPKIDataTypes )) {
-            $SPKIData->setSPKIDataType( $SPKIDataTypes );
-        }
     }
 }

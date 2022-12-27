@@ -51,7 +51,7 @@ class X509IssuerSerialTypeWriter extends DsigWriterBase
         }
         if( $subject->isX509SerialNumberSet()) {
             $this->writeTextElement(
-                self::X509SERIALNUBER,
+                self::X509SERIALNUMBER,
                 $XMLattributes,
                 (string) $subject->getX509SerialNumber()
             );

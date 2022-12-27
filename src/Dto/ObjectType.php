@@ -48,8 +48,6 @@ class ObjectType extends DsigBase
      * in keyed elementSets : [ key => valueType ]
      * key : self::MANIFEST / self::SIGNATUREPROPERTIES / self::ANYTYPE
      * minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="lax"
-     *
-     *
      */
     protected array $objectTypes = [];
 

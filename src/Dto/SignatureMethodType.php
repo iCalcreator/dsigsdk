@@ -109,8 +109,7 @@ class SignatureMethodType extends DsigBase
                 );
                 break;
             case  self::ANY :
-                $type = self::ANYTYPE;
-                // fall through
+                $type = self::ANYTYPE; // fall through
             case  self::ANYTYPE :
                 Assert::isInstanceOf( $signatureMethodType, Any::class );
                 break;

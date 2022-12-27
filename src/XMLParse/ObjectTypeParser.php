@@ -89,7 +89,6 @@ class ObjectTypeParser extends DsigParserBase
     private function processSubNodes( Objekt $objekt ) : void
     {
         $headElement = $this->reader->localName;
-        $objectTypes = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -101,22 +100,24 @@ class ObjectTypeParser extends DsigParserBase
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
                 case ( self::MANIFEST === $this->reader->localName ) :
-                    $objectTypes[] = [
-                        self::MANIFEST => ManifestTypeParser::factory( $this->reader )->parse()
-                    ];
+                    $objekt->addObjectType(
+                        self::MANIFEST,
+                        ManifestTypeParser::factory( $this->reader )->parse()
+                    );
                     break;
                 case ( self::SIGNATUREPROPERTIES === $this->reader->localName ) :
-                    $objectTypes[] = [
-                        self::SIGNATUREPROPERTIES => SignaturePropertiesTypeParser::factory( $this->reader )->parse()
-                    ];
+                    $objekt->addObjectType(
+                        self::SIGNATUREPROPERTIES,
+                        SignaturePropertiesTypeParser::factory( $this->reader )->parse()
+                    );
                     break;
                 default :
-                    $objectTypes[] = [ self::ANYTYPE => AnyTypeParser::factory( $this->reader )->parse() ];
+                    $objekt->addObjectType(
+                        self::ANYTYPE,
+                        AnyTypeParser::factory( $this->reader )->parse()
+                    );
                     break;
             }  // end switch
         } // end while
-        if( ! empty( $objectTypes )) {
-            $objekt->setObjectTypes( $objectTypes );
-        }
     }
 }

@@ -135,4 +135,9 @@ abstract class DsigParserBase extends DsigBase
         static $FMTnodeEnd = '%s End ';
         $this->logger->debug( $FMTnodeEnd . $method );
     }
+
+    protected function isNonEmptyTextNode( int $nodeType ) : bool
+    {
+        return (( XMLReader::TEXT === $nodeType ) && $this->reader->hasValue );
+    }
 }

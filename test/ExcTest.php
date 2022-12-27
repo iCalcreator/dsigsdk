@@ -48,25 +48,24 @@ class ExcTest extends TestCase
      */
     public function algorithmTest() : void
     {
-        echo PHP_EOL . ' START ' . __FUNCTION__ . PHP_EOL;
         foreach( SignatureLoader::ALGORITHMS as $algorithmIdentifier ) {
             $algorithm = Util::extractAlgorithmFromUriIdentifier( $algorithmIdentifier );
             $offset    = 0 - strlen( $algorithm ) - 2;
             $searchStr = substr( $algorithmIdentifier, $offset );
             $this->assertNotFalse(
                 @strpos( $searchStr, $algorithm ),
-                $algorithm . ' NOT found in ' . $algorithmIdentifier
+                $algorithm . ' NOT found in ' . $algorithmIdentifier . ' (' . __METHOD__ . ')'
             );
         } // end foreach
 
-        $ieFound = false;
+        $notFound = false;
         try {
             $algorithm = Util::extractAlgorithmFromUriIdentifier( 'grodan boll' );
         }
         catch( InvalidArgumentException $e ) {
-            $ieFound = true;
+            $notFound = true;
         }
-        $this->assertTrue( $ieFound );
+        $this->assertTrue( $notFound );
     }
 
     /**

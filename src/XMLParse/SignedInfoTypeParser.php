@@ -79,7 +79,6 @@ class SignedInfoTypeParser extends DsigParserBase
     private function processSubNodes( SignedInfo $signedInfo ) : void
     {
         $headElement = $this->reader->localName;
-        $references  = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -99,12 +98,9 @@ class SignedInfoTypeParser extends DsigParserBase
                     $signedInfo->setSignatureMethod( SignatureMethodTypeParser::factory( $this->reader )->parse());
                     break;
                 case ( self::REFERENS === $this->reader->localName ) :
-                    $references[] = ReferenceTypeParser::factory( $this->reader )->parse();
+                    $signedInfo->addReference( ReferenceTypeParser::factory( $this->reader )->parse());
                     break;
             } // end switch
         } // end while
-        if( ! empty( $references )) {
-            $signedInfo->setReference( $references );
-        }
     }
 }

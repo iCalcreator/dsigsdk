@@ -79,7 +79,6 @@ class ManifestTypeParser extends DsigParserBase
     protected function processSubNodes( Manifest $manifest ) : void
     {
         $headElement = $this->reader->localName;
-        $references  = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -88,15 +87,11 @@ class ManifestTypeParser extends DsigParserBase
                         break 2;
                     }
                     break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                case ( self::REFERENS === $this->reader->localName ) :
-                    $references[] = ReferenceTypeParser::factory( $this->reader )->parse();
+                case (( XMLReader::ELEMENT === $this->reader->nodeType ) &&
+                    ( self::REFERENS === $this->reader->localName )) :
+                    $manifest->addReference( ReferenceTypeParser::factory( $this->reader )->parse());
                     break;
             } // end switch
         } // end while
-        if( ! empty( $references )) {
-            $manifest->setReference( $references );
-        }
     }
 }

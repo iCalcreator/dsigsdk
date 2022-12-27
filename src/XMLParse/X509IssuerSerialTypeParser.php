@@ -32,6 +32,8 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\X509IssuerSerialType;
 use XMLReader;
 
+use function in_array;
+
 /**
  * Class X509IssuerSerialTypeParser
  */
@@ -75,11 +77,11 @@ class X509IssuerSerialTypeParser extends DsigParserBase
      */
     private function processSubNodes( X509IssuerSerialType $X509IssuerSerialType ) : void
     {
-        $headElement    = $this->reader->localName;
-        $currentElement = null;
+        static $NAMENUMB = [ self::X509ISSUERNAME, self::X509SERIALNUMBER ];
+        $headElement     = $this->reader->localName;
+        $currentElement  = null;
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
-            $isText = ( XMLReader::TEXT === $this->reader->nodeType );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -87,20 +89,16 @@ class X509IssuerSerialTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case ( $isText && ! $this->reader->hasValue ) :
+                case ( $this->isNonEmptyTextNode( $this->reader->nodeType ) && ! empty( $currentElement )) :
+                    if( self::X509ISSUERNAME === $currentElement ) {
+                        $X509IssuerSerialType->setX509IssuerName( $this->reader->value );
+                    }
+                    elseif( self::X509SERIALNUMBER === $currentElement ) {
+                        $X509IssuerSerialType->setX509SerialNumber( $this->reader->value );
+                    }
                     break;
-                case ( $isText && ( self::X509ISSUERNAME === $currentElement )) :
-                    $X509IssuerSerialType->setX509IssuerName( $this->reader->value );
-                    break;
-                case ($isText && ( self::X509SERIALNUBER === $currentElement )) :
-                    $X509IssuerSerialType->setX509SerialNumber( $this->reader->value );
-                    break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                case ( self::X509ISSUERNAME === $this->reader->localName ) :
-                    $currentElement = $this->reader->localName;
-                    break;
-                case ( self::X509SERIALNUBER === $this->reader->localName ) :
+                case (( XMLReader::ELEMENT === $this->reader->nodeType ) &&
+                    in_array( $this->reader->localName, $NAMENUMB, true )) :
                     $currentElement = $this->reader->localName;
                     break;
             } // end switch

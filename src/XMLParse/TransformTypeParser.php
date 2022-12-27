@@ -80,7 +80,6 @@ class TransformTypeParser extends DsigParserBase
     {
         $headElement    = $this->reader->localName;
         $currentElement = null;
-        $transformTypes = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -90,10 +89,9 @@ class TransformTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case ( XMLReader::TEXT === $this->reader->nodeType ) :
-                    if( $this->reader->hasValue  && ( self::XPATH === $currentElement )) {
-                        $transformTypes[] = [ self::XPATH => $this->reader->value ];
-                    }
+                case ( $this->isNonEmptyTextNode( $this->reader->nodeType ) &&
+                    ( self::XPATH === $currentElement )) :
+                    $transform->addTransformType( self::XPATH, $this->reader->value );
                     break;
                 case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
                     break;
@@ -101,13 +99,10 @@ class TransformTypeParser extends DsigParserBase
                     $currentElement = $this->reader->localName;
                     break;
                 default :
-                    $transformTypes[] = [ self::ANYTYPE => AnyTypeParser::factory( $this->reader )->parse() ];
+                    $transform->addTransformType( self::ANYTYPE, AnyTypeParser::factory( $this->reader )->parse());
                     $currentElement   = null;
                     break;
             } // end switch
         } // end while
-        if( ! empty( $transformTypes )) {
-            $transform->setTransformTypes( $transformTypes );
-        }
     }
 }

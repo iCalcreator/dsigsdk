@@ -80,7 +80,6 @@ class CanonicalizationMethodTypeParser extends DsigParserBase
     protected function processSubNodes( CanonicalizationMethod $canonicalizationMethod ) : void
     {
         $headElement = $this->reader->localName;
-        $anyTypes    = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -89,15 +88,10 @@ class CanonicalizationMethodTypeParser extends DsigParserBase
                         break 2;
                     }
                     break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                default :
-                    $anyTypes[] = AnyTypeParser::factory( $this->reader )->parse();
+                case ( XMLReader::ELEMENT === $this->reader->nodeType ) :
+                    $canonicalizationMethod->addAny( AnyTypeParser::factory( $this->reader )->parse());
                     break;
             } // end switch
         } // end while
-        if( ! empty( $anyTypes )) {
-            $canonicalizationMethod->setAny( $anyTypes );
-        }
     }
 }

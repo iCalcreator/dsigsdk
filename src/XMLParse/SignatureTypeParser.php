@@ -80,7 +80,6 @@ class SignatureTypeParser extends DsigParserBase
     private function processSubNodes( Signature $signature ) : void
     {
         $headElement = $this->reader->localName;
-        $objects     = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -101,12 +100,9 @@ class SignatureTypeParser extends DsigParserBase
                     $signature->setKeyInfo( KeyInfoTypeParser::factory( $this->reader )->parse());
                     break;
                 case ( self::OBJECT === $this->reader->localName ) :
-                    $objects[] = ObjectTypeParser::factory( $this->reader )->parse();
+                    $signature->addObject( ObjectTypeParser::factory( $this->reader )->parse());
                     break;
             } // end switch
         } // end while
-        if( ! empty( $objects )) {
-            $signature->setObject( $objects );
-        }
     }
 }

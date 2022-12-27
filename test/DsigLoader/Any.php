@@ -42,19 +42,25 @@ class Any implements DsigLoaderInterface
      */
     public static function loadFromFaker( ? int $iterateCnt = 3 ) : Dto
     {
-        static $search = '/[^A-Za-z0-9]/';
+        static $SEARCH  = '/[^A-Za-z0-9]/';
+        static $SP0     = '';
+        static $SP1     = ' ';
+        static $DOTHTML = '.html';
+        static $DOTXML  = '.xml';
+        static $SLASH   = '/';
         $faker = Faker\Factory::create();
 
-        $elementNamePart = [];
-        foreach( explode( ' ', $faker->catchPhrase ) as $part ) {
-            $elementNamePart[] = ucfirst( strtolower( preg_replace( $search, '', $part )));
+        $elementName = $SP0;
+        foreach( explode( $SP1, $faker->catchPhrase ) as $part ) {
+            $elementName .= ucfirst( strtolower( preg_replace( $SEARCH, $SP0, $part )));
         }
-        $uri = str_replace( '.html', '§', $faker->url );
-        if( str_ends_with( $uri, '/' ) ) {
-            $uri .= 'abc§';
+        $uri = str_replace( $DOTHTML, $DOTXML, $faker->url );
+        if( str_ends_with( $uri, $SLASH ) ) {
+            $uri .= $DOTXML;
         }
-        $dto = Dto::factoryElementName( implode( '', $elementNamePart ))
-                  ->setXMLattribute( Dto::XMLNS, $uri );
+        $dto = Dto::factoryElementName( $elementName )
+            ->setXMLattribute( Dto::XMLNS, $uri );
+
         $attributes = [];
         if( 1 === random_int( 1, 3 )) {
             $attributes[self::ALGORITM] = self::ALGORITHMS[random_int( 0, count( self::ALGORITHMS ) - 1 )];
@@ -67,7 +73,7 @@ class Any implements DsigLoaderInterface
         }
 
         --$iterateCnt;
-        if( empty( $iterateCnt ) || ( 1 === random_int( 1, 3 ))) {
+        if(( 0 >= $iterateCnt ) || ( 1 === random_int( 1, 3 ))) {
             $dto->setContent( $faker->md5 );
         }
         else {
@@ -78,16 +84,14 @@ class Any implements DsigLoaderInterface
     }
 
     /**
-     * @param int $max
-     * @param null|int $iterateCnt
      * @return Dto[]
      */
-    public static function getSomeAnys( ? int $iterateCnt = null ) : array
+    public static function getSomeAnys() : array
     {
         $max  = random_int( 1, 2 );
         $anys = [];
         for( $x = 0; $x <= $max; $x++ ) {
-            $anys[] = self::loadFromFaker( $iterateCnt );
+            $anys[] = self::loadFromFaker( 0 ); // no sub-anys...
         }
         return $anys;
     }

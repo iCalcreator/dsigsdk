@@ -32,6 +32,8 @@ namespace Kigkonsult\DsigSdk\XMLParse;
 use Kigkonsult\DsigSdk\Dto\RSAKeyValue;
 use XMLReader;
 
+use function in_array;
+
 /**
  * Class RSAKeyValueTypeParser
  */
@@ -75,11 +77,11 @@ class RSAKeyValueTypeParser extends DsigParserBase
      */
     private function processSubNodes( RSAKeyValue $RSAKeyValue ) : void
     {
+        static $EXPMOD  = [ self::EXPONENT, self::MODULUS ];
         $headElement    = $this->reader->localName;
         $currentElement = null;
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
-            $isText = ( XMLReader::TEXT === $this->reader->nodeType );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -87,20 +89,16 @@ class RSAKeyValueTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case ( $isText && ! $this->reader->hasValue ) :
+                case ( $this->isNonEmptyTextNode( $this->reader->nodeType ) && ! empty( $currentElement )) :
+                    if( self::MODULUS === $currentElement ) {
+                        $RSAKeyValue->setModulus( $this->reader->value );
+                    }
+                    elseif( self::EXPONENT === $currentElement ) {
+                        $RSAKeyValue->setExponent( $this->reader->value );
+                    }
                     break;
-                case ( $isText && ( self::MODULUS === $currentElement )) :
-                    $RSAKeyValue->setModulus( $this->reader->value );
-                    break;
-                case ($isText && ( self::EXPONENT === $currentElement )) :
-                    $RSAKeyValue->setExponent( $this->reader->value );
-                    break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                case ( self::MODULUS === $this->reader->localName ) :
-                    $currentElement = $this->reader->localName;
-                    break;
-                case ( self::EXPONENT === $this->reader->localName ) :
+                case (( XMLReader::ELEMENT === $this->reader->nodeType ) &&
+                    in_array( $this->reader->localName, $EXPMOD, true )) :
                     $currentElement = $this->reader->localName;
                     break;
             } // end switch

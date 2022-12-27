@@ -76,7 +76,6 @@ class TransformsTypeParser extends DsigParserBase
     private function processSubNodes( Transforms $transforms ) : void
     {
         $headElement   = $this->reader->localName;
-        $subTransforms = [];
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
             switch( true ) {
@@ -87,12 +86,9 @@ class TransformsTypeParser extends DsigParserBase
                     break;
                 case (( XMLReader::ELEMENT === $this->reader->nodeType ) &&
                     ( self::TRANSFORM === $this->reader->localName )) :
-                    $subTransforms[] = TransformTypeParser::factory( $this->reader )->parse();
+                    $transforms->addTransform( TransformTypeParser::factory( $this->reader )->parse());
                     break;
             } // end switch
         } // end while
-        if( ! empty( $subTransforms )) {
-            $transforms->setTransform( $subTransforms );
-        }
     }
 }

@@ -40,7 +40,7 @@ use function in_array;
 class DSAKeyValueTypeParser extends DsigParserBase
 {
     /**
-     * @var array
+     * @var string[]
      */
     private static array $DtoProps = [
         self::P,
@@ -94,7 +94,6 @@ class DSAKeyValueTypeParser extends DsigParserBase
         $currentElement = null;
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
-            $isText = ( XMLReader::TEXT === $this->reader->nodeType );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
@@ -102,28 +101,30 @@ class DSAKeyValueTypeParser extends DsigParserBase
                     }
                     $currentElement = null;
                     break;
-                case ( $isText && ! $this->reader->hasValue ) :
-                    break;
-                case ( $isText && ( self::P === $currentElement )) :
-                    $DSAKeyValue->setP( $this->reader->value );
-                    break;
-                case ( $isText && ( self::Q === $currentElement )) :
-                    $DSAKeyValue->setQ( $this->reader->value );
-                    break;
-                case ( $isText && ( self::G === $currentElement )) :
-                    $DSAKeyValue->setG( $this->reader->value );
-                    break;
-                case ( $isText && ( self::Y === $currentElement )) :
-                    $DSAKeyValue->setY( $this->reader->value );
-                    break;
-                case ($isText && ( self::J === $currentElement )) :
-                    $DSAKeyValue->setJ( $this->reader->value );
-                    break;
-                case ( $isText && ( self::SEED === $currentElement )) :
-                    $DSAKeyValue->setSeed( $this->reader->value );
-                    break;
-                case ( $isText && ( self::PGENCOUNTER === $currentElement )) :
-                    $DSAKeyValue->setPgenCounter( $this->reader->value );
+                case ( $this->isNonEmptyTextNode( $this->reader->nodeType ) && ! empty( $currentElement )) :
+                    switch( $currentElement ) {
+                        case ( self::P ) :
+                            $DSAKeyValue->setP( $this->reader->value );
+                            break;
+                        case ( self::Q  ) :
+                            $DSAKeyValue->setQ( $this->reader->value );
+                            break;
+                        case ( self::G  ) :
+                            $DSAKeyValue->setG( $this->reader->value );
+                            break;
+                        case ( self::Y ) :
+                            $DSAKeyValue->setY( $this->reader->value );
+                            break;
+                        case ( self::J ) :
+                            $DSAKeyValue->setJ( $this->reader->value );
+                            break;
+                        case ( self::SEED ) :
+                            $DSAKeyValue->setSeed( $this->reader->value );
+                            break;
+                        case ( self::PGENCOUNTER ) :
+                            $DSAKeyValue->setPgenCounter( $this->reader->value );
+                            break;
+                    } // end switch
                     break;
                 case (( XMLReader::ELEMENT === $this->reader->nodeType ) &&
                     in_array( $this->reader->localName, self::$DtoProps, true )) :

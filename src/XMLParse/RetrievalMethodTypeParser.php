@@ -87,29 +87,17 @@ class RetrievalMethodTypeParser extends DsigParserBase
     private function processSubNodes( RetrievalMethod $retrievalMethod ) : void
     {
         $headElement    = $this->reader->localName;
-        $currentElement = null;
         while( @$this->reader->read()) {
             $this->logDebug3( __METHOD__ );
-            $isText = ( XMLReader::TEXT === $this->reader->nodeType );
             switch( true ) {
                 case ( XMLReader::END_ELEMENT === $this->reader->nodeType ) :
                     if( $headElement === $this->reader->localName ) {
                         break 2;
                     }
-                    $currentElement = null;
                     break;
-                case ( $isText && ! $this->reader->hasValue ) :
-                    break;
-                case ( $isText && ( self::URI === $currentElement )) :
-                    $retrievalMethod->setURI( $this->reader->value);
-                    break;
-                case ( XMLReader::ELEMENT !== $this->reader->nodeType ) :
-                    break;
-                case ( self::TRANSFORMS === $this->reader->localName ) :
+                case (( XMLReader::ELEMENT === $this->reader->nodeType ) &&
+                    ( self::TRANSFORMS === $this->reader->localName )) :
                     $retrievalMethod->setTransforms( TransformsTypeParser::factory( $this->reader )->parse());
-                    break;
-                case ( self::URI === $this->reader->localName ) :
-                    $currentElement = $this->reader->localName;
                     break;
             } // end switch
         } // end while

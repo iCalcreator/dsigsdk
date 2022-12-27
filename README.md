@@ -31,7 +31,7 @@ In your `composer.json`:
 }
 ```
 
-Version 1.4.5 supports PHP 8.0, 1.2 7.4, 1.0 7.0.
+Version 1.4.8 supports PHP 8.0, 1.2 7.4, 1.0 7.0.
 
 Acquire access
 ``` php
